@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hokejíček – O nás | hokejicek.site</title>
+  <link rel="icon" href="/favicon.png">
+  <meta name="description" content="Hokejíček — informační stránka k nahlášení nelegálních streamů sportovních utkání." />
+  <style>
+    :root{--bg:#ffffff;--card:#ffffff;--text:#0b1530;--muted:#556182;--accent:#0b6bff;--radius:12px;--maxw:1000px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--maxw);margin:36px auto;padding:28px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#08b4ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+    nav a{color:var(--muted);text-decoration:none;margin-left:12px}
+    h1{margin:0;font-size:28px}
+    .lead{color:var(--muted);margin-top:6px}
+    .hero{margin-top:20px;padding:22px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(11,107,255,0.06),rgba(8,180,255,0.03));border:1px solid rgba(11,107,255,0.06)}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:18px}
+    .card{background:var(--card);padding:18px;border-radius:12px;border:1px solid #f0f4fb}
+    .muted{color:var(--muted)}
+    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.logo{width:48px;height:48px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">H</div>
+        <div>
+          <h1>Hokejíček</h1>
+          <div class="lead">Informační stránka — nahlášení nelegálních sportovních streamů</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">O nás</a>
+        <a href="#services">Co děláme</a>
+        <a href="#contact">Kontakt</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h2>Krátce a jasně</h2>
+        <p class="muted">Hokejíček je informační platforma, která pomáhá evidovat a nahlásit nepovolené přenosy sportovních utkání. Neprovádíme právní zastoupení — připravíme podklady pro držitele práv a komunikaci s platformami.</p>
+      </section>
+
+      <div class="grid">
+        <div>
+          <section id="about" class="card">
+            <h3>O nás</h3>
+            <p>Jsme komunitní iniciativa zaměřená na identifikaci a dokumentaci nelegálních streamů (YouTube, Facebook, Instagram a další). Shromažďujeme URL adresy, screenshoty a časové značky jako důkazy, které následně předáváme držitelům práv nebo správcům obsahu.</p>
+            <p class="muted">Spolupracujeme se subjekty, které spravují vysílací práva — při potřebe pomůžeme shromáždit přehledné podklady a doporučit další kroky.</p>
+          </section>
+
+          <section id="services" class="card" style="margin-top:14px">
+            <h3>Co děláme</h3>
+            <ul class="muted">
+              <li>Sběr a evidence podezřelých URL</li>
+              <li>Shromažďování screenshotů a časových značek</li>
+              <li>Příprava přehledných podkladů pro správce platforem</li>
+              <li>Komunikace s vlastníky práv (na vyžádání)</li>
+            </ul>
+            <p class="muted" style="margin-top:8px">Příklad držitelů práv: <strong>Borgis a.s.</strong> (uvedeno jako příklad; za žádání kontaktujte e‑mail níže).</p>
+          </section>
+        </div>
+
+        <aside class="card" id="contact">
+          <h3>Kontakt</h3>
+          <p class="muted">Jestli máte informaci o podezřelém přenosu nebo jste držitelem práv a chcete spolupracovat, napište nám:</p>
+          <p><strong>E‑mail:</strong> <a href="mailto:kontakt@hokejicek.site">kontakt@hokejicek.site</a></p>
+          <p class="muted">Uveďte prosím URL, časové značky a krátký popis. Nebo přiložte screenshoty v odpovědi.</p>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <div>© <span id="year"></span> Hokejíček — hokejicek.site • Nejsme právní zástupci. Pokud potřebujete právní služby, kontaktujte advokáta.</div>
+    </footer>
+  </div>
+
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
