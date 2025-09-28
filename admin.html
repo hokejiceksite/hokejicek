@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin — Hokejíček</title>
+<link rel="icon" href="/favicon.png">
+<style>
+  body{font-family:Inter,system-ui,Arial;margin:16px;background:#fff;color:#07142a}
+  .wrap{max-width:900px;margin:0 auto}
+  input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef6;margin-top:6px}
+  button{background:#0B6BFF;color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;margin-top:8px}
+  .row{display:flex;gap:8px}
+  .card{border:1px solid #e6eef6;padding:12px;border-radius:10px;margin-top:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Admin — Hokejíček</h1>
+    <div id="authBox" class="card">
+      <h3>Přihlášení</h3>
+      <input id="email" placeholder="Email"/>
+      <input id="pass" placeholder="Heslo" type="password"/>
+      <button id="login">Přihlásit</button>
+      <div id="authMsg"></div>
+    </div>
+
+    <div id="adminUI" style="display:none">
+      <section class="card">
+        <h3>Vytvořit zápas</h3>
+        <input id="home" placeholder="Domácí"/>
+        <input id="away" placeholder="Hosté"/>
+        <input id="start" placeholder="Start (např. 2025-09-30 18:00)"/>
+        <button id="createMatch">Vytvořit</button>
+        <div id="created"></div>
+      </section>
+
+      <section class="card">
+        <h3>Přidat událost do zápasu</h3>
+        <select id="matchSelect"></select>
+        <textarea id="evText" placeholder="Text události (např. Gól: 1-0)"></textarea>
+        <button id="addEvent">Přidat událost</button>
+      </section>
+
+      <section style="margin-top:12px">
+        <button id="logout" style="background:#ef4444">Odhlásit</button>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
+      authDomain: "hokejicek-live.firebaseapp.com",
+      databaseURL: "https://hokejicek-live-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hokejicek-live",
+      storageBucket: "hokejicek-live.appspot.com",
+      messagingSenderId: "382599668613",
+      appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
+      measurementId: "G-Z3FP66RW29"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const email = document.getElementById('email'), pass=document.getElementById('pass'), login=document.getElementById('login'), authMsg=document.getElementById('authMsg');
+    const adminUI = document.getElementById('adminUI'), authBox=document.getElementById('authBox');
+
+    login.addEventListener('click', ()=> {
+      auth.signInWithEmailAndPassword(email.value, pass.value).then(()=> {
+        authMsg.textContent = 'Přihlášeno';
+      }).catch(err=> authMsg.textContent = 'Chyba: ' + err.message);
+    });
+
+    auth.onAuthStateChanged(user => {
+      if(user){ authBox.style.display='none'; adminUI.style.display='block'; loadMatches(); }
+      else{ authBox.style.display='block'; adminUI.style.display='none'; }
+    });
+
+    document.getElementById('createMatch').addEventListener('click', async ()=>{
+      const h = document.getElementById('home').value.trim(); const a = document.getElementById('away').value.trim(); const s=document.getElementById('start').value.trim();
+      if(!h || !a){ alert('Vyplňte domácí a hosty'); return; }
+      const ref = db.ref('matches').push();
+      await ref.set({ home: h, away: a, startTime: s, createdAt: Date.now() });
+      document.getElementById('created').textContent = 'Vytvořeno: ' + ref.key;
+      loadMatches();
+    });
+
+    async function loadMatches(){
+      const sel = document.getElementById('matchSelect'); sel.innerHTML = '';
+      const snap = await db.ref('matches').once('value');
+      snap.forEach(ch => {
+        const opt = document.createElement('option'); opt.value = ch.key; opt.textContent = (ch.val().home||'') + ' – ' + (ch.val().away||'');
+        sel.appendChild(opt);
+      });
+    }
+
+    document.getElementById('addEvent').addEventListener('click', async ()=>{
+      const matchId = document.getElementById('matchSelect').value; const txt = document.getElementById('evText').value.trim();
+      if(!matchId || !txt){ alert('Vyberte zápas a napište text'); return; }
+      const ref = db.ref('events/' + matchId).push();
+      await ref.set({ text: txt, createdAt: Date.now(), author: auth.currentUser.email });
+      document.getElementById('evText').value = '';
+      alert('Událost přidána');
+    });
+
+    document.getElementById('logout').addEventListener('click', ()=> auth.signOut());
+  </script>
+</body>
+</html>
