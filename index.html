@@ -1,36 +1,84 @@
 <!doctype html>
 <html lang="cs">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hokejíček — Přenosy</title>
-<link rel="icon" href="/favicon.png">
-<style>
-  body{font-family:Inter,system-ui,Arial;margin:20px;background:#fff;color:#062336}
-  .wrap{max-width:900px;margin:0 auto}
-  header{display:flex;justify-content:space-between;align-items:center}
-  .card{border:1px solid #e6eef6;padding:12px;border-radius:10px;margin-top:12px}
-  a.button{background:#0B6BFF;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
-  .muted{color:#556676}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hokejíček — Přenosy</title>
+  <link rel="icon" href="/favicon.png">
+  <meta name="description" content="Živé textové přenosy hokeje — Hokejíček" />
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #07142a;
+      --muted: #566776;
+      --accent: #0B6BFF;
+      --card: #fbfdff;
+      --radius: 12px;
+      --maxw: 980px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--maxw);margin:32px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#08B4FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:20px}
+    h1{margin:0;font-size:22px}
+    .lead{color:var(--muted);margin-top:6px}
+    nav a{color:var(--muted);text-decoration:none;margin-left:12px}
+    .list{margin-top:18px;display:grid;gap:12px}
+    .card{background:var(--card);padding:14px;border-radius:12px;border:1px solid #eef6ff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .match-info{display:flex;flex-direction:column}
+    .teams{font-weight:700}
+    .meta{color:var(--muted);font-size:13px;margin-top:6px}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;border:0;cursor:pointer}
+    .ghost{background:transparent;border:1px solid #e6f3ff;color:var(--accent);padding:8px 12px;border-radius:10px}
+    .small{font-size:13px;color:var(--muted)}
+    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
+    .empty{padding:18px;border-radius:12px;border:1px dashed #e6f3ff;color:var(--muted);text-align:center}
+    @media(max-width:720px){.logo{width:44px;height:44px;font-size:18px}.card{flex-direction:column;align-items:flex-start}}
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Hokejíček — Přenosy</h1>
-      <a class="button" href="/admin.html">Admin</a>
+      <div class="brand">
+        <div class="logo">H</div>
+        <div>
+          <h1>Hokejíček — Přenosy</h1>
+          <div class="lead">Živé textové přenosy hokeje — klikněte pro zobrazení</div>
+        </div>
+      </div>
+      <nav>
+        <a class="small" href="/admin.html">Admin</a>
+        <a class="small" href="/converter.html">Konvertor</a>
+      </nav>
     </header>
-    <p class="muted">Klikněte na zápas pro živý textový přenos.</p>
 
-    <div id="list"></div>
+    <main>
+      <div id="status" class="small" style="margin-top:14px">Kontrola připojení k databázi...</div>
+
+      <section class="list" id="list">
+        <!-- Zde budou zápasy -->
+      </section>
+
+      <div id="empty" class="empty small" style="display:none;margin-top:12px">
+        Zatím žádné přenosy — admin může vytvořit nový v <a href="/admin.html">admin rozhraní</a>.
+      </div>
+    </main>
+
+    <footer>
+      © <span id="year"></span> Hokejíček — hokejicek.site
+    </footer>
   </div>
 
-  <!-- Firebase (compat) -->
+  <!-- Firebase compat (pro čisté HTML) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // === Vaše firebaseConfig (z Firebase Console) ===
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ======= VLOŽENÝ firebaseConfig (z Firebase Console) =======
     const firebaseConfig = {
       apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
       authDomain: "hokejicek-live.firebaseapp.com",
@@ -41,46 +89,114 @@
       appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
       measurementId: "G-Z3FP66RW29"
     };
-    // ==============================================
+    // =========================================================
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const list = document.getElementById('list');
-
-    function renderMatch(key, data){
-      const d = data;
-      const el = document.createElement('div'); el.className='card';
-      const title = document.createElement('div'); title.innerHTML = `<strong>${d.home || 'Home'} — ${d.away || 'Away'}</strong>`;
-      const meta = document.createElement('div'); meta.textContent = d.startTime ? `Start: ${d.startTime}` : '';
-      const link = document.createElement('a'); link.textContent = 'Zobrazit přenos'; link.href = '/match.html?id=' + key;
-      link.className='button';
-      el.appendChild(title); el.appendChild(meta); el.appendChild(document.createElement('br')); el.appendChild(link);
-      el.id = 'm-'+key;
-      return el;
+    // inicializace Firebase (compat)
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch(e){
+      console.error('Firebase init error', e);
+      document.getElementById('status').textContent = 'Chyba při inicializaci Firebase: ' + (e.message || e);
     }
 
-    // listen for matches
-    db.ref('matches').on('child_added', snap => {
-      const item = renderMatch(snap.key, snap.val());
-      list.prepend(item);
-    });
-    db.ref('matches').on('child_changed', snap => {
-      const node = document.getElementById('m-'+snap.key);
-      if(node){
-        const newEl = renderMatch(snap.key, snap.val());
-        list.replaceChild(newEl, node);
+    const db = firebase.database();
+    const listEl = document.getElementById('list');
+    const statusEl = document.getElementById('status');
+    const emptyEl = document.getElementById('empty');
+
+    // Kontrola spojení + nastavení UI
+    function testDb() {
+      if(!db) {
+        statusEl.textContent = 'Realtime Database není dostupná. Zkontrolujte databaseURL v configu.';
+        emptyEl.style.display = 'block';
+        return;
       }
-    });
-    db.ref('matches').on('child_removed', snap => {
-      const node = document.getElementById('m-'+snap.key);
-      if(node) node.remove();
+      db.ref('/').once('value').then(()=> {
+        statusEl.textContent = 'Připojeno k Realtime Database.';
+      }).catch(err=>{
+        console.error(err);
+        statusEl.innerHTML = 'Nelze přistoupit k Realtime Database: ' + (err.message || err.code) + 
+          '<br><span class="small">Zkontrolujte, že jste přidali Authorized domain v Firebase Project settings.</span>';
+      });
+    }
+    testDb();
+
+    // Vytvoří element zápasu
+    function createMatchCard(key, data){
+      const d = data;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.id = 'm-' + key;
+
+      const info = document.createElement('div');
+      info.className = 'match-info';
+      const teams = document.createElement('div');
+      teams.className = 'teams';
+      teams.textContent = (d.home || 'Domácí') + ' — ' + (d.away || 'Hosté');
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = d.startTime ? ('Start: ' + d.startTime) : ('Vytvořeno: ' + (d.createdAt ? new Date(d.createdAt).toLocaleString() : '—'));
+
+      info.appendChild(teams);
+      info.appendChild(meta);
+
+      const actions = document.createElement('div');
+      actions.style.display='flex';
+      actions.style.gap='8px';
+      const view = document.createElement('a');
+      view.className = 'btn';
+      view.textContent = 'Zobrazit přenos';
+      view.href = '/match.html?id=' + encodeURIComponent(key);
+
+      actions.appendChild(view);
+      card.appendChild(info);
+      card.appendChild(actions);
+      return card;
+    }
+
+    // Listenery pro matches
+    const matchesRef = db.ref('matches');
+
+    // child_added
+    matchesRef.on('child_added', snap => {
+      const key = snap.key;
+      const data = snap.val();
+      const node = createMatchCard(key, data);
+      // prepend: nový nahoře
+      if(listEl.firstChild) listEl.insertBefore(node, listEl.firstChild);
+      else listEl.appendChild(node);
+      emptyEl.style.display = 'none';
     });
 
-    // if empty
-    db.ref('matches').once('value').then(snap=>{
-      if(!snap.exists()) list.innerHTML = '<div class="card">Zatím žádné přenosy.</div>';
+    // child_changed
+    matchesRef.on('child_changed', snap => {
+      const key = snap.key;
+      const data = snap.val();
+      const existing = document.getElementById('m-' + key);
+      const newNode = createMatchCard(key, data);
+      if(existing) listEl.replaceChild(newNode, existing);
     });
+
+    // child_removed
+    matchesRef.on('child_removed', snap => {
+      const key = snap.key;
+      const node = document.getElementById('m-' + key);
+      if(node) node.remove();
+      // if no items left -> show empty
+      if(!listEl.hasChildNodes()) emptyEl.style.display = 'block';
+    });
+
+    // initial check: show empty if none
+    matchesRef.once('value').then(snap => {
+      if(!snap.exists()) {
+        emptyEl.style.display = 'block';
+      }
+    }).catch(e => {
+      console.error('initial fetch error', e);
+    });
+
+    // small helper: refresh (optional)
+    // můžete přidat tlačítko pro manuální refresh pokud chcete
   </script>
 </body>
 </html>
