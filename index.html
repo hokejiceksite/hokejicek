@@ -1,97 +1,86 @@
 <!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hokejíček – Loga pro weby | hokejicek.site</title>
-  <meta name="description" content="Hokejíček – nabídka log a jednoduché hostování obrázků klubů pro použití na webech a v přenosech." />
-  <link rel="icon" href="/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#ffffff;--text:#08132a;--muted:#54657a;--accent:#0B6BFF;--card:#fbfdff;--radius:12px;--maxw:980px}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    .wrap{max-width:var(--maxw);margin:36px auto;padding:28px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#08B4FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
-    nav a{color:var(--muted);text-decoration:none;margin-left:12px}
-    h1{margin:0;font-size:28px}
-    .lead{color:var(--muted);margin-top:6px}
-    .hero{margin-top:20px;padding:20px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(11,107,255,0.06),rgba(8,180,255,0.03));border:1px solid rgba(11,107,255,0.06)}
-    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:12px;border:1px solid #eef6ff}
-    ul{margin:8px 0 0 18px}
-    .muted{color:var(--muted)}
-    pre{background:#f4f8ff;padding:10px;border-radius:8px;overflow:auto}
-    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}.logo{width:48px;height:48px}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hokejíček — Přenosy</title>
+<link rel="icon" href="/favicon.png">
+<style>
+  body{font-family:Inter,system-ui,Arial;margin:20px;background:#fff;color:#062336}
+  .wrap{max-width:900px;margin:0 auto}
+  header{display:flex;justify-content:space-between;align-items:center}
+  .card{border:1px solid #e6eef6;padding:12px;border-radius:10px;margin-top:12px}
+  a.button{background:#0B6BFF;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+  .muted{color:#556676}
+</style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">
-        <div class="logo">H</div>
-        <div>
-          <h1>Hokejíček</h1>
-          <div class="lead">Loga pro weby — jednoduché hostování obrázků klubů</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#about">O službě</a>
-        <a href="#how">Jak to funguje</a>
-        <a href="#contact">Kontakt</a>
-      </nav>
+      <h1>Hokejíček — Přenosy</h1>
+      <a class="button" href="/admin.html">Admin</a>
     </header>
+    <p class="muted">Klikněte na zápas pro živý textový přenos.</p>
 
-    <main>
-      <section class="hero">
-        <h2>Potřebujete logo rychle na web nebo do přenosu?</h2>
-        <p class="muted">Pošlete nám logo nebo odkaz a my připravíme webovou verzi – SVG a PNG v běžných velikostech. Hotové soubory dostanete s přímým odkazem ke stažení.</p>
-      </section>
-
-      <div class="grid">
-        <div>
-          <section id="about" class="card">
-            <h3>O službě</h3>
-            <p>Jednoduše: pošlete logo nebo odkaz → my připravíme verze vhodné pro web a poskytneme přímý odkaz ke stažení. Loga si pak může kdokoli stáhnout a vložit na svůj web.</p>
-            <p class="muted">Výhody:</p>
-            <ul>
-              <li>Okamžitý přímý URL odkaz na obrázek (např. <code>https://hokejicek.site/loga/test1.png</code>).</li>
-              <li>Standardní verze: SVG, PNG 64×64, PNG 256×256.</li>
-              <li>Možnost úprav (průhledné pozadí, změna rozlišení).</li>
-            </ul>
-          </section>
-
-          <section id="how" class="card" style="margin-top:14px">
-            <h3>Jak to funguje</h3>
-            <ol>
-              <li>Pošlete e‑mailem logo nebo odkaz.</li>
-              <li>My připravíme web‑přátelské verze a nahrajeme je do složky <code>/loga/</code>.</li>
-              <li>Dostanete přímý odkaz, který můžete vložit do stránky nebo overlayu.</li>
-            </ol>
-            <p class="muted">Příklad URL (ukázka):</p>
-            <pre>https://hokejicek.site/loga/test1.png
-https://hokejicek.site/loga/test2.svg</pre>
-          </section>
-        </div>
-
-        <aside class="card" id="contact">
-          <h3>Kontakt</h3>
-          <p class="muted">Chcete nahrát logo nebo upravit obrázek? Pošlete e‑mail s přílohou nebo odkazem.</p>
-          <p><strong>E‑mail:</strong> <a href="mailto:kontakt@hokejicek.site">kontakt@hokejicek.site</a></p>
-          <p class="muted">Do e‑mailu uveďte preferovaný název souboru (např. <code>test1.png</code>).</p>
-        </aside>
-      </div>
-
-    </main>
-
-    <footer>
-      <div>© <span id="year"></span> Hokejíček — hokejicek.site</div>
-    </footer>
+    <div id="list"></div>
   </div>
 
-  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    // === Vaše firebaseConfig (z Firebase Console) ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
+      authDomain: "hokejicek-live.firebaseapp.com",
+      databaseURL: "https://hokejicek-live-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hokejicek-live",
+      storageBucket: "hokejicek-live.appspot.com",
+      messagingSenderId: "382599668613",
+      appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
+      measurementId: "G-Z3FP66RW29"
+    };
+    // ==============================================
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const list = document.getElementById('list');
+
+    function renderMatch(key, data){
+      const d = data;
+      const el = document.createElement('div'); el.className='card';
+      const title = document.createElement('div'); title.innerHTML = `<strong>${d.home || 'Home'} — ${d.away || 'Away'}</strong>`;
+      const meta = document.createElement('div'); meta.textContent = d.startTime ? `Start: ${d.startTime}` : '';
+      const link = document.createElement('a'); link.textContent = 'Zobrazit přenos'; link.href = '/match.html?id=' + key;
+      link.className='button';
+      el.appendChild(title); el.appendChild(meta); el.appendChild(document.createElement('br')); el.appendChild(link);
+      el.id = 'm-'+key;
+      return el;
+    }
+
+    // listen for matches
+    db.ref('matches').on('child_added', snap => {
+      const item = renderMatch(snap.key, snap.val());
+      list.prepend(item);
+    });
+    db.ref('matches').on('child_changed', snap => {
+      const node = document.getElementById('m-'+snap.key);
+      if(node){
+        const newEl = renderMatch(snap.key, snap.val());
+        list.replaceChild(newEl, node);
+      }
+    });
+    db.ref('matches').on('child_removed', snap => {
+      const node = document.getElementById('m-'+snap.key);
+      if(node) node.remove();
+    });
+
+    // if empty
+    db.ref('matches').once('value').then(snap=>{
+      if(!snap.exists()) list.innerHTML = '<div class="card">Zatím žádné přenosy.</div>';
+    });
+  </script>
 </body>
 </html>
