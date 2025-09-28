@@ -3,200 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hokejíček — Přenosy</title>
+  <title>Hokejíček</title>
   <link rel="icon" href="/favicon.png">
-  <meta name="description" content="Živé textové přenosy hokeje — Hokejíček" />
   <style>
+    /* Dark aesthetic */
     :root{
-      --bg: #ffffff;
-      --text: #07142a;
-      --muted: #566776;
-      --accent: #0B6BFF;
-      --card: #fbfdff;
-      --radius: 12px;
-      --maxw: 980px;
+      --bg-1: #0f1724; /* tmavě modročerná */
+      --bg-2: #071227; /* hlubší odstín */
+      --accent: #0ea5ff; /* jemný světle modrý akcent */
+      --glass: rgba(255,255,255,0.04);
+      --text: #e6eef8;
+      --muted: #9fb4c9;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    .wrap{max-width:var(--maxw);margin:32px auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#08B4FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:20px}
-    h1{margin:0;font-size:22px}
-    .lead{color:var(--muted);margin-top:6px}
-    nav a{color:var(--muted);text-decoration:none;margin-left:12px}
-    .list{margin-top:18px;display:grid;gap:12px}
-    .card{background:var(--card);padding:14px;border-radius:12px;border:1px solid #eef6ff;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .match-info{display:flex;flex-direction:column}
-    .teams{font-weight:700}
-    .meta{color:var(--muted);font-size:13px;margin-top:6px}
-    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;border:0;cursor:pointer}
-    .ghost{background:transparent;border:1px solid #e6f3ff;color:var(--accent);padding:8px 12px;border-radius:10px}
-    .small{font-size:13px;color:var(--muted)}
-    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
-    .empty{padding:18px;border-radius:12px;border:1px dashed #e6f3ff;color:var(--muted);text-align:center}
-    @media(max-width:720px){.logo{width:44px;height:44px;font-size:18px}.card{flex-direction:column;align-items:flex-start}}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(14,165,255,0.06), transparent 8%),
+                  linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .box {
+      width:100%;
+      max-width:880px;
+      text-align:center;
+      padding:48px 36px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+
+    .logo {
+      width:72px;height:72px;border-radius:14px;
+      margin:0 auto 18px;
+      background: linear-gradient(135deg, rgba(14,165,255,0.18), rgba(0,0,0,0.08));
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);
+      font-size:30px;
+      border:1px solid rgba(14,165,255,0.08);
+    }
+
+    .message {
+      font-size:28px;
+      line-height:1.2;
+      font-weight:600;
+      margin:6px 0 8px;
+      color:var(--text);
+      letter-spacing:0.2px;
+    }
+
+    .sub {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    footer { margin-top:20px; font-size:12px; color:rgba(159,180,200,0.14); }
+
+    @media (max-width:600px){
+      .box{padding:28px 18px;border-radius:12px}
+      .message{font-size:20px}
+      .logo{width:56px;height:56px;font-size:24px}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">H</div>
-        <div>
-          <h1>Hokejíček — Přenosy</h1>
-          <div class="lead">Živé textové přenosy hokeje — klikněte pro zobrazení</div>
-        </div>
-      </div>
-      <nav>
-        <a class="small" href="/admin.html">Admin</a>
-        <a class="small" href="/converter.html">Konvertor</a>
-      </nav>
-    </header>
-
-    <main>
-      <div id="status" class="small" style="margin-top:14px">Kontrola připojení k databázi...</div>
-
-      <section class="list" id="list">
-        <!-- Zde budou zápasy -->
-      </section>
-
-      <div id="empty" class="empty small" style="display:none;margin-top:12px">
-        Zatím žádné přenosy — admin může vytvořit nový v <a href="/admin.html">admin rozhraní</a>.
-      </div>
-    </main>
-
-    <footer>
-      © <span id="year"></span> Hokejíček — hokejicek.site
-    </footer>
+  <div class="box" role="main" aria-live="polite">
+    <div class="logo">H</div>
+    <div class="message">Nová stránka se připravuje.</div>
+    <div class="sub" aria-hidden="true"></div>
+    <footer aria-hidden="true"></footer>
   </div>
-
-  <!-- Firebase compat (pro čisté HTML) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ======= VLOŽENÝ firebaseConfig (z Firebase Console) =======
-    const firebaseConfig = {
-      apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
-      authDomain: "hokejicek-live.firebaseapp.com",
-      databaseURL: "https://hokejicek-live-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "hokejicek-live",
-      storageBucket: "hokejicek-live.appspot.com",
-      messagingSenderId: "382599668613",
-      appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
-      measurementId: "G-Z3FP66RW29"
-    };
-    // =========================================================
-
-    // inicializace Firebase (compat)
-    try {
-      firebase.initializeApp(firebaseConfig);
-    } catch(e){
-      console.error('Firebase init error', e);
-      document.getElementById('status').textContent = 'Chyba při inicializaci Firebase: ' + (e.message || e);
-    }
-
-    const db = firebase.database();
-    const listEl = document.getElementById('list');
-    const statusEl = document.getElementById('status');
-    const emptyEl = document.getElementById('empty');
-
-    // Kontrola spojení + nastavení UI
-    function testDb() {
-      if(!db) {
-        statusEl.textContent = 'Realtime Database není dostupná. Zkontrolujte databaseURL v configu.';
-        emptyEl.style.display = 'block';
-        return;
-      }
-      db.ref('/').once('value').then(()=> {
-        statusEl.textContent = 'Připojeno k Realtime Database.';
-      }).catch(err=>{
-        console.error(err);
-        statusEl.innerHTML = 'Nelze přistoupit k Realtime Database: ' + (err.message || err.code) + 
-          '<br><span class="small">Zkontrolujte, že jste přidali Authorized domain v Firebase Project settings.</span>';
-      });
-    }
-    testDb();
-
-    // Vytvoří element zápasu
-    function createMatchCard(key, data){
-      const d = data;
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.id = 'm-' + key;
-
-      const info = document.createElement('div');
-      info.className = 'match-info';
-      const teams = document.createElement('div');
-      teams.className = 'teams';
-      teams.textContent = (d.home || 'Domácí') + ' — ' + (d.away || 'Hosté');
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      meta.textContent = d.startTime ? ('Start: ' + d.startTime) : ('Vytvořeno: ' + (d.createdAt ? new Date(d.createdAt).toLocaleString() : '—'));
-
-      info.appendChild(teams);
-      info.appendChild(meta);
-
-      const actions = document.createElement('div');
-      actions.style.display='flex';
-      actions.style.gap='8px';
-      const view = document.createElement('a');
-      view.className = 'btn';
-      view.textContent = 'Zobrazit přenos';
-      view.href = '/match.html?id=' + encodeURIComponent(key);
-
-      actions.appendChild(view);
-      card.appendChild(info);
-      card.appendChild(actions);
-      return card;
-    }
-
-    // Listenery pro matches
-    const matchesRef = db.ref('matches');
-
-    // child_added
-    matchesRef.on('child_added', snap => {
-      const key = snap.key;
-      const data = snap.val();
-      const node = createMatchCard(key, data);
-      // prepend: nový nahoře
-      if(listEl.firstChild) listEl.insertBefore(node, listEl.firstChild);
-      else listEl.appendChild(node);
-      emptyEl.style.display = 'none';
-    });
-
-    // child_changed
-    matchesRef.on('child_changed', snap => {
-      const key = snap.key;
-      const data = snap.val();
-      const existing = document.getElementById('m-' + key);
-      const newNode = createMatchCard(key, data);
-      if(existing) listEl.replaceChild(newNode, existing);
-    });
-
-    // child_removed
-    matchesRef.on('child_removed', snap => {
-      const key = snap.key;
-      const node = document.getElementById('m-' + key);
-      if(node) node.remove();
-      // if no items left -> show empty
-      if(!listEl.hasChildNodes()) emptyEl.style.display = 'block';
-    });
-
-    // initial check: show empty if none
-    matchesRef.once('value').then(snap => {
-      if(!snap.exists()) {
-        emptyEl.style.display = 'block';
-      }
-    }).catch(e => {
-      console.error('initial fetch error', e);
-    });
-
-    // small helper: refresh (optional)
-    // můžete přidat tlačítko pro manuální refresh pokud chcete
-  </script>
 </body>
 </html>
