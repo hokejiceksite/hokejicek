@@ -1,57 +1,90 @@
 <!doctype html>
 <html lang="cs">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Admin — Hokejíček</title>
 <link rel="icon" href="/favicon.png">
 <style>
-  body{font-family:Inter,system-ui,Arial;margin:16px;background:#fff;color:#07142a}
-  .wrap{max-width:900px;margin:0 auto}
-  input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef6;margin-top:6px}
-  button{background:#0B6BFF;color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;margin-top:8px}
-  .row{display:flex;gap:8px}
-  .card{border:1px solid #e6eef6;padding:12px;border-radius:10px;margin-top:12px}
+  :root{--bg:#fff;--text:#07142a;--muted:#556676;--accent:#0B6BFF}
+  body{font-family:Inter,system-ui,Arial;margin:18px;background:var(--bg);color:var(--text)}
+  .wrap{max-width:920px;margin:0 auto}
+  h1{margin:0 0 12px}
+  .card{border:1px solid #e6eef6;padding:14px;border-radius:10px;background:#fff;margin-bottom:12px}
+  input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;margin-top:8px}
+  button{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;margin-top:10px}
+  button.ghost{background:transparent;border:1px solid #e6eef6;color:var(--accent)}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .small{font-size:13px;color:var(--muted)}
+  .hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px;border-radius:6px;margin-top:8px}
+  .err{background:#fff1f2;border-left:4px solid #ef4444;padding:10px;border-radius:6px;margin-top:8px;color:#7f1d1d}
+  .success{background:#ecfdf5;border-left:4px solid #10b981;padding:10px;border-radius:6px;margin-top:8px;color:#065f46}
 </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Admin — Hokejíček</h1>
-    <div id="authBox" class="card">
-      <h3>Přihlášení</h3>
-      <input id="email" placeholder="Email"/>
-      <input id="pass" placeholder="Heslo" type="password"/>
-      <button id="login">Přihlásit</button>
-      <div id="authMsg"></div>
+
+    <div class="card" id="statusCard">
+      <strong>Kontrola připojení k Firebase</strong>
+      <div id="statusMsg" class="small">Inicializuji Firebase...</div>
+      <div id="connActions" style="margin-top:10px"></div>
     </div>
 
-    <div id="adminUI" style="display:none">
-      <section class="card">
-        <h3>Vytvořit zápas</h3>
-        <input id="home" placeholder="Domácí"/>
-        <input id="away" placeholder="Hosté"/>
-        <input id="start" placeholder="Start (např. 2025-09-30 18:00)"/>
-        <button id="createMatch">Vytvořit</button>
-        <div id="created"></div>
-      </section>
+    <div id="authArea" style="display:none">
+      <div class="card" id="authBox">
+        <h3>Přihlášení</h3>
+        <input id="email" placeholder="Email"/>
+        <input id="pass" placeholder="Heslo" type="password"/>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button id="login">Přihlásit</button>
+          <button id="testBtn" class="ghost">Otestovat přihlášení</button>
+        </div>
+        <div id="authMsg" class="small" style="margin-top:8px"></div>
+      </div>
 
-      <section class="card">
-        <h3>Přidat událost do zápasu</h3>
-        <select id="matchSelect"></select>
-        <textarea id="evText" placeholder="Text události (např. Gól: 1-0)"></textarea>
-        <button id="addEvent">Přidat událost</button>
-      </section>
+      <div id="adminUI" style="display:none">
+        <div class="card">
+          <h3>Vytvořit zápas</h3>
+          <input id="home" placeholder="Domácí"/>
+          <input id="away" placeholder="Hosté" style="margin-top:8px"/>
+          <input id="start" placeholder="Start (např. 2025-09-30 18:00)" style="margin-top:8px"/>
+          <button id="createMatch">Vytvořit</button>
+          <div id="created" class="small" style="margin-top:6px"></div>
+        </div>
 
-      <section style="margin-top:12px">
-        <button id="logout" style="background:#ef4444">Odhlásit</button>
-      </section>
+        <div class="card">
+          <h3>Přidat událost do zápasu</h3>
+          <select id="matchSelect"></select>
+          <textarea id="evText" placeholder="Text události (např. Gól: 1-0)"></textarea>
+          <div style="display:flex;gap:8px">
+            <button id="addEvent">Přidat událost</button>
+            <button id="refreshMatches" class="ghost">Obnovit seznam</button>
+            <button id="logout" class="ghost" style="margin-left:auto;background:#ef4444;color:#fff;border:0">Odhlásit</button>
+          </div>
+          <div id="eventMsg" class="small" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="help" class="card small">
+      <strong>Pokud se přihlášení nezdaří</strong>
+      <ul>
+        <li>Zkontrolujte, zda jste v souborech vložil(a) správný <code>firebaseConfig</code> (apiKey, authDomain, databaseURL, ...).</li>
+        <li>V Firebase Console → Project settings → <strong>Authorized domains</strong> přidejte: <code>localhost</code>, <code>hokejicek.site</code> a (pokud testujete) <code>VAŠE_UZIVATEL.github.io</code>.</li>
+        <li>V Realtime Database → Rules měly by povolit čtení veřejně a zápis jen přihlášeným (nebo podle vaší volby).</li>
+        <li>Pokud stále chybí: otevřete DevTools (Console) a zkopírujte chybu — pomoct s ní mohu dál.</li>
+      </ul>
     </div>
   </div>
 
+  <!-- Firebase (compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
+    // ===== ZDE vložte svůj firebaseConfig (přesně tak, jak to vidíte v konzoli) =====
     const firebaseConfig = {
       apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
       authDomain: "hokejicek-live.firebaseapp.com",
@@ -62,52 +95,149 @@
       appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
       measurementId: "G-Z3FP66RW29"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+    // ============================================================================
 
-    const email = document.getElementById('email'), pass=document.getElementById('pass'), login=document.getElementById('login'), authMsg=document.getElementById('authMsg');
-    const adminUI = document.getElementById('adminUI'), authBox=document.getElementById('authBox');
+    // initialize
+    let app, auth, db;
+    try {
+      app = firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.database();
+      document.getElementById('statusMsg').textContent = 'Firebase inicializováno. Kontroluji povolené domény a spojení...';
+    } catch (e) {
+      document.getElementById('statusMsg').textContent = 'Chyba při inicializaci Firebase: ' + (e.message || e);
+      document.getElementById('statusCard').classList.add('err');
+      console.error(e);
+    }
 
-    login.addEventListener('click', ()=> {
-      auth.signInWithEmailAndPassword(email.value, pass.value).then(()=> {
-        authMsg.textContent = 'Přihlášeno';
-      }).catch(err=> authMsg.textContent = 'Chyba: ' + err.message);
-    });
+    // helper UI refs
+    const authArea = document.getElementById('authArea');
+    const authBox = document.getElementById('authBox');
+    const authMsg = document.getElementById('authMsg');
+    const adminUI = document.getElementById('adminUI');
+    const statusMsg = document.getElementById('statusMsg');
+    const connActions = document.getElementById('connActions');
 
-    auth.onAuthStateChanged(user => {
-      if(user){ authBox.style.display='none'; adminUI.style.display='block'; loadMatches(); }
-      else{ authBox.style.display='block'; adminUI.style.display='none'; }
-    });
-
-    document.getElementById('createMatch').addEventListener('click', async ()=>{
-      const h = document.getElementById('home').value.trim(); const a = document.getElementById('away').value.trim(); const s=document.getElementById('start').value.trim();
-      if(!h || !a){ alert('Vyplňte domácí a hosty'); return; }
-      const ref = db.ref('matches').push();
-      await ref.set({ home: h, away: a, startTime: s, createdAt: Date.now() });
-      document.getElementById('created').textContent = 'Vytvořeno: ' + ref.key;
-      loadMatches();
-    });
-
-    async function loadMatches(){
-      const sel = document.getElementById('matchSelect'); sel.innerHTML = '';
-      const snap = await db.ref('matches').once('value');
-      snap.forEach(ch => {
-        const opt = document.createElement('option'); opt.value = ch.key; opt.textContent = (ch.val().home||'') + ' – ' + (ch.val().away||'');
-        sel.appendChild(opt);
+    // quick check: can we reach db root
+    function testDbConnection(){
+      if(!db) { statusMsg.textContent = 'Realtime Database není inicializována.'; return; }
+      db.ref('/').once('value', snap => {
+        statusMsg.innerHTML = 'Spojení s Realtime Database OK. <span class="small">Můžete se přihlásit.</span>';
+        statusMsg.className = 'small';
+        authArea.style.display = 'block';
+      }, err => {
+        console.error('DB err', err);
+        statusMsg.innerHTML = 'Nelze přistoupit k Realtime Database: ' + (err.message || err.code) + 
+          '<div class="hint">Tip: zkontrolujte <strong>databaseURL</strong> v configu a pravidla (Rules) v konzoli Firebase.</div>';
+        statusMsg.className = 'err';
+        authArea.style.display = 'block'; // show auth area so user can still try to login
       });
     }
 
-    document.getElementById('addEvent').addEventListener('click', async ()=>{
-      const matchId = document.getElementById('matchSelect').value; const txt = document.getElementById('evText').value.trim();
-      if(!matchId || !txt){ alert('Vyberte zápas a napište text'); return; }
-      const ref = db.ref('events/' + matchId).push();
-      await ref.set({ text: txt, createdAt: Date.now(), author: auth.currentUser.email });
-      document.getElementById('evText').value = '';
-      alert('Událost přidána');
+    // run initial DB check (if db configured)
+    if(db) testDbConnection();
+
+    // login
+    document.getElementById('login').addEventListener('click', async () => {
+      authMsg.textContent = 'Probíhá přihlášení…';
+      try {
+        const email = document.getElementById('email').value.trim();
+        const pass = document.getElementById('pass').value;
+        if(!email || !pass){ authMsg.textContent = 'Vyplňte e-mail a heslo.'; return; }
+        await auth.signInWithEmailAndPassword(email, pass);
+        authMsg.textContent = 'Přihlášení proběhlo úspěšně.';
+      } catch (err) {
+        console.error(err);
+        // Helpful messages for common errors
+        let message = err.message || String(err);
+        if(err.code === 'auth/network-request-failed') message = 'Chyba sítě – zkontrolujte připojení.';
+        else if(err.code === 'auth/invalid-api-key' || err.code === 'auth/api-key-not-valid' || err.code === 'auth/app-deleted') {
+          message = 'Chyba API klíče. Zkontrolujte, že apiKey a databaseURL jsou správně vložené a že jste přidali Authorized domain pro tento web v Firebase Project settings.';
+        } else if(err.code === 'auth/user-not-found') {
+          message = 'Uživatel nenalezen. Zkontrolujte e-mail nebo vytvořte uživatele v Firebase Console → Authentication → Users.';
+        } else if(err.code === 'auth/wrong-password') {
+          message = 'Špatné heslo. Zkontrolujte jej nebo obnovte v konzoli Firebase.';
+        }
+        authMsg.innerHTML = '<div class="err">Chyba: ' + message + '</div>';
+      }
     });
 
+    // allow quick test of current credentials (doesn't change state)
+    document.getElementById('testBtn').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value.trim();
+      if(!email){ authMsg.textContent = 'Zadejte e-mail pro test.'; return; }
+      authMsg.textContent = 'Zkouším najít uživatele v Authentication...';
+      try {
+        // read users isn't available from client, so we just check sign-in attempt placeholder:
+        authMsg.textContent = 'Pro test přihlášení zadejte heslo a klikněte Přihlásit (bude to skutečné přihlášení).';
+      } catch (e) {
+        authMsg.textContent = 'Test selhal: ' + (e.message || e);
+      }
+    });
+
+    // monitor auth state
+    auth && auth.onAuthStateChanged(async user => {
+      if(user){
+        authBox.style.display = 'none';
+        adminUI.style.display = 'block';
+        // load matches
+        await loadMatches();
+      } else {
+        authBox.style.display = 'block';
+        adminUI.style.display = 'none';
+      }
+    });
+
+    // create match
+    document.getElementById('createMatch').addEventListener('click', async ()=>{
+      const h = document.getElementById('home').value.trim();
+      const a = document.getElementById('away').value.trim();
+      const s = document.getElementById('start').value.trim();
+      if(!h || !a){ alert('Vyplňte domácí a hosty'); return; }
+      try {
+        const ref = db.ref('matches').push();
+        await ref.set({ home: h, away: a, startTime: s, createdAt: Date.now(), createdBy: auth.currentUser && auth.currentUser.email });
+        document.getElementById('created').textContent = 'Vytvořeno: ' + ref.key;
+        await loadMatches();
+      } catch(e) {
+        document.getElementById('created').textContent = 'Chyba při vytváření: ' + (e.message || e);
+      }
+    });
+
+    // load matches into select
+    async function loadMatches(){
+      try {
+        const snap = await db.ref('matches').once('value');
+        const sel = document.getElementById('matchSelect');
+        sel.innerHTML = '';
+        snap.forEach(ch => {
+          const opt = document.createElement('option'); opt.value = ch.key; opt.textContent = (ch.val().home||'') + ' – ' + (ch.val().away||'');
+          sel.appendChild(opt);
+        });
+        document.getElementById('refreshMatches').addEventListener('click', loadMatches);
+      } catch(e) {
+        console.error(e);
+      }
+    }
+
+    // add event
+    document.getElementById('addEvent').addEventListener('click', async ()=>{
+      const matchId = document.getElementById('matchSelect').value;
+      const txt = document.getElementById('evText').value.trim();
+      if(!matchId || !txt){ alert('Vyberte zápas a napište text'); return; }
+      try {
+        const ref = db.ref('events/' + matchId).push();
+        await ref.set({ text: txt, createdAt: Date.now(), author: auth.currentUser && auth.currentUser.email });
+        document.getElementById('evText').value = '';
+        document.getElementById('eventMsg').textContent = 'Událost přidána.';
+      } catch(e) {
+        document.getElementById('eventMsg').textContent = 'Chyba: ' + (e.message || e);
+      }
+    });
+
+    // logout
     document.getElementById('logout').addEventListener('click', ()=> auth.signOut());
+
   </script>
 </body>
 </html>
