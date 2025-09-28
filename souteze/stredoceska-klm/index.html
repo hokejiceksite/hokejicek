@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krajská liga mužů – Středočeský kraj | Hokejíček</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      color: #222;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 2px solid #e2e2e2;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d62828;
+    }
+    nav a {
+      text-decoration: none;
+      margin-left: 20px;
+      color: #333;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #d62828;
+    }
+
+    .league {
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .league h1 {
+      font-size: 32px;
+      margin-bottom: 15px;
+      color: #d62828;
+    }
+    .league p {
+      font-size: 16px;
+      margin-bottom: 40px;
+      color: #555;
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .team {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #eaeaea;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .team:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .team img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .team p {
+      margin: 0;
+      font-size: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    footer {
+      margin-top: 60px;
+      background: #f1f1f1;
+      padding: 20px;
+      font-size: 14px;
+      text-align: center;
+      border-top: 2px solid #e2e2e2;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">🏒 Hokejíček</div>
+    <nav>
+      <a href="/">Hlavní stránka</a>
+      <a href="/souteze/">Soutěže</a>
+      <a href="/o-projektu/">O projektu</a>
+    </nav>
+  </header>
+
+  <section class="league">
+    <h1>Krajská liga mužů – Středočeský kraj</h1>
+    <p>Loga všech týmů hrajících KLM ve Středočeském kraji.</p>
+
+    <div class="teams">
+      <div class="team">
+        <img src="/images/bkmladaboleslav.png" alt="BK Mladá Boleslav B">
+        <p>BK Mladá Boleslav B</p>
+      </div>
+      <div class="team">
+        <img src="/images/flyers.png" alt="Flyers Hockey Team">
+        <p>Flyers Hockey Team</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcbenatkynadjizerou.png" alt="HC Benátky n.J. B">
+        <p>HC Benátky n.J. B</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcberoun.png" alt="HC Berounští Medvědi">
+        <p>HC Berounští Medvědi</p>
+      </div>
+      <div class="team">
+        <img src="/images/hchvezdapraha.png" alt="HC Hvězda Praha">
+        <p>HC Hvězda Praha</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcmelnik.png" alt="HC Junior Mělník">
+        <p>HC Junior Mělník</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcbenesov.png" alt="HC Lev Benešov">
+        <p>HC Lev Benešov</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcpodebrady.png" alt="HC Poděbrady">
+        <p>HC Poděbrady</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcrakovnik.png" alt="HC Rakovník">
+        <p>HC Rakovník</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcvlasim.png" alt="HC Rytíři Vlašim">
+        <p>HC Rytíři Vlašim</p>
+      </div>
+      <div class="team">
+        <img src="/images/hczabonosy.png" alt="HC Žabonosy">
+        <p>HC Žabonosy</p>
+      </div>
+      <div class="team">
+        <img src="/images/hkslany.png" alt="HK Lev Slaný">
+        <p>HK Lev Slaný</p>
+      </div>
+      <div class="team">
+        <img src="/images/hccaslav.png" alt="Hokejový klub Čáslav">
+        <p>Hokejový klub Čáslav</p>
+      </div>
+      <div class="team">
+        <img src="/images/skcernosice.png" alt="SK Černošice">
+        <p>SK Černošice</p>
+      </div>
+      <div class="team">
+        <img src="/images/skkutnahora.png" alt="SK Sršni Kutná Hora">
+        <p>SK Sršni Kutná Hora</p>
+      </div>
+      <div class="team">
+        <img src="/images/hcvelkepopovice.png" alt="Slavoj Vel. Popovice">
+        <p>Slavoj Vel. Popovice</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Hokejíček | Loga hokejových týmů pro fanoušky
+  </footer>
+
+</body>
+</html>
