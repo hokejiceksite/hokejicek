@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hokejíček — Přenos</title>
+<link rel="icon" href="/favicon.png">
+<style>
+  body{font-family:Inter,system-ui,Arial;margin:14px;background:#fff;color:#0b1530}
+  .wrap{max-width:900px;margin:0 auto}
+  .event{border-bottom:1px solid #eef6ff;padding:8px 0}
+  .time{color:#6b7c8f;font-size:12px}
+  .card{border:1px solid #e6eef6;padding:12px;border-radius:10px;margin-top:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="/">← Zpět</a>
+    <h1 id="title">Přenos</h1>
+    <div id="meta" class="small"></div>
+    <div class="card" id="events" style="margin-top:12px;padding:12px;border-radius:10px"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
+      authDomain: "hokejicek-live.firebaseapp.com",
+      databaseURL: "https://hokejicek-live-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hokejicek-live",
+      storageBucket: "hokejicek-live.appspot.com",
+      messagingSenderId: "382599668613",
+      appId: "1:382599668613:web:737bc3dd697bc5a1f95aec",
+      measurementId: "G-Z3FP66RW29"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const params = new URLSearchParams(location.search);
+    const matchId = params.get('id');
+    if(!matchId){ document.getElementById('events').textContent='Chybí id zápasu.'; throw new Error('no id'); }
+
+    const title = document.getElementById('title');
+    const meta = document.getElementById('meta');
+    const events = document.getElementById('events');
+
+    // load match info
+    db.ref('matches/'+matchId).once('value').then(snap=>{
+      const d = snap.val();
+      if(!d) { title.textContent='Neznámý přenos'; return; }
+      title.textContent = (d.home||'Home') + ' — ' + (d.away||'Away');
+      meta.textContent = d.startTime ? 'Start: ' + d.startTime : '';
+    });
+
+    // listen events
+    db.ref('events/'+matchId).on('child_added', snap => {
+      const ev = snap.val();
+      const el = document.createElement('div'); el.className='event';
+      el.innerHTML = `<div class="time">${new Date(ev.createdAt).toLocaleString()}</div><div>${ev.text}</div>`;
+      events.appendChild(el);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
+</body>
+</html>
