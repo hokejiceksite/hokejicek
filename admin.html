@@ -19,6 +19,7 @@
   .hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px;border-radius:6px;margin-top:8px}
   .err{background:#fff1f2;border-left:4px solid #ef4444;padding:10px;border-radius:6px;margin-top:8px;color:#7f1d1d}
   .success{background:#ecfdf5;border-left:4px solid #10b981;padding:10px;border-radius:6px;margin-top:8px;color:#065f46}
+  .muted{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -68,23 +69,25 @@
     </div>
 
     <div id="help" class="card small">
-      <strong>Pokud se přihlášení nezdaří</strong>
+      <strong>Nejčastější problémy a řešení</strong>
       <ul>
-        <li>Zkontrolujte, zda jste v souborech vložil(a) správný <code>firebaseConfig</code> (apiKey, authDomain, databaseURL, ...).</li>
-        <li>V Firebase Console → Project settings → <strong>Authorized domains</strong> přidejte: <code>localhost</code>, <code>hokejicek.site</code> a (pokud testujete) <code>VAŠE_UZIVATEL.github.io</code>.</li>
-        <li>V Realtime Database → Rules měly by povolit čtení veřejně a zápis jen přihlášeným (nebo podle vaší volby).</li>
-        <li>Pokud stále chybí: otevřete DevTools (Console) a zkopírujte chybu — pomoct s ní mohu dál.</li>
+        <li>Zkontrolujte, že jste v souboru ponechal(a) přesný <code>firebaseConfig</code> (nejlépe copy/paste z konzole).</li>
+        <li>V Firebase Console → Project settings → <strong>Authorized domains</strong> přidejte: <code>localhost</code>, <code>hokejicek.site</code> a <code>VAŠE_UZIV_JMENO.github.io</code> (pokud používáte Pages).</li>
+        <li>V Realtime Database → Rules nastavit například:
+          <pre>{ "rules": { ".read": true, ".write": "auth != null" } }</pre>
+        </li>
+        <li>Pokud dostanete chybu typu <em>api-key-not-valid</em>, zkontrolujte, že v configu máte i <code>databaseURL</code> a že config je přesně z konzole.</li>
       </ul>
     </div>
   </div>
 
-  <!-- Firebase (compat) -->
+  <!-- Firebase (compat) - vhodné pro čisté HTML bez bundleru -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // ===== ZDE vložte svůj firebaseConfig (přesně tak, jak to vidíte v konzoli) =====
+    // ======= VLOŽTE sem přesný firebaseConfig z Firebase Console (copy/paste) =======
     const firebaseConfig = {
       apiKey: "AIzaSyCpbltZZZ1xq91rL9i92ZBdTNJLSyiahSK",
       authDomain: "hokejicek-live.firebaseapp.com",
@@ -97,30 +100,34 @@
     };
     // ============================================================================
 
-    // initialize
+    // Inicializace
     let app, auth, db;
     try {
       app = firebase.initializeApp(firebaseConfig);
       auth = firebase.auth();
       db = firebase.database();
-      document.getElementById('statusMsg').textContent = 'Firebase inicializováno. Kontroluji povolené domény a spojení...';
+      document.getElementById('statusMsg').textContent = 'Firebase inicializováno. Testuji připojení k DB...';
     } catch (e) {
       document.getElementById('statusMsg').textContent = 'Chyba při inicializaci Firebase: ' + (e.message || e);
       document.getElementById('statusCard').classList.add('err');
       console.error(e);
     }
 
-    // helper UI refs
+    // UI refs
     const authArea = document.getElementById('authArea');
     const authBox = document.getElementById('authBox');
     const authMsg = document.getElementById('authMsg');
     const adminUI = document.getElementById('adminUI');
     const statusMsg = document.getElementById('statusMsg');
-    const connActions = document.getElementById('connActions');
 
-    // quick check: can we reach db root
+    // Test DB connection
     function testDbConnection(){
-      if(!db) { statusMsg.textContent = 'Realtime Database není inicializována.'; return; }
+      if(!db){
+        statusMsg.textContent = 'Realtime Database není inicializována (chybí databaseURL?).';
+        statusMsg.className = 'err';
+        authArea.style.display = 'block';
+        return;
+      }
       db.ref('/').once('value', snap => {
         statusMsg.innerHTML = 'Spojení s Realtime Database OK. <span class="small">Můžete se přihlásit.</span>';
         statusMsg.className = 'small';
@@ -128,16 +135,15 @@
       }, err => {
         console.error('DB err', err);
         statusMsg.innerHTML = 'Nelze přistoupit k Realtime Database: ' + (err.message || err.code) + 
-          '<div class="hint">Tip: zkontrolujte <strong>databaseURL</strong> v configu a pravidla (Rules) v konzoli Firebase.</div>';
+          '<div class="hint">Zkontrolujte <strong>databaseURL</strong> v configu a pravidla (Rules) v konzoli Firebase.</div>';
         statusMsg.className = 'err';
-        authArea.style.display = 'block'; // show auth area so user can still try to login
+        authArea.style.display = 'block';
       });
     }
 
-    // run initial DB check (if db configured)
     if(db) testDbConnection();
 
-    // login
+    // Přihlášení
     document.getElementById('login').addEventListener('click', async () => {
       authMsg.textContent = 'Probíhá přihlášení…';
       try {
@@ -148,7 +154,6 @@
         authMsg.textContent = 'Přihlášení proběhlo úspěšně.';
       } catch (err) {
         console.error(err);
-        // Helpful messages for common errors
         let message = err.message || String(err);
         if(err.code === 'auth/network-request-failed') message = 'Chyba sítě – zkontrolujte připojení.';
         else if(err.code === 'auth/invalid-api-key' || err.code === 'auth/api-key-not-valid' || err.code === 'auth/app-deleted') {
@@ -162,17 +167,11 @@
       }
     });
 
-    // allow quick test of current credentials (doesn't change state)
+    // Test tlačítko (nemění stav, jen instrukce)
     document.getElementById('testBtn').addEventListener('click', async ()=>{
       const email = document.getElementById('email').value.trim();
       if(!email){ authMsg.textContent = 'Zadejte e-mail pro test.'; return; }
-      authMsg.textContent = 'Zkouším najít uživatele v Authentication...';
-      try {
-        // read users isn't available from client, so we just check sign-in attempt placeholder:
-        authMsg.textContent = 'Pro test přihlášení zadejte heslo a klikněte Přihlásit (bude to skutečné přihlášení).';
-      } catch (e) {
-        authMsg.textContent = 'Test selhal: ' + (e.message || e);
-      }
+      authMsg.textContent = 'Pro test přihlášení zadejte heslo a klikněte Přihlásit.';
     });
 
     // monitor auth state
@@ -180,7 +179,6 @@
       if(user){
         authBox.style.display = 'none';
         adminUI.style.display = 'block';
-        // load matches
         await loadMatches();
       } else {
         authBox.style.display = 'block';
@@ -188,7 +186,7 @@
       }
     });
 
-    // create match
+    // Vytvořit zápas
     document.getElementById('createMatch').addEventListener('click', async ()=>{
       const h = document.getElementById('home').value.trim();
       const a = document.getElementById('away').value.trim();
@@ -204,7 +202,7 @@
       }
     });
 
-    // load matches into select
+    // Načíst zápasy
     async function loadMatches(){
       try {
         const snap = await db.ref('matches').once('value');
@@ -214,13 +212,12 @@
           const opt = document.createElement('option'); opt.value = ch.key; opt.textContent = (ch.val().home||'') + ' – ' + (ch.val().away||'');
           sel.appendChild(opt);
         });
-        document.getElementById('refreshMatches').addEventListener('click', loadMatches);
       } catch(e) {
         console.error(e);
       }
     }
 
-    // add event
+    // Přidat událost
     document.getElementById('addEvent').addEventListener('click', async ()=>{
       const matchId = document.getElementById('matchSelect').value;
       const txt = document.getElementById('evText').value.trim();
@@ -235,9 +232,8 @@
       }
     });
 
-    // logout
+    document.getElementById('refreshMatches').addEventListener('click', loadMatches);
     document.getElementById('logout').addEventListener('click', ()=> auth.signOut());
-
   </script>
 </body>
 </html>
