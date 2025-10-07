@@ -89,7 +89,6 @@ section h2 {
   margin-bottom: 10px;
 }
 .timer {
-  color: #ff6666;
   font-weight: 500;
   font-size: 15px;
   margin-bottom: 15px;
@@ -187,7 +186,6 @@ async function loadStreams() {
       <a href="${s.url}" target="_blank">Sledovat</a>
     `;
 
-    // podle kategorie
     if (s.category === "featured" || s.category === "both") {
       featured.appendChild(card.cloneNode(true));
     }
@@ -201,19 +199,32 @@ async function loadStreams() {
 
 function startCountdown(time, elementId) {
   const el = document.getElementById(elementId);
+
   function update() {
     const now = new Date();
     const [hours, minutes] = time.split(":").map(Number);
     const target = new Date();
     target.setHours(hours, minutes, 0, 0);
-    if (target < now) target.setDate(target.getDate() + 1);
 
     const diff = target - now;
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-    el.textContent = `${h}h ${m}m ${s}s`;
+
+    if (diff > 0) {
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      el.textContent = `Začíná za ${h}h ${m}m ${s}s`;
+      el.style.color = "#ff6666";
+    } 
+    else if (diff <= 0 && diff > -3.5 * 60 * 60 * 1000) { 
+      el.textContent = "🟢 Zápas právě probíhá";
+      el.style.color = "#00e676";
+    } 
+    else {
+      el.textContent = "🔴 Zápas skončil";
+      el.style.color = "#ff5252";
+    }
   }
+
   update();
   setInterval(update, 1000);
 }
