@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin | Hokejíček</title></head>
+<body>
+<h1>Admin panel – přenosy</h1>
+
+<div id="loginBox">
+  <input id="email" placeholder="E-mail"><br>
+  <input id="password" type="password" placeholder="Heslo"><br>
+  <button id="loginBtn">Přihlásit se</button>
+  <p id="loginError"></p>
+</div>
+
+<div id="adminPanel" style="display:none;">
+  <h2>Nový přenos</h2>
+  <input id="title" placeholder="Název zápasu"><br>
+  <input id="date" placeholder="Datum a čas"><br>
+  <input id="url" placeholder="Odkaz (.m3u8 nebo web)"><br>
+  <button id="addBtn">Přidat přenos</button>
+  <p id="status"></p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "TVŮJ_API_KEY",
+  authDomain: "TVŮJ_PROJECT.firebaseapp.com",
+  projectId: "TVŮJ_PROJECT",
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+document.getElementById("loginBtn").onclick = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (e) {
+    document.getElementById("loginError").innerText = "Chyba: " + e.message;
+  }
+};
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+  } else {
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("adminPanel").style.display = "none";
+  }
+});
+
+document.getElementById("addBtn").onclick = async () => {
+  const title = document.getElementById("title").value;
+  const date = document.getElementById("date").value;
+  const url = document.getElementById("url").value;
+  try {
+    await db.collection("streams").add({ title, date, url });
+    document.getElementById("status").innerText = "✅ Přenos přidán!";
+  } catch (e) {
+    document.getElementById("status").innerText = "❌ Chyba při ukládání: " + e.message;
+  }
+};
+</script>
+</body>
+</html>
