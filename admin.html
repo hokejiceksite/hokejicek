@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin | Hokejíček</title></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin | Hokejíček</title>
+<style>
+body { background:#0a0f1c; color:white; font-family:Arial; padding:30px; }
+input { display:block; margin:5px 0; padding:8px; border-radius:6px; border:none; width:250px; }
+button { padding:10px 20px; background:#3a82f7; border:none; color:white; border-radius:8px; cursor:pointer; }
+#adminPanel { display:none; }
+</style>
+</head>
 <body>
-<h1>Admin panel – přenosy</h1>
+<h1>Správa přenosů</h1>
 
 <div id="loginBox">
-  <input id="email" placeholder="E-mail"><br>
-  <input id="password" type="password" placeholder="Heslo"><br>
+  <input id="email" placeholder="E-mail">
+  <input id="password" type="password" placeholder="Heslo">
   <button id="loginBtn">Přihlásit se</button>
   <p id="loginError"></p>
 </div>
 
-<div id="adminPanel" style="display:none;">
-  <h2>Nový přenos</h2>
-  <input id="title" placeholder="Název zápasu"><br>
-  <input id="date" placeholder="Datum a čas"><br>
-  <input id="url" placeholder="Odkaz (.m3u8 nebo web)"><br>
-  <button id="addBtn">Přidat přenos</button>
+<div id="adminPanel">
+  <h2>Přidat přenos</h2>
+  <input id="title" placeholder="Název zápasu">
+  <input id="date" placeholder="Datum a čas">
+  <input id="url" placeholder="Odkaz na stream (.m3u8)">
+  <button id="addBtn">💾 Uložit přenos</button>
   <p id="status"></p>
 </div>
 
@@ -27,9 +34,13 @@
 
 <script>
 const firebaseConfig = {
-  apiKey: "TVŮJ_API_KEY",
-  authDomain: "TVŮJ_PROJECT.firebaseapp.com",
-  projectId: "TVŮJ_PROJECT",
+  apiKey: "AIzaSyAjDSUsGEEw1js7tlEiF98Sp0ZYyfhHxa4",
+  authDomain: "hokejicek-65a98.firebaseapp.com",
+  projectId: "hokejicek-65a98",
+  storageBucket: "hokejicek-65a98.firebasestorage.app",
+  messagingSenderId: "699646619013",
+  appId: "1:699646619013:web:3672cd198683e1e035e8ec",
+  measurementId: "G-3YEPQ41LYX"
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -41,11 +52,11 @@ document.getElementById("loginBtn").onclick = async () => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
   } catch (e) {
-    document.getElementById("loginError").innerText = "Chyba: " + e.message;
+    document.getElementById("loginError").innerText = "❌ " + e.message;
   }
 };
 
-auth.onAuthStateChanged(async (user) => {
+auth.onAuthStateChanged(user => {
   if (user) {
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("adminPanel").style.display = "block";
@@ -63,7 +74,7 @@ document.getElementById("addBtn").onclick = async () => {
     await db.collection("streams").add({ title, date, url });
     document.getElementById("status").innerText = "✅ Přenos přidán!";
   } catch (e) {
-    document.getElementById("status").innerText = "❌ Chyba při ukládání: " + e.message;
+    document.getElementById("status").innerText = "❌ Chyba: " + e.message;
   }
 };
 </script>
