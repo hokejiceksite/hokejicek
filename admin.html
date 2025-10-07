@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel | Hokejíček</title>
 <style>
 body {
@@ -14,7 +14,6 @@ body {
   display: flex;
   justify-content: center;
 }
-
 .container {
   background-color: #111;
   padding: 30px 40px;
@@ -22,13 +21,11 @@ body {
   width: 700px;
   box-shadow: 0 0 30px rgba(0,0,0,0.7);
 }
-
 h1 {
   color: #fff;
   text-align: center;
-  margin-bottom: 0;
+  margin-bottom: 5px;
 }
-
 h2 {
   color: #bbb;
   text-align: center;
@@ -36,8 +33,7 @@ h2 {
   margin-top: 5px;
   margin-bottom: 30px;
 }
-
-input, textarea {
+input {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
@@ -46,7 +42,6 @@ input, textarea {
   background: #222;
   color: #fff;
 }
-
 button {
   background-color: #3a82f7;
   border: none;
@@ -56,11 +51,7 @@ button {
   cursor: pointer;
   transition: 0.2s;
 }
-
-button:hover {
-  background-color: #2f6ee0;
-}
-
+button:hover { background-color: #2f6ee0; }
 .stream {
   background: #1a1a1a;
   border-radius: 15px;
@@ -68,23 +59,16 @@ button:hover {
   margin-top: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
-
 .stream-title {
   font-weight: bold;
   color: #6fa8ff;
   margin-bottom: 5px;
 }
-
-.stream-actions {
-  margin-top: 8px;
-}
-
 .stream-actions button {
   margin-right: 6px;
   background: #2b2b2b;
   color: #6fa8ff;
 }
-
 .stream-actions button:hover {
   background: #3a82f7;
   color: white;
@@ -109,11 +93,11 @@ button:hover {
     <label>Název zápasu:</label>
     <input id="title" placeholder="Např. HC Vlašim vs HC Benešov">
 
-    <label>Datum a čas:</label>
-    <input id="date" placeholder="Např. 2025-10-20 17:30">
+    <label>Čas začátku (např. 10:00 nebo 19:30):</label>
+    <input id="time" placeholder="10:00">
 
     <label>Odkaz na přenos:</label>
-    <input id="url" placeholder="https://example.com/stream.m3u8">
+    <input id="url" placeholder="https://nějakástránka.cz/stream">
 
     <button id="addBtn">Přidat přenos</button>
     <p id="status"></p>
@@ -166,7 +150,7 @@ auth.onAuthStateChanged(user => {
 });
 
 async function loadStreams() {
-  const snapshot = await db.collection("streams").orderBy("date", "asc").get();
+  const snapshot = await db.collection("streams").get();
   streamList.innerHTML = "";
   snapshot.forEach(doc => {
     const s = doc.data();
@@ -174,10 +158,10 @@ async function loadStreams() {
     div.className = "stream";
     div.innerHTML = `
       <div class="stream-title">🎥 ${s.title}</div>
-      <div>${s.date}</div>
+      <div>🕒 ${s.time}</div>
       <a href="${s.url}" target="_blank" style="color:#6fa8ff">${s.url}</a>
       <div class="stream-actions">
-        <button onclick="editStream('${doc.id}','${s.title}','${s.date}','${s.url}')">✏️ Upravit</button>
+        <button onclick="editStream('${doc.id}','${s.title}','${s.time}','${s.url}')">✏️ Upravit</button>
         <button onclick="deleteStream('${doc.id}')">🗑️ Smazat</button>
       </div>
     `;
@@ -187,16 +171,16 @@ async function loadStreams() {
 
 document.getElementById("addBtn").onclick = async () => {
   const title = document.getElementById("title").value;
-  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
   const url = document.getElementById("url").value;
-  if (!title || !date || !url) {
+  if (!title || !time || !url) {
     document.getElementById("status").innerText = "⚠️ Vyplň všechna pole!";
     return;
   }
-  await db.collection("streams").add({ title, date, url });
+  await db.collection("streams").add({ title, time, url });
   document.getElementById("status").innerText = "✅ Přenos přidán!";
   document.getElementById("title").value = "";
-  document.getElementById("date").value = "";
+  document.getElementById("time").value = "";
   document.getElementById("url").value = "";
   loadStreams();
 };
@@ -208,18 +192,18 @@ async function deleteStream(id) {
   }
 }
 
-function editStream(id, title, date, url) {
+function editStream(id, title, time, url) {
   document.getElementById("title").value = title;
-  document.getElementById("date").value = date;
+  document.getElementById("time").value = time;
   document.getElementById("url").value = url;
   document.getElementById("status").innerHTML = `✏️ Úprava přenosu... <button onclick="saveEdit('${id}')">Uložit změny</button>`;
 }
 
 async function saveEdit(id) {
   const title = document.getElementById("title").value;
-  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
   const url = document.getElementById("url").value;
-  await db.collection("streams").doc(id).update({ title, date, url });
+  await db.collection("streams").doc(id).update({ title, time, url });
   document.getElementById("status").innerText = "✅ Změny uloženy!";
   loadStreams();
 }
