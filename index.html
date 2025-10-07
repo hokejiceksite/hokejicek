@@ -6,93 +6,145 @@
 <title>Přenosy | Hokejíček</title>
 <style>
 body {
-  background-color: #0d0d0d;
-  color: #f5f5f5;
+  background-color: #0b0b0b;
+  color: #f2f2f2;
   font-family: "Poppins", Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
-header {
-  text-align: center;
-  padding: 40px 10px 20px;
+
+/* 🔺 Horní panel */
+nav {
+  background-color: #141414;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 50px;
+  box-shadow: 0 2px 15px rgba(255, 0, 0, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
-header h1 {
+nav .logo {
   color: #ff3b3b;
-  font-size: 32px;
+  font-size: 24px;
+  font-weight: 700;
   letter-spacing: 1px;
-  margin-bottom: 10px;
 }
-header p {
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 30px;
+}
+nav ul li a {
   color: #ccc;
-  font-size: 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
 }
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 30px 60px;
+nav ul li a:hover {
+  color: #ff3b3b;
+}
+
+/* 🔻 Sekce */
+section {
+  padding: 40px 20px;
+  text-align: center;
+}
+section h2 {
+  color: #ff3b3b;
+  font-size: 26px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 🎴 Karty */
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 25px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .card {
-  background: #141414;
-  border-radius: 20px;
-  padding: 25px 20px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
-  transition: 0.3s;
+  background: #181818;
+  border-radius: 16px;
+  padding: 25px 15px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow: 0 0 25px rgba(255, 0, 0, 0.3);
 }
-.card h2 {
+.card h3 {
   color: #fff;
-  font-size: 18px;
-  margin-bottom: 8px;
+  font-size: 17px;
+  margin-bottom: 10px;
 }
 .timer {
-  font-size: 15px;
-  margin-bottom: 15px;
   color: #ff6666;
   font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 15px;
 }
 .card a {
   display: inline-block;
-  background: #ff3b3b;
-  color: white;
-  padding: 10px 25px;
+  padding: 10px 22px;
   border-radius: 10px;
+  background: #ff3b3b;
+  color: #fff;
   font-weight: bold;
   text-decoration: none;
-  transition: 0.25s;
+  transition: 0.2s;
 }
 .card a:hover {
-  background: #e32e2e;
+  background: #e52d2d;
 }
+
+/* 🧱 Footer */
 footer {
   text-align: center;
   color: #777;
   font-size: 13px;
   padding: 20px;
+  margin-top: 30px;
   border-top: 1px solid #222;
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🔥 Přenosy Hokejíček</h1>
-  <p>Sleduj nejnovější hokejové zápasy živě</p>
-</header>
+<!-- 🔺 Navigace -->
+<nav>
+  <div class="logo">HOKEJICEK</div>
+  <ul>
+    <li><a href="#">Domů</a></li>
+    <li><a href="#">Streamy</a></li>
+    <li><a href="#">Záznamy</a></li>
+    <li><a href="#">O projektu</a></li>
+  </ul>
+</nav>
 
-<main class="container" id="streams">
-  <p style="text-align:center;width:100%;">Načítám přenosy...</p>
-</main>
+<!-- 🔻 Sekce 1 -->
+<section>
+  <h2>Nejbližší přenosy</h2>
+  <div class="grid" id="upcoming"></div>
+</section>
 
-<footer>
-  © 2025 Hokejíček | Všechna práva vyhrazena
-</footer>
+<!-- 🔻 Sekce 2 -->
+<section>
+  <h2>Všechny přenosy</h2>
+  <div class="grid" id="streams"></div>
+</section>
+
+<footer>© 2025 Hokejíček | Všechna práva vyhrazena</footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -111,13 +163,15 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 async function loadStreams() {
-  const container = document.getElementById("streams");
-  container.innerHTML = "";
+  const all = document.getElementById("streams");
+  const upcoming = document.getElementById("upcoming");
+  all.innerHTML = "";
+  upcoming.innerHTML = "";
 
   const snapshot = await db.collection("streams").get();
 
   if (snapshot.empty) {
-    container.innerHTML = "<p style='text-align:center;width:100%;'>Momentálně nejsou naplánovány žádné přenosy.</p>";
+    all.innerHTML = "<p>Momentálně nejsou naplánovány žádné přenosy.</p>";
     return;
   }
 
@@ -126,12 +180,14 @@ async function loadStreams() {
     const card = document.createElement("div");
     card.className = "card";
     const timerId = "timer-" + doc.id;
+
     card.innerHTML = `
-      <h2>🏒 ${s.title}</h2>
+      <h3>🏒 ${s.title}</h3>
       <div class="timer" id="${timerId}">⏳ Počítám...</div>
       <a href="${s.url}" target="_blank">Sledovat</a>
     `;
-    container.appendChild(card);
+
+    all.appendChild(card);
     startCountdown(s.time, timerId);
   });
 }
@@ -143,8 +199,6 @@ function startCountdown(time, elementId) {
     const [hours, minutes] = time.split(":").map(Number);
     const target = new Date();
     target.setHours(hours, minutes, 0, 0);
-
-    // pokud čas už dnes proběhl, nastav ho na zítřek
     if (target < now) target.setDate(target.getDate() + 1);
 
     const diff = target - now;
