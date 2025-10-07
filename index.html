@@ -4,31 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Přenosy | Hokejíček</title>
+<style>
+body {
+  background: #0a0f1c;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+h1 { color: #3a82f7; }
+.stream {
+  background: #1b2238;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+a {
+  color: #6fa8ff;
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 <h1>🎥 Přenosy</h1>
-<ul id="streams"></ul>
+<div id="streams">Načítám přenosy...</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "TVŮJ_API_KEY",
-  authDomain: "TVŮJ_PROJECT.firebaseapp.com",
-  projectId: "TVŮJ_PROJECT",
+  apiKey: "AIzaSyAjDSUsGEEw1js7tlEiF98Sp0ZYyfhHxa4",
+  authDomain: "hokejicek-65a98.firebaseapp.com",
+  projectId: "hokejicek-65a98",
+  storageBucket: "hokejicek-65a98.firebasestorage.app",
+  messagingSenderId: "699646619013",
+  appId: "1:699646619013:web:3672cd198683e1e035e8ec",
+  measurementId: "G-3YEPQ41LYX"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-db.collection("streams").orderBy("date").get().then(snapshot => {
-  const ul = document.getElementById("streams");
-  ul.innerHTML = "";
+db.collection("streams").orderBy("date", "asc").get().then(snapshot => {
+  const div = document.getElementById("streams");
+  div.innerHTML = "";
   snapshot.forEach(doc => {
     const s = doc.data();
-    const li = document.createElement("li");
-    li.innerHTML = `<b>${s.title}</b> — ${s.date} — <a href="${s.url}" target="_blank">Sledovat</a>`;
-    ul.appendChild(li);
+    div.innerHTML += `
+      <div class="stream">
+        <b>${s.title}</b><br>
+        📅 ${s.date}<br>
+        🔗 <a href="${s.url}" target="_blank">Sledovat</a>
+      </div>
+    `;
   });
 });
 </script>
