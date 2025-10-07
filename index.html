@@ -6,27 +6,79 @@
 <title>Přenosy | Hokejíček</title>
 <style>
 body {
-  background: #0a0f1c;
-  color: white;
-  font-family: Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: #e0e0e0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 800px;
+  background: #111;
+  border-radius: 20px;
   padding: 30px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
 }
-h1 { color: #3a82f7; }
+
+h1 {
+  text-align: center;
+  color: #3a82f7;
+  margin-bottom: 30px;
+}
+
 .stream {
-  background: #1b2238;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 10px;
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
-a {
+
+.stream-title {
+  font-size: 18px;
+  color: #6fa8ff;
+  font-weight: bold;
+}
+
+.stream-date {
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.stream-url a {
   color: #6fa8ff;
   text-decoration: none;
+}
+
+.timer {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.timer.running { color: #00c853; }
+.timer.ended { color: #ff5252; }
+.timer.waiting { color: #ffb74d; }
+
+footer {
+  text-align: center;
+  color: #666;
+  margin-top: 30px;
+  font-size: 13px;
 }
 </style>
 </head>
 <body>
-<h1>🎥 Přenosy</h1>
-<div id="streams">Načítám přenosy...</div>
+
+<div class="container">
+  <h1>🎥 Přenosy Hokejíček</h1>
+  <div id="streams">Načítám přenosy...</div>
+
+  <footer>© 2025 Hokejíček | Všechna práva vyhrazena</footer>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -44,20 +96,72 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-db.collection("streams").orderBy("date", "asc").get().then(snapshot => {
+async function loadStreams() {
   const div = document.getElementById("streams");
   div.innerHTML = "";
+  const snapshot = await db.collection("streams").orderBy("date", "asc").get();
+
+  if (snapshot.empty) {
+    div.innerHTML = "<p>Momentálně nejsou naplánovány žádné přenosy.</p>";
+    return;
+  }
+
   snapshot.forEach(doc => {
     const s = doc.data();
-    div.innerHTML += `
-      <div class="stream">
-        <b>${s.title}</b><br>
-        📅 ${s.date}<br>
-        🔗 <a href="${s.url}" target="_blank">Sledovat</a>
-      </div>
+    const streamDiv = document.createElement("div");
+    streamDiv.className = "stream";
+
+    // vytvoř kartičku
+    streamDiv.innerHTML = `
+      <div class="stream-title">🏒 ${s.title}</div>
+      <div class="stream-date">📅 ${s.date}</div>
+      <div class="stream-url">🔗 <a href="${s.url}" target="_blank">Sledovat přenos</a></div>
+      <div class="timer waiting" id="timer-${doc.id}">⏳ Počítám čas...</div>
     `;
+
+    div.appendChild(streamDiv);
+
+    // spusť odpočet
+    startCountdown(s.date, `timer-${doc.id}`);
   });
-});
+}
+
+function startCountdown(dateString, elementId) {
+  const el = document.getElementById(elementId);
+  const targetTime = new Date(dateString).getTime();
+
+  function update() {
+    const now = new Date().getTime();
+    const diff = targetTime - now;
+
+    if (isNaN(targetTime)) {
+      el.textContent = "⚠️ Neplatný formát času.";
+      el.className = "timer";
+      return;
+    }
+
+    if (diff > 0) {
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      el.textContent = `🕒 Začíná za ${d > 0 ? d + "d " : ""}${h}h ${m}m ${s}s`;
+      el.className = "timer waiting";
+    } else if (diff > -2 * 60 * 60 * 1000) { // do 2h po začátku
+      el.textContent = "🟢 Zápas probíhá";
+      el.className = "timer running";
+    } else {
+      el.textContent = "🔴 Zápas skončil";
+      el.className = "timer ended";
+    }
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
+loadStreams();
 </script>
+
 </body>
 </html>
