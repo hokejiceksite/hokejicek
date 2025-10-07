@@ -175,7 +175,6 @@ async function loadStreams() {
     return;
   }
 
-  let count = 0;
   snapshot.forEach(doc => {
     const s = doc.data();
     const card = document.createElement("div");
@@ -188,14 +187,15 @@ async function loadStreams() {
       <a href="${s.url}" target="_blank">Sledovat</a>
     `;
 
-    // Prvních 3 přenosy dáme do "nejzajímavějších"
-    if (count < 3) {
+    // podle kategorie
+    if (s.category === "featured" || s.category === "both") {
       featured.appendChild(card.cloneNode(true));
     }
+    if (s.category === "all" || s.category === "both" || !s.category) {
+      all.appendChild(card);
+    }
 
-    all.appendChild(card);
     startCountdown(s.time, timerId);
-    count++;
   });
 }
 
