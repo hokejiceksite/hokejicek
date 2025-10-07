@@ -134,8 +134,8 @@ footer {
 
 <!-- 🔻 Sekce 1 -->
 <section>
-  <h2>Nejbližší přenosy</h2>
-  <div class="grid" id="upcoming"></div>
+  <h2>Nejzajímavější přenosy</h2>
+  <div class="grid" id="featured"></div>
 </section>
 
 <!-- 🔻 Sekce 2 -->
@@ -164,9 +164,9 @@ const db = firebase.firestore();
 
 async function loadStreams() {
   const all = document.getElementById("streams");
-  const upcoming = document.getElementById("upcoming");
+  const featured = document.getElementById("featured");
   all.innerHTML = "";
-  upcoming.innerHTML = "";
+  featured.innerHTML = "";
 
   const snapshot = await db.collection("streams").get();
 
@@ -175,6 +175,7 @@ async function loadStreams() {
     return;
   }
 
+  let count = 0;
   snapshot.forEach(doc => {
     const s = doc.data();
     const card = document.createElement("div");
@@ -187,8 +188,14 @@ async function loadStreams() {
       <a href="${s.url}" target="_blank">Sledovat</a>
     `;
 
+    // Prvních 3 přenosy dáme do "nejzajímavějších"
+    if (count < 3) {
+      featured.appendChild(card.cloneNode(true));
+    }
+
     all.appendChild(card);
     startCountdown(s.time, timerId);
+    count++;
   });
 }
 
