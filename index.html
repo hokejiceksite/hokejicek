@@ -1,235 +1,116 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Přenosy | Hokejíček</title>
-<style>
-body {
-  background-color: #0b0b0b;
-  color: #f2f2f2;
-  font-family: "Poppins", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hokejíček – Loga hokejových týmů</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      color: #222;
+    }
 
-/* 🔺 Horní panel */
-nav {
-  background-color: #141414;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 50px;
-  box-shadow: 0 2px 15px rgba(255, 0, 0, 0.25);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
-nav .logo {
-  color: #ff3b3b;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 30px;
-}
-nav ul li a {
-  color: #ccc;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.2s;
-}
-nav ul li a:hover {
-  color: #ff3b3b;
-}
+    /* Navigace */
+    header {
+      background: #fff;
+      border-bottom: 2px solid #e2e2e2;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d62828;
+    }
+    nav a {
+      text-decoration: none;
+      margin-left: 20px;
+      color: #333;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #d62828;
+    }
 
-/* 🔻 Sekce */
-section {
-  padding: 40px 20px;
-  text-align: center;
-}
-section h2 {
-  color: #ff3b3b;
-  font-size: 26px;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+    /* Úvodní část */
+    .hero {
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: #d62828;
+    }
+    .hero p {
+      font-size: 18px;
+      max-width: 750px;
+      margin: 0 auto 30px auto;
+      line-height: 1.6;
+    }
 
-/* 🎴 Karty */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  justify-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.card {
-  background: #181818;
-  border-radius: 16px;
-  padding: 25px 15px;
-  width: 100%;
-  max-width: 300px;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
-  transition: transform 0.25s, box-shadow 0.25s;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 25px rgba(255, 0, 0, 0.3);
-}
-.card h3 {
-  color: #fff;
-  font-size: 17px;
-  margin-bottom: 10px;
-}
-.timer {
-  font-weight: 500;
-  font-size: 15px;
-  margin-bottom: 15px;
-}
-.card a {
-  display: inline-block;
-  padding: 10px 22px;
-  border-radius: 10px;
-  background: #ff3b3b;
-  color: #fff;
-  font-weight: bold;
-  text-decoration: none;
-  transition: 0.2s;
-}
-.card a:hover {
-  background: #e52d2d;
-}
+    /* Tlačítko */
+    .btn {
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      background: #d62828;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+      background: #b71c1c;
+      transform: translateY(-3px);
+    }
 
-/* 🧱 Footer */
-footer {
-  text-align: center;
-  color: #777;
-  font-size: 13px;
-  padding: 20px;
-  margin-top: 30px;
-  border-top: 1px solid #222;
-}
-</style>
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      background: #f1f1f1;
+      padding: 20px;
+      font-size: 14px;
+      text-align: center;
+      border-top: 2px solid #e2e2e2;
+    }
+  </style>
 </head>
 <body>
 
-<!-- 🔺 Navigace -->
-<nav>
-  <div class="logo">HOKEJICEK</div>
-  <ul>
-    <li><a href="#">Domů</a></li>
-    <li><a href="#">Streamy</a></li>
-    <li><a href="#">Záznamy</a></li>
-    <li><a href="#">O projektu</a></li>
-  </ul>
-</nav>
+  <!-- Navigace -->
+  <header>
+    <div class="logo">🏒 Hokejíček</div>
+    <nav>
+      <a href="/">Hlavní stránka</a>
+      <a href="/souteze/">Soutěže</a>
+      <a href="/o-projektu/">O projektu</a>
+    </nav>
+  </header>
 
-<!-- 🔻 Sekce 1 -->
-<section>
-  <h2>Nejzajímavější přenosy</h2>
-  <div class="grid" id="featured"></div>
-</section>
+  <!-- Úvod -->
+  <section class="hero">
+    <h1>Loga českých hokejových týmů</h1>
+    <p>
+      Hokejíček přináší přehled <strong>log českých hokejových klubů</strong> rozdělených podle soutěží.  
+      Všechna loga jsou připravena k použití na web, sociální sítě nebo pro fanouškovské projekty.  
+    </p>
+    <a href="/souteze/" class="btn">Prozkoumat soutěže</a>
+  </section>
 
-<!-- 🔻 Sekce 2 -->
-<section>
-  <h2>Všechny přenosy</h2>
-  <div class="grid" id="streams"></div>
-</section>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Hokejíček | Loga hokejových týmů pro fanoušky
+  </footer>
 
-<footer>© 2025 Hokejíček | Všechna práva vyhrazena</footer>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAjDSUsGEEw1js7tlEiF98Sp0ZYyfhHxa4",
-  authDomain: "hokejicek-65a98.firebaseapp.com",
-  projectId: "hokejicek-65a98",
-  storageBucket: "hokejicek-65a98.appspot.com",
-  messagingSenderId: "699646619013",
-  appId: "1:699646619013:web:3672cd198683e1e035e8ec",
-  measurementId: "G-3YEPQ41LYX"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-async function loadStreams() {
-  const all = document.getElementById("streams");
-  const featured = document.getElementById("featured");
-  all.innerHTML = "";
-  featured.innerHTML = "";
-
-  const snapshot = await db.collection("streams").get();
-
-  if (snapshot.empty) {
-    all.innerHTML = "<p>Momentálně nejsou naplánovány žádné přenosy.</p>";
-    return;
-  }
-
-  snapshot.forEach(doc => {
-    const s = doc.data();
-    const card = document.createElement("div");
-    card.className = "card";
-    const timerId = "timer-" + doc.id;
-
-    card.innerHTML = `
-      <h3>🏒 ${s.title}</h3>
-      <div class="timer" id="${timerId}">⏳ Počítám...</div>
-      <a href="${s.url}" target="_blank">Sledovat</a>
-    `;
-
-    if (s.category === "featured" || s.category === "both") {
-      featured.appendChild(card.cloneNode(true));
-    }
-    if (s.category === "all" || s.category === "both" || !s.category) {
-      all.appendChild(card);
-    }
-
-    startCountdown(s.time, timerId);
-  });
-}
-
-function startCountdown(time, elementId) {
-  const el = document.getElementById(elementId);
-
-  function update() {
-    const now = new Date();
-    const [hours, minutes] = time.split(":").map(Number);
-    const target = new Date();
-    target.setHours(hours, minutes, 0, 0);
-
-    const diff = target - now;
-
-    if (diff > 0) {
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      el.textContent = `Začíná za ${h}h ${m}m ${s}s`;
-      el.style.color = "#ff6666";
-    } 
-    else if (diff <= 0 && diff > -3.5 * 60 * 60 * 1000) { 
-      el.textContent = "🟢 Zápas právě probíhá";
-      el.style.color = "#00e676";
-    } 
-    else {
-      el.textContent = "🔴 Zápas skončil";
-      el.style.color = "#ff5252";
-    }
-  }
-
-  update();
-  setInterval(update, 1000);
-}
-
-loadStreams();
-</script>
 </body>
 </html>
+
+
