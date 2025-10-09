@@ -3,114 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hokejíček – Loga hokejových týmů</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f9f9;
-      color: #222;
-    }
-
-    /* Navigace */
-    header {
-      background: #fff;
-      border-bottom: 2px solid #e2e2e2;
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-    }
-    .logo {
-      font-size: 22px;
-      font-weight: bold;
-      color: #d62828;
-    }
-    nav a {
-      text-decoration: none;
-      margin-left: 20px;
-      color: #333;
-      font-weight: 500;
-    }
-    nav a:hover {
-      color: #d62828;
-    }
-
-    /* Úvodní část */
-    .hero {
-      padding: 80px 20px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: 40px;
-      margin-bottom: 20px;
-      color: #d62828;
-    }
-    .hero p {
-      font-size: 18px;
-      max-width: 750px;
-      margin: 0 auto 30px auto;
-      line-height: 1.6;
-    }
-
-    /* Tlačítko */
-    .btn {
-      display: inline-block;
-      padding: 15px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      background: #d62828;
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .btn:hover {
-      background: #b71c1c;
-      transform: translateY(-3px);
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 60px;
-      background: #f1f1f1;
-      padding: 20px;
-      font-size: 14px;
-      text-align: center;
-      border-top: 2px solid #e2e2e2;
-    }
-  </style>
+  <title>HOKEJÍČEK | Rozpis zápasů</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Navigace -->
   <header>
-    <div class="logo">🏒 Hokejíček</div>
-    <nav>
-      <a href="/">Hlavní stránka</a>
-      <a href="/souteze/">Soutěže</a>
-      <a href="/o-projektu/">O projektu</a>
-    </nav>
+    <h1>🏒 HOKEJÍČEK</h1>
+    <p>Oficiální rozpis zápasů a výsledků</p>
   </header>
 
-  <!-- Úvod -->
-  <section class="hero">
-    <h1>Loga českých hokejových týmů</h1>
-    <p>
-      Hokejíček přináší přehled <strong>log českých hokejových klubů</strong> rozdělených podle soutěží.  
-      Všechna loga jsou připravena k použití na web, sociální sítě nebo pro fanouškovské projekty.  
-    </p>
-    <a href="/souteze/" class="btn">Prozkoumat soutěže</a>
-  </section>
+  <main>
+    <section class="schedule">
+      <h2>📅 Rozpis zápasů</h2>
+      <div id="matches-container" class="matches-grid"></div>
+    </section>
+  </main>
 
-  <!-- Footer -->
   <footer>
-    &copy; 2025 Hokejíček | Loga hokejových týmů pro fanoušky
+    <p>© 2025 HOKEJÍČEK | Vytvořeno s ❤️ pro fanoušky hokeje</p>
   </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
-
-
