@@ -12,10 +12,10 @@
       getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import { 
-      getFirestore, collection, addDoc, getDocs, deleteDoc, doc 
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc 
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    // 🔥 Konfigurace Firebase
+    // 🔥 Firebase konfigurace
     const firebaseConfig = {
       apiKey: "AIzaSyDPchDBpLy51f8WZrfV6owLA_y2yVPbE0g",
       authDomain: "hokejicek-3a7d1.firebaseapp.com",
@@ -36,7 +36,7 @@
       const password = document.getElementById("password").value.trim();
       try {
         await signInWithEmailAndPassword(auth, email, password);
-      } catch (e) {
+      } catch {
         alert("❌ Nesprávné přihlašovací údaje!");
       }
     }
@@ -59,12 +59,13 @@
         return;
       }
 
-      await addDoc(collection(db, "matches"), {
-        name, date, time, link, category
-      });
-
+      await addDoc(collection(db, "matches"), { name, date, time, link, category });
       alert("✅ Přenos přidán!");
+      clearForm();
       loadMatches();
+    }
+
+    function clearForm() {
       document.getElementById("matchName").value = "";
       document.getElementById("matchDate").value = "";
       document.getElementById("matchTime").value = "";
@@ -87,12 +88,48 @@
             🏷️ ${d.category}<br>
             <a href="${d.link}" target="_blank">${d.link}</a>
           </div>
-          <button onclick="deleteMatch('${docItem.id}')">Smazat</button>`;
+          <div class="buttons">
+            <button onclick="editMatch('${docItem.id}', '${d.name}', '${d.date}', '${d.time}', '${d.link}', '${d.category}')">✏️ Upravit</button>
+            <button class="delete" onclick="deleteMatch('${docItem.id}')">🗑️ Smazat</button>
+          </div>
+        `;
         container.appendChild(div);
       });
     }
 
-    // === Smazání přenosu ===
+    // === Upravit přenos ===
+    window.editMatch = function (id, name, date, time, link, category) {
+      document.getElementById("matchId").value = id;
+      document.getElementById("matchName").value = name;
+      document.getElementById("matchDate").value = date;
+      document.getElementById("matchTime").value = time;
+      document.getElementById("matchLink").value = link;
+      document.getElementById("matchCategory").value = category;
+      document.getElementById("addBtn").style.display = "none";
+      document.getElementById("updateBtn").style.display = "block";
+    };
+
+    // === Aktualizovat přenos ===
+    window.updateMatch = async function () {
+      const id = document.getElementById("matchId").value;
+      const name = document.getElementById("matchName").value.trim();
+      const date = document.getElementById("matchDate").value.trim();
+      const time = document.getElementById("matchTime").value.trim();
+      const link = document.getElementById("matchLink").value.trim();
+      const category = document.getElementById("matchCategory").value;
+
+      if (!id) return alert("Není vybrán žádný přenos k úpravě.");
+
+      const ref = doc(db, "matches", id);
+      await updateDoc(ref, { name, date, time, link, category });
+      alert("✏️ Přenos byl úspěšně upraven.");
+      document.getElementById("updateBtn").style.display = "none";
+      document.getElementById("addBtn").style.display = "block";
+      clearForm();
+      loadMatches();
+    };
+
+    // === Smazat přenos ===
     window.deleteMatch = async function (id) {
       if (confirm("Opravdu smazat přenos?")) {
         await deleteDoc(doc(db, "matches", id));
@@ -100,7 +137,7 @@
       }
     };
 
-    // === Reakce na změnu přihlášení ===
+    // === Změna přihlášení ===
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("loginBox").style.display = "none";
@@ -119,31 +156,19 @@
 
   <style>
     body { background:#0f0f0f; color:#eee; font-family:"Segoe UI"; margin:0; }
-    header {
-      display:flex; align-items:center; justify-content:space-between;
-      background:#111; padding:10px 25px; box-shadow:0 0 15px rgba(0,0,0,0.5);
-    }
+    header { display:flex; align-items:center; justify-content:space-between; background:#111; padding:10px 25px; box-shadow:0 0 15px rgba(0,0,0,0.5); }
     header img { height:70px; }
     h1 { font-size:1.4em; color:#fff; margin:0; }
     main { padding:30px; max-width:700px; margin:auto; }
-    .login-box, .admin-panel {
-      background:#1a1a1a; padding:25px; border-radius:12px;
-      box-shadow:0 0 12px rgba(0,0,0,0.5);
-    }
-    input, select, button {
-      width:100%; padding:10px; margin-top:10px;
-      border:none; border-radius:6px; background:#222; color:#fff;
-    }
+    .login-box, .admin-panel { background:#1a1a1a; padding:25px; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.5); }
+    input, select, button { width:100%; padding:10px; margin-top:10px; border:none; border-radius:6px; background:#222; color:#fff; }
     button { background:#007bff; cursor:pointer; transition:0.2s; }
     button:hover { background:#005fcc; }
-    .match {
-      background:#181818; border-radius:10px; padding:15px; margin-top:10px;
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    a { color:#50b6ff; text-decoration:none; }
-    .logout-btn {
-      background:#dc3545; margin-top:20px; width:100%;
-    }
+    .match { background:#181818; border-radius:10px; padding:15px; margin-top:10px; display:flex; justify-content:space-between; align-items:center; }
+    .buttons { display:flex; gap:10px; }
+    .buttons button { width:auto; padding:8px 12px; font-size:14px; }
+    .delete { background:#dc3545; }
+    .logout-btn { background:#dc3545; margin-top:20px; width:100%; }
   </style>
 </head>
 
@@ -167,6 +192,7 @@
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel" style="display:none;">
       <h2>Přenosy</h2>
+      <input type="hidden" id="matchId">
       <input type="text" id="matchName" placeholder="Název zápasu">
       <input type="date" id="matchDate">
       <input type="time" id="matchTime">
@@ -176,7 +202,8 @@
         <option value="všechny">Všechny</option>
         <option value="oboje">Oboje</option>
       </select>
-      <button onclick="addMatch()">Přidat přenos</button>
+      <button id="addBtn" onclick="addMatch()">Přidat přenos</button>
+      <button id="updateBtn" style="display:none;" onclick="updateMatch()">Uložit změny</button>
       <div id="matches"></div>
       <button class="logout-btn" onclick="logout()">Odhlásit se</button>
     </div>
