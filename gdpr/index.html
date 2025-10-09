@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOKEJÍČEK – GDPR & Podmínky</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #0f0f0f;
+      color: #eee;
+      margin: 0;
+    }
+
+    header {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      height: 55px;
+      padding: 0 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      overflow: visible;
+      z-index: 5;
+    }
+
+    header img {
+      height: 150px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 25px;
+      z-index: 10;
+    }
+
+    nav {
+      display: flex;
+      gap: 35px;
+      margin-left: auto;
+      z-index: 15;
+    }
+
+    nav a {
+      color: #f0f0f0;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: all 0.25s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    nav a:hover {
+      color: #50b6ff;
+      transform: scale(1.07);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #50b6ff;
+      transition: width 0.25s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 90px auto 50px;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      color: #50b6ff;
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #50b6ff;
+      margin-top: 40px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      margin: 10px 0 20px 25px;
+      color: #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      background: #111;
+      margin-top: 80px;
+      font-size: 14px;
+      border-top: 1px solid #222;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+      }
+      header img {
+        position: static;
+        transform: none;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+      nav {
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+    <nav>
+      <a href="/index.html">Hlavní stránka</a>
+      <a href="/index.html">Přenosy</a>
+      <a href="/gdpr">GDPR</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>🔒 Ochrana osobních údajů a podmínky používání</h1>
+
+    <h2>1. Obecné informace</h2>
+    <p>
+      Web <strong>Hokejíček</strong> slouží pro sdílení a sledování hokejových přenosů a dalších sportovních informací.  
+      Používáním tohoto webu vyjadřujete souhlas s níže uvedenými podmínkami a zásadami.
+    </p>
+
+    <h2>2. Reklamy a cookies</h2>
+    <p>
+      Na webu se mohou zobrazovat reklamní prvky (například prostřednictvím partnerských sítí nebo systémů třetích stran).  
+      Tyto reklamy mohou využívat <strong>cookies</strong> nebo jiné sledovací technologie k zobrazování personalizovaného obsahu.
+    </p>
+    <p>
+      Web Hokejíček neukládá žádné citlivé osobní údaje uživatelů.  
+      Cookies používané na tomto webu jsou pouze pro základní funkčnost a analytiku.
+    </p>
+
+    <h2>3. Odpovědnost za externí odkazy</h2>
+    <p>
+      Na stránkách mohou být uvedeny odkazy na externí weby nebo streamovací služby.  
+      <strong>Hokejíček nenese odpovědnost</strong> za obsah těchto externích stránek, jejich spolehlivost ani bezpečnost.
+    </p>
+    <p>
+      Používání externích odkazů je <strong>na vlastní riziko uživatele</strong>.  
+      V případě, že se prostřednictvím externích odkazů dostanete na stránku obsahující malware, škodlivý kód nebo jiný závadný obsah,  
+      web Hokejíček nemůže být činěn zodpovědným za jakékoli škody či ztráty.
+    </p>
+
+    <h2>4. Ochrana osobních údajů</h2>
+    <p>
+      Hokejíček zpracovává pouze základní anonymní údaje (např. návštěvnost, přehled přenosů, kliknutí), které nejsou osobními daty ve smyslu GDPR.  
+      Žádné osobní údaje jako jméno, e-mail nebo IP adresa nejsou trvale uchovávány ani sdíleny.
+    </p>
+
+    <h2>5. Bezpečnost webu</h2>
+    <p>
+      Děláme maximum pro to, aby byl web bezpečný a bez škodlivého obsahu.  
+      Přesto nelze zaručit stoprocentní ochranu před možnými útoky, technickými chybami nebo zásahy třetích stran.  
+      Používáním webu souhlasíte, že <strong>Hokejíček nenese odpovědnost za případné ztráty dat, malware, viry či jiné problémy</strong>,  
+      které mohou vzniknout při používání tohoto webu nebo propojených stránek.
+    </p>
+
+    <h2>6. Kontakt</h2>
+    <p>
+      V případě jakýchkoli dotazů ohledně zásad ochrany osobních údajů nebo hlášení závadného obsahu  
+      nás můžete kontaktovat prostřednictvím e-mailu:  
+      <strong>info@hokejicek.site</strong>
+    </p>
+
+    <p style="margin-top:40px; text-align:center; color:#888;">
+      Poslední aktualizace: říjen 2025
+    </p>
+  </main>
+
+  <footer>
+    © 2025 Hokejíček – Všechna práva vyhrazena
+  </footer>
+</body>
+</html>
