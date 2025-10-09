@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HOKEJÍČEK – Admin Panel</title>
 
-  <!-- ====== Firebase ====== -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { 
+      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { 
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc 
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+    // 🔥 Konfigurace Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDPchDBpLy51f8WZrfV6owLA_y2yVPbE0g",
       authDomain: "hokejicek-3a7d1.firebaseapp.com",
@@ -27,12 +32,12 @@
 
     // === Přihlášení ===
     async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
-        alert("Nesprávné přihlašovací údaje!");
+        alert("❌ Nesprávné přihlašovací údaje!");
       }
     }
 
@@ -43,14 +48,26 @@
 
     // === Přidání přenosu ===
     async function addMatch() {
-      const name = document.getElementById("matchName").value;
-      const date = document.getElementById("matchDate").value;
-      const link = document.getElementById("matchLink").value;
-      if (!name || !date || !link) return alert("Vyplň všechna pole!");
-      await addDoc(collection(db, "matches"), { name, date, link });
+      const name = document.getElementById("matchName").value.trim();
+      const date = document.getElementById("matchDate").value.trim();
+      const time = document.getElementById("matchTime").value.trim();
+      const link = document.getElementById("matchLink").value.trim();
+      const category = document.getElementById("matchCategory").value;
+
+      if (!name || !date || !time || !link) {
+        alert("Vyplň všechna pole!");
+        return;
+      }
+
+      await addDoc(collection(db, "matches"), {
+        name, date, time, link, category
+      });
+
+      alert("✅ Přenos přidán!");
       loadMatches();
       document.getElementById("matchName").value = "";
       document.getElementById("matchDate").value = "";
+      document.getElementById("matchTime").value = "";
       document.getElementById("matchLink").value = "";
     }
 
@@ -60,17 +77,17 @@
       container.innerHTML = "";
       const querySnapshot = await getDocs(collection(db, "matches"));
       querySnapshot.forEach((docItem) => {
-        const data = docItem.data();
+        const d = docItem.data();
         const div = document.createElement("div");
         div.className = "match";
         div.innerHTML = `
           <div>
-            <strong>${data.name}</strong><br>
-            🕒 ${data.date}<br>
-            🔗 <a href="${data.link}" target="_blank">${data.link}</a>
+            <strong>${d.name}</strong><br>
+            📅 ${d.date} ⏰ ${d.time}<br>
+            🏷️ ${d.category}<br>
+            <a href="${d.link}" target="_blank">${d.link}</a>
           </div>
-          <button onclick="deleteMatch('${docItem.id}')">Smazat</button>
-        `;
+          <button onclick="deleteMatch('${docItem.id}')">Smazat</button>`;
         container.appendChild(div);
       });
     }
@@ -83,7 +100,7 @@
       }
     };
 
-    // === Sledování přihlášení ===
+    // === Reakce na změnu přihlášení ===
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("loginBox").style.display = "none";
@@ -101,86 +118,45 @@
   </script>
 
   <style>
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #0f0f0f;
-      color: #eee;
-      margin: 0;
-    }
+    body { background:#0f0f0f; color:#eee; font-family:"Segoe UI"; margin:0; }
     header {
-      display: flex;
-      align-items: center;
-      background: #111;
-      padding: 15px 25px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      display:flex; align-items:center; justify-content:space-between;
+      background:#111; padding:10px 25px; box-shadow:0 0 15px rgba(0,0,0,0.5);
     }
-    header img {
-      height: 70px; /* 🔥 zvětšeno */
-      margin-right: 18px;
-      margin-left: 5px;
-    }
-    h1 {
-      font-size: 1.4em;
-      color: #fff;
-      letter-spacing: 1px;
-    }
-    main {
-      padding: 30px;
-      max-width: 700px;
-      margin: auto;
-    }
+    header img { height:70px; }
+    h1 { font-size:1.4em; color:#fff; margin:0; }
+    main { padding:30px; max-width:700px; margin:auto; }
     .login-box, .admin-panel {
-      background: #1a1a1a;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      background:#1a1a1a; padding:25px; border-radius:12px;
+      box-shadow:0 0 12px rgba(0,0,0,0.5);
     }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      font-size: 15px;
+    input, select, button {
+      width:100%; padding:10px; margin-top:10px;
+      border:none; border-radius:6px; background:#222; color:#fff;
     }
-    input {
-      background: #222;
-      color: #fff;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover { background: #005fcc; }
+    button { background:#007bff; cursor:pointer; transition:0.2s; }
+    button:hover { background:#005fcc; }
     .match {
-      background: #181818;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background:#181818; border-radius:10px; padding:15px; margin-top:10px;
+      display:flex; justify-content:space-between; align-items:center;
     }
-    a { color: #50b6ff; text-decoration: none; }
-    .logout { background: #dc3545; margin-top: 20px; }
-    @media (max-width: 600px) {
-      header img {
-        height: 50px;
-      }
+    a { color:#50b6ff; text-decoration:none; }
+    .logout-btn {
+      background:#dc3545; margin-top:20px; width:100%;
     }
   </style>
 </head>
 
 <body>
   <header>
-    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
-    <h1>HOKEJÍČEK – Admin Panel</h1>
+    <div style="display:flex;align-items:center;gap:15px;">
+      <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+      <h1>HOKEJÍČEK – Admin Panel</h1>
+    </div>
   </header>
 
   <main>
+    <!-- Přihlášení -->
     <div id="loginBox" class="login-box">
       <h2>Přihlášení</h2>
       <input type="email" id="email" placeholder="E-mail">
@@ -188,14 +164,21 @@
       <button onclick="login()">Přihlásit se</button>
     </div>
 
+    <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel" style="display:none;">
       <h2>Přenosy</h2>
       <input type="text" id="matchName" placeholder="Název zápasu">
-      <input type="text" id="matchDate" placeholder="Datum a čas">
+      <input type="date" id="matchDate">
+      <input type="time" id="matchTime">
       <input type="text" id="matchLink" placeholder="Odkaz na přenos">
+      <select id="matchCategory">
+        <option value="nejzajímavější">Nejzajímavější</option>
+        <option value="všechny">Všechny</option>
+        <option value="oboje">Oboje</option>
+      </select>
       <button onclick="addMatch()">Přidat přenos</button>
       <div id="matches"></div>
-      <button class="logout" onclick="logout()">Odhlásit se</button>
+      <button class="logout-btn" onclick="logout()">Odhlásit se</button>
     </div>
   </main>
 </body>
