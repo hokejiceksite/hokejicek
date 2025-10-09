@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – HOKEJÍČEK</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    form { max-width: 500px; margin: 40px auto; display: flex; flex-direction: column; gap: 10px; }
+    input, select, button { padding: 10px; border-radius: 8px; border: none; }
+    button { background: #e43f5a; color: white; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">🛠️ Admin HOKEJÍČEK</h1>
+
+  <form id="addMatchForm">
+    <input type="text" id="home" placeholder="Domácí tým" required>
+    <input type="text" id="away" placeholder="Hostující tým" required>
+    <input type="text" id="date" placeholder="Datum a čas (např. 28.10.2025 17:30)" required>
+    <input type="text" id="location" placeholder="Místo" required>
+    <input type="text" id="league" placeholder="Soutěž" required>
+    <button type="submit">Přidat zápas</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("addMatchForm");
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const match = {
+        home: form.home.value,
+        away: form.away.value,
+        date: form.date.value,
+        location: form.location.value,
+        league: form.league.value
+      };
+
+      let matches = JSON.parse(localStorage.getItem("matches")) || [];
+      matches.push(match);
+      localStorage.setItem("matches", JSON.stringify(matches));
+      alert("Zápas byl přidán!");
+      form.reset();
+    });
+  </script>
+</body>
+</html>
