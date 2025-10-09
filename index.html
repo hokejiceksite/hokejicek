@@ -3,26 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOKEJÍČEK | Rozpis zápasů</title>
-  <link rel="stylesheet" href="style.css">
+  <title>HOKEJÍČEK – Přenosy</title>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPchDBpLy51f8WZrfV6owLA_y2yVPbE0g",
+      authDomain: "hokejicek-3a7d1.firebaseapp.com",
+      projectId: "hokejicek-3a7d1",
+      storageBucket: "hokejicek-3a7d1.firebasestorage.app",
+      messagingSenderId: "409740758033",
+      appId: "1:409740758033:web:a1069dbfd7fd634c14f5b0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadMatches() {
+      const querySnapshot = await getDocs(collection(db, "matches"));
+      const top = document.getElementById("interesting");
+      const all = document.getElementById("all");
+      top.innerHTML = "";
+      all.innerHTML = "";
+
+      querySnapshot.forEach((docItem) => {
+        const d = docItem.data();
+        const dateTime = new Date(`${d.date}T${d.time}`);
+        const card = document.createElement("div");
+        card.className = "match";
+        card.innerHTML = `
+          <strong>${d.name}</strong><br>
+          📅 ${d.date} ⏰ ${d.time}<br>
+          <span class="countdown">Načítám časovač...</span><br>
+          <a href="${d.link}" target="_blank" class="watch">🎥 Sledovat přenos</a>
+        `;
+        startCountdown(card.querySelector(".countdown"), dateTime);
+
+        // Kategorie zobrazení
+        if (d.category === "nejzajímavější" || d.category === "oboje") top.appendChild(card.cloneNode(true));
+        if (d.category === "všechny" || d.category === "oboje") all.appendChild(card);
+      });
+
+      if (!top.innerHTML.trim()) top.innerHTML = "<p>Žádné nejzajímavější přenosy.</p>";
+      if (!all.innerHTML.trim()) all.innerHTML = "<p>Žádné přenosy k zobrazení.</p>";
+    }
+
+    // === Časovač ===
+    function startCountdown(el, startTime) {
+      const timer = setInterval(() => {
+        const now = new Date().getTime();
+        const diff = startTime - now;
+
+        if (diff <= 0) {
+          clearInterval(timer);
+          el.textContent = "🟢 Zápas právě probíhá!";
+          el.style.color = "#00ff91";
+          el.style.fontWeight = "bold";
+          return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        el.textContent = `Začíná za ${hours}h ${minutes}m ${seconds}s`;
+      }, 1000);
+    }
+
+    window.addEventListener("DOMContentLoaded", loadMatches);
+  </script>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #0f0f0f;
+      color: #eee;
+      margin: 0;
+    }
+
+    /* 🔹 Hlavní lišta */
+    header {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      height: 55px;
+      padding: 0 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      overflow: visible;
+      z-index: 5;
+    }
+
+    /* 🔹 Logo */
+    header img {
+      height: 150px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 25px;
+      z-index: 10;
+    }
+
+    /* 🔹 Navigace */
+    nav {
+      display: flex;
+      gap: 35px;
+      margin-left: auto;
+      z-index: 15;
+    }
+
+    nav a {
+      color: #f0f0f0;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: all 0.25s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    nav a:hover {
+      color: #50b6ff;
+      transform: scale(1.07);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #50b6ff;
+      transition: width 0.25s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* 🔹 Obsah stránky */
+    main {
+      max-width: 900px;
+      margin: 90px auto 50px;
+      padding: 0 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #50b6ff;
+      margin-bottom: 20px;
+    }
+
+    /* 🔹 Karta přenosu */
+    .match {
+      background: #181818;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .match:hover {
+      background: #1f1f1f;
+      transform: scale(1.01);
+    }
+
+    .countdown {
+      color: #ccc;
+      font-weight: 600;
+      margin-top: 5px;
+      display: inline-block;
+    }
+
+    .watch {
+      display: inline-block;
+      margin-top: 10px;
+      color: #50b6ff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .watch:hover {
+      color: #00aaff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      background: #111;
+      margin-top: 80px;
+      font-size: 14px;
+      border-top: 1px solid #222;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+      }
+      header img {
+        position: static;
+        transform: none;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+      nav {
+        gap: 20px;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header>
-    <h1>🏒 HOKEJÍČEK</h1>
-    <p>Oficiální rozpis zápasů a výsledků</p>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+    <nav>
+      <a href="/index.html">Hlavní stránka</a>
+      <a href="/index.html">Přenosy</a>
+      <a href="/gdpr">GDPR</a>
+    </nav>
   </header>
 
   <main>
-    <section class="schedule">
-      <h2>📅 Rozpis zápasů</h2>
-      <div id="matches-container" class="matches-grid"></div>
-    </section>
+    <h1>🏒 Nejzajímavější přenosy</h1>
+    <div id="interesting"></div>
+
+    <h2 style="margin-top:50px;">📺 Všechny přenosy</h2>
+    <div id="all"></div>
   </main>
 
   <footer>
-    <p>© 2025 HOKEJÍČEK | Vytvořeno s ❤️ pro fanoušky hokeje</p>
+    © 2025 Hokejíček – Všechna práva vyhrazena
   </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
