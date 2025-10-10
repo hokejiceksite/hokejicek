@@ -1,28 +1,16 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube Live Chat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hokejíček | Live Chat</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       background: #0f0f0f;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: "Segoe UI", sans-serif;
-    }
-
-    .chat-frame {
-      width: 600px;
-      height: 700px;
-      border: 2px solid #222;
-      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
     }
 
     iframe {
@@ -30,33 +18,15 @@
       height: 100%;
       border: none;
     }
-
-    .chat-error {
-      color: #ccc;
-      text-align: center;
-      padding: 20px;
-      font-size: 16px;
-    }
   </style>
 </head>
 <body>
 
-  <div class="chat-frame" id="chatContainer">
-    <iframe
-      id="ytChat"
-      src="https://www.youtube.com/live_chat?v=t86OUiIuIWw&embed_domain=hokejicek.site"
-      allowfullscreen>
-    </iframe>
-  </div>
-
-  <script>
-    // Když se chat nenačte (např. kvůli blokaci), zobrazí se hláška
-    const chat = document.getElementById('ytChat');
-    chat.addEventListener('error', () => {
-      document.getElementById('chatContainer').innerHTML =
-        '<div class="chat-error">Chat se nepodařilo načíst.<br>Zkontroluj, zda je stream aktivní, veřejný a má povolené vkládání na jiné weby.</div>';
-    });
-  </script>
+  <!-- 💬 YouTube Chat přes celou obrazovku -->
+  <iframe
+    src="https://www.youtube.com/live_chat?v=t86OUiIuIWw&embed_domain=hokejicek.site"
+    allowfullscreen>
+  </iframe>
 
 </body>
 </html>
