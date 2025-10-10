@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hokejíček | Stream 1</title>
-
   <style>
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
-      background-color: #0f0f0f;
+      background: #0f0f0f;
       color: #fff;
     }
 
-        /* 🔹 Hlavní lišta */
+    /* 🔹 Hlavní lišta */
     header {
       position: relative;
       display: flex;
@@ -75,20 +74,21 @@
     nav a:hover::after {
       width: 100%;
     }
+
     /* 🔹 Rozložení stránky */
     main {
       display: flex;
       justify-content: center;
       align-items: flex-start;
       gap: 20px;
-      padding: 40px;
-      height: calc(100vh - 95px);
+      padding: 60px 40px;
+      height: calc(100vh - 115px);
     }
 
-    /* 🔹 Video */
+    /* 🔹 Přehrávač */
     .video-frame {
-      width: 78vw;          /* o něco větší než předtím */
-      height: 75vh;         /* vyšší video */
+      width: 78vw;
+      height: 75vh;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
@@ -98,7 +98,7 @@
     /* 🔹 Chat */
     .chat-frame {
       width: 25vw;
-      height: 75vh;         /* stejná výška jako video */
+      height: 75vh;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #222;
@@ -124,19 +124,20 @@
   </header>
 
   <main>
-    <!-- 🎥 Přehrávač -->
+    <!-- 🎥 Kinescope přehrávač -->
     <div class="video-frame">
       <iframe
-        src="https://streambetter.cyou/play/play.php?id=923"
-        allowfullscreen
-        allow="autoplay; encrypted-media">
+        src="https://kinescope.io/embed/0csXGKoBkHtwmHSxmxacjL"
+        allow="autoplay; fullscreen; encrypted-media"
+        allowfullscreen>
       </iframe>
     </div>
 
-    <!-- 💬 Chat -->
+    <!-- 💬 YouTube Live Chat -->
     <div class="chat-frame">
       <iframe
-        src="https://www.youtube.com/live_chat?v=t86OUiIuIWw">
+        src="https://www.youtube.com/live_chat?v=t86OUiIuIWw"
+        allowfullscreen>
       </iframe>
     </div>
   </main>
