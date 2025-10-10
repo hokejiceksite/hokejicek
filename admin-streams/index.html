@@ -1,6 +1,165 @@
-  <!-- 🔥 Firebase logika -->
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOKEJÍČEK – Admin přenosů</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      background: #111;
+      height: 55px;
+      padding: 0 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    header img {
+      height: 50px;
+      margin-right: auto;
+    }
+
+    main {
+      padding: 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #50b6ff;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #181818;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background: #222;
+      color: #50b6ff;
+    }
+
+    tr:hover {
+      background: #1a1a1a;
+    }
+
+    input {
+      width: 80%;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: #fff;
+    }
+
+    button {
+      background: #50b6ff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: #3a94dd;
+    }
+
+    #loginBox {
+      max-width: 400px;
+      margin: 15vh auto;
+      background: #181818;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    #loginBox input {
+      width: 85%;
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: #fff;
+    }
+
+    #loginBox button {
+      width: 90%;
+      margin-top: 10px;
+    }
+
+    #logoutBtn {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: #d32f2f;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+  </header>
+
+  <main id="adminPanel" style="display:none;">
+    <button id="logoutBtn" onclick="logout()">🚪 Odhlásit</button>
+    <h1>🛠️ Správa přenosů</h1>
+    <table>
+      <thead>
+        <tr><th>Stream</th><th>Odkaz (m3u8 / iframe)</th><th>Uložit</th></tr>
+      </thead>
+      <tbody id="streamTable"></tbody>
+    </table>
+  </main>
+
+  <div id="loginBox">
+    <h2>Přihlášení do administrace</h2>
+    <input type="email" id="email" placeholder="E-mail"><br>
+    <input type="password" id="password" placeholder="Heslo"><br>
+    <button id="loginBtn">Přihlásit se</button>
+    <p id="errorMsg" style="color:#f44336;"></p>
+    <p id="status">🔄 Načítám Firebase...</p>
+  </div>
+
   <script>
-    // Inicializace Firebase
+    // 🔥 Inicializace Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDzLNoTKVC8GfcZsARHlmlgmF2eXlC858c",
       authDomain: "hokejicek-streamy.firebaseapp.com",
@@ -11,69 +170,58 @@
       appId: "1:747005458237:web:835917780e34b1f1757754"
     };
 
-    // ⚙️ Spuštění Firebase
     firebase.initializeApp(firebaseConfig);
-
-    // 🧱 Inicializace služeb (musí být hned po initializeApp)
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // 🧩 Teprve potom definujeme zbytek logiky
+    // 📦 Elementy
     const loginBox = document.getElementById("loginBox");
     const adminPanel = document.getElementById("adminPanel");
     const table = document.getElementById("streamTable");
     const statusText = document.getElementById("status");
 
-    // ✅ Kontrola připojení k databázi
-    db.ref(".info/connected").on("value", (snap) => {
+    // 🟢 Kontrola připojení
+    db.ref(".info/connected").on("value", snap => {
       statusText.textContent = snap.val()
         ? "✅ Připojeno k Firebase"
-        : "❌ Nepřipojeno";
+        : "❌ Nepřipojeno k databázi";
     });
 
     // 🔑 Přihlášení
-    function login() {
+    document.getElementById("loginBtn").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      // Ujisti se, že je Firebase načteno
-      if (!auth) {
-        alert("❌ Firebase Auth se nenačetlo správně. Zkontroluj skripty nahoře.");
-        return;
-      }
-
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-          console.log("✅ Přihlášení OK");
           loginBox.style.display = "none";
           adminPanel.style.display = "block";
           loadStreams();
         })
         .catch(error => {
-          console.error("❌ Chyba přihlášení:", error);
           document.getElementById("errorMsg").textContent =
-            "❌ Firebase hlásí: " + error.code + " – " + error.message;
+            "❌ Chyba: " + error.message;
         });
-    }
+    });
 
     // 🚪 Odhlášení
     function logout() {
       auth.signOut().then(() => location.reload());
     }
 
-    // 📡 Načtení streamů
+    // 📡 Načtení seznamu streamů
     function loadStreams() {
       table.innerHTML = "";
       for (let i = 1; i <= 20; i++) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><a href="/stream${i}.html" target="_blank">/stream${i}</a></td>
-          <td><input id="input${i}" type="text" placeholder="Vlož odkaz..."></td>
+          <td><input id="input${i}" type="text" placeholder="Vlož m3u8 nebo iframe..."></td>
           <td><button onclick="saveStream(${i})">💾</button></td>
         `;
         table.appendChild(tr);
 
-        db.ref("streams/stream" + i).on("value", (snapshot) => {
+        db.ref("streams/stream" + i).on("value", snapshot => {
           const val = snapshot.val();
           if (val && val.url) document.getElementById("input" + i).value = val.url;
         });
@@ -87,3 +235,5 @@
       alert(`✅ Stream ${num} uložen.`);
     }
   </script>
+</body>
+</html>
