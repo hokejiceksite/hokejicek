@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hokejíček | Stream 1</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+    }
+
+    /* 🔹 Horní lišta */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      height: 55px;
+      padding: 0 25px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    header img {
+      height: 80px;
+      margin-top: -12px;
+      margin-bottom: -12px;
+    }
+
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      margin-left: 30px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #50b6ff;
+    }
+
+    /* 🔹 Rozložení stránky */
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 40px;
+      height: calc(100vh - 95px);
+    }
+
+    /* 🔹 Video */
+    .video-frame {
+      width: 78vw;          /* o něco větší než předtím */
+      height: 75vh;         /* vyšší video */
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+      background: #000;
+    }
+
+    /* 🔹 Chat */
+    .chat-frame {
+      width: 25vw;
+      height: 75vh;         /* stejná výška jako video */
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #222;
+      background: #0f0f0f;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+    <nav>
+      <a href="/index.html">Hlavní stránka</a>
+      <a href="/index.html">Přenosy</a>
+      <a href="/gdpr.html">GDPR</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 🎥 Přehrávač -->
+    <div class="video-frame">
+      <iframe
+        src="https://kinescope.io/embed/0csXGKoBkHtwmHSxmxacjL"
+        allowfullscreen
+        allow="autoplay; encrypted-media">
+      </iframe>
+    </div>
+
+    <!-- 💬 Chat -->
+    <div class="chat-frame">
+      <iframe
+        src="https://www.youtube.com/live_chat?v=t86OUiIuIWw">
+      </iframe>
+    </div>
+  </main>
+
+</body>
+</html>
