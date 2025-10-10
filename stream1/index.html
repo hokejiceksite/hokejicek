@@ -13,36 +13,68 @@
       color: #fff;
     }
 
-    /* 🔹 Horní lišta */
+        /* 🔹 Hlavní lišta */
     header {
+      position: relative;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       background: #111;
       height: 55px;
       padding: 0 25px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      overflow: visible;
+      z-index: 5;
     }
 
+    /* 🔹 Logo */
     header img {
-      height: 80px;
-      margin-top: -12px;
-      margin-bottom: -12px;
+      height: 150px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 25px;
+      z-index: 10;
+    }
+
+    /* 🔹 Navigace */
+    nav {
+      display: flex;
+      gap: 35px;
+      margin-left: auto;
+      z-index: 15;
     }
 
     nav a {
-      color: #e0e0e0;
+      color: #f0f0f0;
       text-decoration: none;
-      margin-left: 30px;
-      font-size: 15px;
-      font-weight: 500;
-      transition: color 0.3s;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: all 0.25s ease;
+      position: relative;
+      padding: 5px 0;
     }
 
     nav a:hover {
       color: #50b6ff;
+      transform: scale(1.07);
     }
 
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #50b6ff;
+      transition: width 0.25s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
     /* 🔹 Rozložení stránky */
     main {
       display: flex;
@@ -95,7 +127,7 @@
     <!-- 🎥 Přehrávač -->
     <div class="video-frame">
       <iframe
-        src="https://kinescope.io/embed/0csXGKoBkHtwmHSxmxacjL"
+        src="https://streambetter.cyou/play/play.php?id=923"
         allowfullscreen
         allow="autoplay; encrypted-media">
       </iframe>
