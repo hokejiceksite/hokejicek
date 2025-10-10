@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HOKEJÍČEK – Admin přenosů</title>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK (musí být přesně v tomto pořadí!) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
@@ -158,8 +158,9 @@
     <p id="status">🔄 Připojování k Firebase...</p>
   </div>
 
+  <!-- 🔥 Firebase logika -->
   <script>
-    // Firebase konfigurace (tvůj nový projekt)
+    // Inicializace Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDzLNoTKVC8GfcZsARHlmlgmF2eXlC858c",
       authDomain: "hokejicek-streamy.firebaseapp.com",
@@ -179,33 +180,39 @@
     const table = document.getElementById("streamTable");
     const statusText = document.getElementById("status");
 
-    // Zjistit stav připojení
+    // ✅ Kontrola připojení k databázi
     db.ref(".info/connected").on("value", (snap) => {
-      statusText.textContent = snap.val() ? "✅ Připojeno k Firebase" : "❌ Nepřipojeno";
+      statusText.textContent = snap.val()
+        ? "✅ Připojeno k Firebase"
+        : "❌ Nepřipojeno";
     });
 
-    // Přihlášení
+    // 🔑 Přihlášení
     function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
+          console.log("✅ Přihlášeno úspěšně.");
           loginBox.style.display = "none";
           adminPanel.style.display = "block";
           loadStreams();
         })
         .catch(error => {
-          document.getElementById("errorMsg").textContent = "❌ Chyba: " + error.message;
+          console.error("❌ Chyba přihlášení:", error);
+          document.getElementById("errorMsg").textContent =
+            "❌ Firebase hlásí: " + error.code + " – " + error.message;
         });
     }
 
-    // Odhlášení
+    // 🚪 Odhlášení
     function logout() {
       auth.signOut().then(() => location.reload());
     }
 
-    // Načtení streamů
+    // 📡 Načtení a zobrazení 20 streamů
     function loadStreams() {
+      table.innerHTML = "";
       for (let i = 1; i <= 20; i++) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -222,7 +229,7 @@
       }
     }
 
-    // Uložit stream
+    // 💾 Uložení odkazu
     function saveStream(num) {
       const input = document.getElementById("input" + num).value;
       db.ref("streams/stream" + num).set({ url: input });
