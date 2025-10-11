@@ -5,21 +5,29 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hokejíček | Stream</title>
 
+  <!-- Lokální knihovny -->
   <script src="/assets/lib/clappr.min.js"></script>
   <script src="/assets/lib/hlsjs-playback.min.js"></script>
 
   <style>
     html,body{margin:0;height:100%;background:#000;overflow:hidden;}
     #player{width:100%;height:100vh;}
+    #loading {
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      margin-top: 20%;
+      font-size: 20px;
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
+  <div id="loading">🎥 Načítám stream…</div>
   <div id="player"></div>
-  <script>
-    // tvůj m3u8 zdroj
-    var sourceUrl = "https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg";
 
-    // jednoduchá lehká ochrana: povolené domény
+  <script>
+    // ✅ Povolené domény
     const allowed = ["hokejicek.site","starstreams.pro","w3schools.com"];
     const ref = document.referrer || location.hostname;
     if(!allowed.some(h=>ref.includes(h))){
@@ -27,25 +35,60 @@
       throw new Error("Neautorizovaný hostitel");
     }
 
-    // zakázat pravé tlačítko
+    // ❌ Zakázat pravé tlačítko
     document.addEventListener("contextmenu",e=>e.preventDefault());
 
-    // inicializace Clappr
-    try {
-      var player = new Clappr.Player({
-        parentId: "#player",
-        source: sourceUrl,
-        plugins: [HlsjsPlayback],
-        mimeType: "application/x-mpegURL",
-        width: "100%",
-        height: "100%",
-        autoPlay: true,
-        mute: false,
-        playback: { hlsjsConfig: { lowLatencyMode: true } }
-      });
-    } catch (e) {
-      document.body.innerHTML = "<p style='color:white;text-align:center;margin-top:20%'>Nelze inicializovat přehrávač.</p>";
+    // ✅ Adresa tvé proxy (změň podle svého Vercel projektu)
+    const vercelProxy = "https://tv-proxy-abc.vercel.app"; // ← uprav podle svého názvu projektu
+
+    // 🎞️ Původní M3U8 stream
+    const originSrc = "https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg";
+
+    // 🔑 Načti token z proxy a spusť přehrávač
+    async function initPlayer() {
+      try {
+        const originEnc = encodeURIComponent(originSrc);
+        const tokenUrl = `${vercelProxy}/api/token?src=${originEnc}`;
+        const tokenResp = await fetch(tokenUrl);
+        const data = await tokenResp.json();
+
+        if (!data.url) {
+          document.getElementById("loading").textContent = "❌ Chyba při získávání tokenu.";
+          return;
+        }
+
+        const fullStreamUrl = data.url.startsWith("/")
+          ? `${vercelProxy}${data.url}`
+          : data.url;
+
+        // 🧩 Inicializace Clappr
+        var player = new Clappr.Player({
+          parentId: "#player",
+          source: fullStreamUrl,
+          plugins: [HlsjsPlayback],
+          mimeType: "application/x-mpegURL",
+          width: "100%",
+          height: "100%",
+          autoPlay: true,
+          mute: false,
+          playback: { hlsjsConfig: { lowLatencyMode: true } }
+        });
+
+        player.on(Clappr.Events.PLAYER_READY, function(){
+          document.getElementById("loading").style.display = "none";
+        });
+
+        player.on(Clappr.Events.PLAYER_ERROR, function(){
+          document.getElementById("loading").textContent = "⚠️ Chyba přehrávání.";
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("loading").textContent = "❌ Nelze inicializovat přehrávač.";
+      }
     }
+
+    initPlayer();
   </script>
 </body>
 </html>
