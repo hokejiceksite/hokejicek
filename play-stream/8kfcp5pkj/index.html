@@ -1,216 +1,118 @@
 <!doctype html>
 <html lang="cs">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Hokejíček — Secure Player</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hokejíček — Stream</title>
 
-<!-- Content Security Policy: povolit zdroje z vlastní domény a CDN pro Clappr/hls plugin -->
-<meta http-equiv="Content-Security-Policy"
-  content="default-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://stream-48.mazana.tv; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;">
-
-<!-- Clappr + HLS plugin (CDN; pokud chceš, můžeš je nahrát lokálně a změnit cesty) -->
+<!-- Clappr + HLS plugin -->
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js"></script>
 
 <style>
-  html,body{height:100%;margin:0;background:#000;color:#fff}
-  #player{width:100%;height:100vh;display:block}
-  #overlay {
-    position:fixed; left:0; right:0; top:0; bottom:0;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(0,0,0,0.55); color:#fff; font-family:system-ui; z-index:9999;
-    visibility:hidden;
+  html,body{
+    height:100%;
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:system-ui;
+    overflow:hidden;
   }
-  #loading { text-align:center; margin-top:18%; font-size:20px; opacity:0.95; }
+  #player{
+    width:100%;
+    height:100vh;
+  }
+  #loading{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color:#fff;
+    font-size:18px;
+    background:rgba(0,0,0,0.5);
+    padding:12px 18px;
+    border-radius:8px;
+    z-index:1000;
+  }
 </style>
 </head>
 <body>
-  <div id="loading">🎥 Načítám stream…</div>
-  <div id="player" role="application" aria-label="Video player"></div>
-
-  <div id="overlay"><div id="overlayText">Ověřte prosím, že divácký přehrávač běží v povoleném okně.</div></div>
+  <div id="player"></div>
 
 <script>
-/*
-Single-file secure static player for GitHub Pages.
+/* ====== NASTAVENÍ (jen zde měnit) ====== */
+const M3U8 = "https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg";
+/* ======================================= */
 
-Important:
-- I WILL NOT include code that disables extensions or forcibly blocks DevTools.
-- This file uses a Service Worker registered from a Blob to act as a client-side proxy and rewrite manifest segment URLs.
-- SW may be limited by origin CORS/policies; if manifest/segments are blocked by the origin, SW cannot bypass that.
-- Replace ORIGIN_M3U8 if your m3u8 changes.
-*/
+/* 🚫 Blokace pravého tlačítka, výběru textu, kopírování */
+['contextmenu','selectstart','copy','cut','dragstart'].forEach(ev=>{
+  document.addEventListener(ev, e=>e.preventDefault(), {capture:true});
+});
 
-// ---------- CONFIG ----------
-const ALLOWED_HOSTS = ['hokejicek.site','starstreams.pro','w3schools.com']; // povolené hosty
-// Original m3u8 split into base64 chunks (slightly obfuscated)
-const ORIGIN_M3U8_CHUNKS = [
-  "aHR0cHM6Ly9zdHJlYW0tNDgubWF6YW5hLnR2L1YyX21uLm0z",
-  "dThzP2NvZGVjX2lkPTEyNDAm",
-  "c2Vzc2lvbj1vbWc="
-];
-// Client-side TTL: remove decoded source from memory after this many ms
-const CLIENT_TTL_MS = 45 * 1000;
-// SW proxy path exposed to player
-const SW_PROXY_PATH = '/sw-proxy/stream.m3u8';
-// ---------- end CONFIG ----------
-
-// ----- helper: base64 join & decode -----
-function joinChunks(chunks){ return chunks.join(''); }
-function b64dec(s){ try{ return decodeURIComponent(escape(window.atob(s))); } catch(e){ return atob(s); } }
-
-// ----- guard: check host/referrer -----
-function allowedHost(){
-  try{
-    const host = location.hostname || '';
-    if (ALLOWED_HOSTS.some(h=>host.includes(h))) return true;
-    if (window.top !== window.self){
-      const ref = document.referrer || '';
-      if (ALLOWED_HOSTS.some(h=>ref.includes(h))) return true;
-    }
-  }catch(e){}
-  return false;
-}
-if (!allowedHost()){
-  document.documentElement.innerHTML = '<div style="background:#000;color:#fff;padding:30px;text-align:center">Tento přehrávač zde není povolen.</div>';
-  throw new Error('host not allowed');
-}
-
-// ----- basic UI protections (non-aggressive) -----
-document.addEventListener('contextmenu', e=>e.preventDefault());
-document.addEventListener('selectstart', e=>e.preventDefault());
-document.addEventListener('copy', e=>e.preventDefault());
-document.addEventListener('cut', e=>e.preventDefault());
-document.addEventListener('dragstart', e=>e.preventDefault());
-
-// ----- small DevTools detector (non-destructive) -----
-let devtoolsFlag = false;
-function detectDevtools() {
-  // dimension heuristic
-  try {
-    const dW = window.outerWidth - window.innerWidth;
-    const dH = window.outerHeight - window.innerHeight;
-    if (dW > 160 || dH > 160) { devtoolsFlag = true; onDevtools(); return; }
-  } catch(e){}
-  // console getter trick (non-destructive)
-  try {
-    let detected=false;
-    const el = new Image();
-    Object.defineProperty(el, 'id', { get(){ detected=true; return 'x'; }});
-    console.log('%c', el);
-    if (detected){ devtoolsFlag=true; onDevtools(); return; }
-  } catch(e){}
-}
-// when devtools suspected: pause player and show overlay (non-destructive)
-function onDevtools(){
-  try {
-    const overlay = document.getElementById('overlay');
-    overlay.style.visibility = 'visible';
-    overlay.querySelector('#overlayText').textContent = 'Prohlížečové nástroje detekovány — přehrávání pozastaveno kvůli ochraně obsahu.';
-    if (window._clappr_player && typeof window._clappr_player.pause === 'function') {
-      try { window._clappr_player.pause(); } catch(e){}
-    }
-  } catch(e){}
-}
-setInterval(()=>{ if (!devtoolsFlag) detectDevtools(); }, 1000);
-
-// ----- register service worker from Blob (so single-file) -----
-async function registerSWFromBlob() {
-  if (!('serviceWorker' in navigator)) return false;
-
-  const swCode = `self.addEventListener('install', e=>{self.skipWaiting();});
-self.addEventListener('activate', e=>{self.clients.claim();});
-const ORIGIN='${b64dec(joinChunks(ORIGIN_M3U8_CHUNKS))}';
-self.addEventListener('fetch', event=>{
-  const url = new URL(event.request.url);
-  if (url.pathname === '${SW_PROXY_PATH}') {
-    event.respondWith((async ()=>{
-      try{
-        const upstream = await fetch(ORIGIN, {method:'GET', headers:{'User-Agent':'hokejicek-sw/1.0'}});
-        if (!upstream.ok) return new Response('upstream error',{status:502});
-        const txt = await upstream.text();
-        // rewrite lines that reference segments (simple heuristic)
-        const rewritten = txt.replace(/^(.*\\.ts.*)$/gm, function(m){
-          const seg = m.trim();
-          const encoded = encodeURIComponent(new URL(seg, ORIGIN).toString());
-          return '/sw-proxy/segment/?u=' + encoded;
-        });
-        return new Response(rewritten, {status:200, headers:{'Content-Type':'application/vnd.apple.mpegurl'}});
-      }catch(err){ return new Response('proxy error',{status:500}); }
-    })());
-    return;
+/* ⛔ Blokace zkratek (F12, Ctrl+U, Ctrl+Shift+I/J/C/K, Ctrl+S, atd.) */
+document.addEventListener('keydown', function(e){
+  const key = (e.key || '').toUpperCase();
+  if (
+    key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(key)) ||
+    (e.ctrlKey && ['U','S','P'].includes(key)) ||
+    (e.metaKey && e.shiftKey && ['I','J','C','K'].includes(key))
+  ){
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
   }
-  if (url.pathname.startsWith('/sw-proxy/segment/')) {
-    const seg = url.searchParams.get('u');
-    if (seg) {
-      event.respondWith(fetch(decodeURIComponent(seg), {method:'GET', headers:{'User-Agent':'hokejicek-sw/1.0'}}));
-      return;
-    }
-  }
-});`;
+}, true);
+
+/* 🧩 Funkce pro otestování dostupnosti manifestu */
+async function testManifest(url){
   try {
-    const blob = new Blob([swCode], {type:'application/javascript'});
-    const swUrl = URL.createObjectURL(blob);
-    await navigator.serviceWorker.register(swUrl, {scope: '/'});
-    return true;
-  } catch(e){
+    const resp = await fetch(url, { method: 'GET', cache: 'no-store' });
+    if (!resp.ok) return false;
+    const text = await resp.text();
+    return text.startsWith('#EXTM3U');
+  } catch {
     return false;
   }
 }
 
-// ----- choose URL: prefer SW proxy if SW active and working -----
-async function chooseSourceUrl() {
-  // decode origin
-  const encoded = joinChunks(ORIGIN_M3U8_CHUNKS);
-  let origin = b64dec(encoded);
-
-  // register SW from blob and check readiness
-  try {
-    const regOk = await registerSWFromBlob();
-    if (regOk) {
-      // check if SW controls the page
-      const ready = await navigator.serviceWorker.ready;
-      try {
-        const r = await fetch(SW_PROXY_PATH + '?_check=1', {method:'GET', cache:'no-store'});
-        if (r.ok) return SW_PROXY_PATH;
-      } catch(e){}
-    }
-  } catch(e){}
-  return origin;
-}
-
-// ----- initialize Clappr -----
-(async function init(){
+/* 🚀 Inicializace přehrávače */
+async function start(){
   const loading = document.getElementById('loading');
-  const playerDiv = document.getElementById('player');
+  const manifestOk = await testManifest(M3U8);
 
-  let src = await chooseSourceUrl();
+  if (!manifestOk){
+    if (loading) loading.textContent = "⚠️ Nelze načíst stream (CORS nebo 403)";
+    return;
+  }
 
-  // create player
   try {
     const player = new Clappr.Player({
       parentId: '#player',
-      source: src,
+      source: M3U8,
       plugins: [HlsjsPlayback],
-      mimeType: 'application/x-mpegURL',
+      mimeType: "application/x-mpegURL",
       width: '100%',
       height: '100%',
       autoPlay: true,
       mute: false,
-      playback: { hlsjsConfig: { lowLatencyMode: true } }
     });
-    // expose for devtools detection pause
-    window._clappr_player = player;
-    player.on(Clappr.Events.PLAYER_READY, ()=> { if (loading) loading.style.display='none'; });
-    player.on(Clappr.Events.PLAYER_ERROR, ()=> { if (loading) loading.textContent='⚠️ Chyba přehrávání'; });
-  } catch(e){
-    playerDiv.innerHTML = "<p style='text-align:center;margin-top:20%'>❌ Nelze inicializovat přehrávač.</p>";
-  }
 
-  // clear origin from memory after TTL
-  setTimeout(()=>{ try{ ORIGIN_M3U8_CHUNKS.fill(''); }catch(e){} }, CLIENT_TTL_MS);
-})();
+    player.on(Clappr.Events.PLAYER_READY, ()=> {
+      if (loading) loading.style.display = 'none';
+    });
+
+    player.on(Clappr.Events.PLAYER_ERROR, ()=> {
+      if (loading) loading.textContent = "❌ Chyba přehrávání.";
+    });
+
+  } catch (err) {
+    if (loading) loading.textContent = "❌ Nelze inicializovat přehrávač.";
+    console.error(err);
+  }
+}
+
+start();
 </script>
 </body>
 </html>
