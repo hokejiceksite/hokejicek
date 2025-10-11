@@ -3,85 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Play Stream — 8kfcp5pkj</title>
+  <title>Player — play-stream/8kfcp5pkj</title>
 
-  <!-- Clappr -->
-  <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <!-- Základní CSP (meta) - omezuje skripty a zdroje na vlastní doménu -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; connect-src 'self' https://stream-48.mazana.tv; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
+
+  <!-- Lokální knihovny (stáhni a nahraj do /assets/lib/) -->
+  <script src="/assets/lib/clappr.min.js"></script>
+  <script src="/assets/lib/hlsjs-playback.min.js"></script>
+
+  <!-- Our scripts -->
+  <script src="/assets/js/guard.js" defer></script>
+  <script src="/assets/js/player-init.js" defer></script>
 
   <style>
-    html,body { height:100%; margin:0; background:#000; }
-    #player { position:fixed; inset:0; width:100%; height:100%; z-index:9999; background:#000; }
-    #status {
-      position:fixed; left:12px; top:12px; z-index:10000;
-      color:#fff; background:rgba(0,0,0,0.45); padding:6px 10px; border-radius:6px;
-      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; font-size:13px;
-    }
+    html,body{height:100%;margin:0;background:#000}
+    #player{width:100%;height:100vh;display:block}
+    #status{position:fixed;left:12px;top:12px;color:#fff;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:6px;font-family:system-ui;}
   </style>
 </head>
 <body>
-  <div id="player" aria-label="Video player"></div>
-  <div id="status">Připravuji přehrání…</div>
-
-  <script>
-  (async function(){
-    const status = document.getElementById('status');
-
-    // --- TVŮJ původní m3u8 (bude přehrán pokud nemáš token endpoint) ---
-    const rawSource = 'https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg';
-
-    // --- Pokusíme se získat podepsanou URL ze serveru (pokud máš backend) ---
-    // Endpoint očekává: GET /token?src=ENCODED_URL
-    async function fetchSignedUrl(src) {
-      try {
-        const encoded = encodeURIComponent(src);
-        const resp = await fetch('/token?src=' + encoded, { method: 'GET', credentials: 'same-origin' });
-        if (!resp.ok) throw new Error('token endpoint: ' + resp.status);
-        const j = await resp.json();
-        if (j && j.url) return j.url;
-      } catch (err) {
-        console.warn('Signed url not available:', err);
-      }
-      return null;
-    }
-
-    // Pokud máš specifickou cestu, ověříme, že jsme na ní (bezpečnostní drobná kontrola)
-    if (!window.location.pathname.includes('/play-stream/8kfcp5pkj/')) {
-      document.body.innerHTML = '<p style="color:white;text-align:center;margin-top:20%;">Tento přehrávač není na této stránce dostupný.</p>';
-      return;
-    }
-
-    // nejprve zkus serverový token (pokud máš backend). Pokud ne, použijeme originální link (fallback).
-    status.textContent = 'Kontroluji serverové podepsané URL…';
-    let source = await fetchSignedUrl(rawSource);
-
-    if (!source) {
-      status.textContent = 'Používám přímý zdroj (fallback).';
-      source = rawSource;
-    } else {
-      status.textContent = 'Používám podepsané URL.';
-    }
-
-    // Inicializace Clappr
-    try {
-      const player = new Clappr.Player({
-        parentId: '#player',
-        source: source,
-        autoPlay: true,
-        width: '100%',
-        height: '100%',
-        mute: false,
-        mediacontrol: { seekbar: '#00d5ff' },
-        playback: { hlsjsConfig: { maxBufferLength: 30 } },
-        events: {
-          onReady: () => { console.log('Clappr ready'); status.style.display = 'none'; },
-          onError: e => { console.error('Player error', e); status.textContent = 'Chyba přehrávání'; }
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      status.textContent = 'Nelze inicializovat přehrávač';
-    }
-  })();
-  </script>
+  <div id="status">Spouštím přehrávač…</div>
+  <div id="player" role="application" aria-label="Video player"></div>
 </body>
 </html>
