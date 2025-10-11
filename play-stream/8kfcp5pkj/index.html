@@ -9,6 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js"></script>
 
+<!-- 🔹 Reklamní skript (Hlavička) -->
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
 <style>
   html,body{
     height:100%;
@@ -38,6 +41,7 @@
 </head>
 <body>
   <div id="player"></div>
+  <div id="loading">Načítání streamu...</div>
 
 <script>
 /* ====== NASTAVENÍ (jen zde měnit) ====== */
@@ -114,5 +118,13 @@ async function start(){
 
 start();
 </script>
+
+<!-- 🔹 Reklamní skript (Patička) -->
+<script type="text/javascript">
+  aclib.runAutoTag({
+      zoneId: 'zitkptgwk8'
+  });
+</script>
+
 </body>
 </html>
