@@ -1,94 +1,108 @@
 <!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hokejíček | Stream</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hokejíček — Stream</title>
 
-  <!-- Lokální knihovny -->
-  <script src="/assets/lib/clappr.min.js"></script>
-  <script src="/assets/lib/hlsjs-playback.min.js"></script>
+<!-- Content Security Policy: skripty a zdroje pouze z vlastní stránky -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; connect-src 'self' https://stream-48.mazana.tv; img-src 'self' data:; style-src 'self' 'unsafe-inline';">
 
-  <style>
-    html,body{margin:0;height:100%;background:#000;overflow:hidden;}
-    #player{width:100%;height:100vh;}
-    #loading {
-      color: #fff;
-      font-family: system-ui, sans-serif;
-      text-align: center;
-      margin-top: 20%;
-      font-size: 20px;
-      opacity: 0.8;
-    }
-  </style>
+<!-- Lokální Clappr + HLS plugin (místo CDN) -->
+<script src="/assets/lib/clappr.min.js"></script>
+<script src="/assets/lib/hlsjs-playback.min.js"></script>
+
+<style>
+  html,body{height:100%;margin:0;background:#000;color:#fff}
+  #player{width:100%;height:100vh;display:block}
+  #loading{position:absolute;left:0;right:0;text-align:center;margin-top:20%;font-family:system-ui}
+</style>
 </head>
 <body>
   <div id="loading">🎥 Načítám stream…</div>
-  <div id="player"></div>
+  <div id="player" role="application" aria-label="Video player"></div>
+
+  <script src="/play-stream/8kfcp5pkj/guard.js"></script>
 
   <script>
-    // ✅ Povolené domény
-    const allowed = ["hokejicek.site","starstreams.pro","w3schools.com"];
-    const ref = document.referrer || location.hostname;
-    if(!allowed.some(h=>ref.includes(h))){
-      document.body.innerHTML="<p style='color:white;text-align:center;margin-top:20%'>Tento přehrávač zde není povolen.</p>";
-      throw new Error("Neautorizovaný hostitel");
+  (function(){
+    // --- KONFIGURACE ---
+    const origin = [
+      "aHR0cHM6Ly9zdHJlYW0tNDgubWF6YW5hLnR2L1YyX21uLm0z", "dThzP2NvZGVjX2lkPTEyNDAm", "c2Vzc2lvbj1vbWc="
+    ];
+    // origin = base64 chunks concatenated
+    function b64join(chunks){ return chunks.join(''); }
+    function b64dec(s){ try{ return decodeURIComponent(escape(window.atob(s))); }catch(e){ return atob(s); } }
+
+    // služba pro dočasné uložení zdroje v paměti (client TTL)
+    const CLIENT_TTL_MS = 45 * 1000; // krátká doba, po které se proměnná vymaže
+
+    // Service Worker path we will request (SW acts as client-side proxy)
+    const SW_PROXY_PATH = '/sw-proxy/stream.m3u8';
+
+    // register service worker (scope must be root or /play-stream/8kfcp5pkj/)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/play-stream/8kfcp5pkj/sw.js', {scope: '/'})
+        .catch(()=>{/* ignore registration failure */});
     }
 
-    // ❌ Zakázat pravé tlačítko
-    document.addEventListener("contextmenu",e=>e.preventDefault());
+    // decode origin and store only locally
+    let encoded = b64join(origin);
+    let sourceUrl = b64dec(encoded);
 
-    // ✅ Adresa tvé proxy (změň podle svého Vercel projektu)
-    const vercelProxy = "https://tv-proxy-abc.vercel.app"; // ← uprav podle svého názvu projektu
-
-    // 🎞️ Původní M3U8 stream
-    const originSrc = "https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg";
-
-    // 🔑 Načti token z proxy a spusť přehrávač
-    async function initPlayer() {
+    // init clappr using Service Worker proxy path (if SW active), otherwise fallback to direct source
+    async function chooseUrl() {
+      // prefer SW proxy if registered
       try {
-        const originEnc = encodeURIComponent(originSrc);
-        const tokenUrl = `${vercelProxy}/api/token?src=${originEnc}`;
-        const tokenResp = await fetch(tokenUrl);
-        const data = await tokenResp.json();
-
-        if (!data.url) {
-          document.getElementById("loading").textContent = "❌ Chyba při získávání tokenu.";
-          return;
+        const swReady = await navigator.serviceWorker.ready;
+        // request a small "sw-proxy check" to ensure SW is controlling page
+        const r = await fetch(SW_PROXY_PATH + '?_check=1', {method:'GET', cache:'no-store'});
+        if (r.ok) {
+          // SW will fetch origin and respond, use SW proxy path
+          return SW_PROXY_PATH;
         }
+      } catch(e){
+        // fallback
+      }
+      // fallback: direct origin (some protection lost)
+      return sourceUrl;
+    }
 
-        const fullStreamUrl = data.url.startsWith("/")
-          ? `${vercelProxy}${data.url}`
-          : data.url;
+    async function init() {
+      const load = document.getElementById('loading');
+      const playerDiv = document.getElementById('player');
+      let source = await chooseUrl();
 
-        // 🧩 Inicializace Clappr
-        var player = new Clappr.Player({
-          parentId: "#player",
-          source: fullStreamUrl,
+      try {
+        const player = new Clappr.Player({
+          parentId: '#player',
+          source: source,
           plugins: [HlsjsPlayback],
-          mimeType: "application/x-mpegURL",
-          width: "100%",
-          height: "100%",
+          mimeType: 'application/x-mpegURL',
+          width: '100%',
+          height: '100%',
           autoPlay: true,
           mute: false,
           playback: { hlsjsConfig: { lowLatencyMode: true } }
         });
 
-        player.on(Clappr.Events.PLAYER_READY, function(){
-          document.getElementById("loading").style.display = "none";
+        player.on(Clappr.Events.PLAYER_READY, () => { if(load) load.style.display = 'none'; });
+
+        player.on(Clappr.Events.PLAYER_ERROR, () => {
+          if(load) load.textContent = '⚠️ Chyba přehrávání';
         });
 
-        player.on(Clappr.Events.PLAYER_ERROR, function(){
-          document.getElementById("loading").textContent = "⚠️ Chyba přehrávání.";
-        });
+        // client-side TTL: po uplynutí doby vymažeme proměnnou s originem
+        setTimeout(()=>{ try{ encoded = null; sourceUrl = null; }catch(e){} }, CLIENT_TTL_MS);
 
-      } catch (err) {
-        console.error(err);
-        document.getElementById("loading").textContent = "❌ Nelze inicializovat přehrávač.";
+      } catch(e){
+        playerDiv.innerHTML = "<p style='text-align:center;margin-top:20%'>❌ Nelze inicializovat přehrávač.</p>";
       }
     }
 
-    initPlayer();
+    init();
+  })();
   </script>
 </body>
 </html>
