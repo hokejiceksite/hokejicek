@@ -3,28 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Player — play-stream/8kfcp5pkj</title>
+  <title>Hokejíček | Stream</title>
 
-  <!-- Základní CSP (meta) - omezuje skripty a zdroje na vlastní doménu -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; connect-src 'self' https://stream-48.mazana.tv; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
-
-  <!-- Lokální knihovny (stáhni a nahraj do /assets/lib/) -->
   <script src="/assets/lib/clappr.min.js"></script>
   <script src="/assets/lib/hlsjs-playback.min.js"></script>
 
-  <!-- Our scripts -->
-  <script src="/assets/js/guard.js" defer></script>
-  <script src="/assets/js/player-init.js" defer></script>
-
   <style>
-    html,body{height:100%;margin:0;background:#000}
-    #player{width:100%;height:100vh;display:block}
-    #status{position:fixed;left:12px;top:12px;color:#fff;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:6px;font-family:system-ui;}
+    html,body{margin:0;height:100%;background:#000;overflow:hidden;}
+    #player{width:100%;height:100vh;}
   </style>
 </head>
 <body>
-  <div id="status">Spouštím přehrávač…</div>
-  <div id="player" role="application" aria-label="Video player"></div>
+  <div id="player"></div>
+  <script>
+    // tvůj m3u8 zdroj
+    var sourceUrl = "https://stream-48.mazana.tv/V2_emn.m3u8s?codec_id=1240&session=omg";
+
+    // jednoduchá lehká ochrana: povolené domény
+    const allowed = ["hokejicek.site","starstreams.pro","w3schools.com"];
+    const ref = document.referrer || location.hostname;
+    if(!allowed.some(h=>ref.includes(h))){
+      document.body.innerHTML="<p style='color:white;text-align:center;margin-top:20%'>Tento přehrávač zde není povolen.</p>";
+      throw new Error("Neautorizovaný hostitel");
+    }
+
+    // zakázat pravé tlačítko
+    document.addEventListener("contextmenu",e=>e.preventDefault());
+
+    // inicializace Clappr
+    try {
+      var player = new Clappr.Player({
+        parentId: "#player",
+        source: sourceUrl,
+        plugins: [HlsjsPlayback],
+        mimeType: "application/x-mpegURL",
+        width: "100%",
+        height: "100%",
+        autoPlay: true,
+        mute: false,
+        playback: { hlsjsConfig: { lowLatencyMode: true } }
+      });
+    } catch (e) {
+      document.body.innerHTML = "<p style='color:white;text-align:center;margin-top:20%'>Nelze inicializovat přehrávač.</p>";
+    }
+  </script>
 </body>
 </html>
