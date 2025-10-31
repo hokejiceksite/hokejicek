@@ -10,6 +10,7 @@
       font-family: "Segoe UI", Arial, sans-serif;
       background-color: #0b0b0b;
       color: #fff;
+      overflow: hidden; /* ❌ Zakáže scrollování */
     }
 
     /* 🔹 Horní lišta */
@@ -55,17 +56,30 @@
       color: #4da3ff;
     }
 
-    /* 🔹 Mřížka zápasů */
+    /* 🔹 Hlavní sekce */
     main {
       max-width: 1300px;
       margin: 70px auto;
       padding: 0 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 40px;
+      color: #4da3ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 🔹 Mřížka zápasů */
+    .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 25px;
     }
 
-    .card {
+    a.card {
       position: relative;
       aspect-ratio: 16/9;
       border-radius: 14px;
@@ -73,9 +87,11 @@
       background: #1a1a1a;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit;
     }
 
-    .card:hover {
+    a.card:hover {
       transform: scale(1.02);
       box-shadow: 0 0 30px rgba(77,163,255,0.3);
     }
@@ -115,6 +131,15 @@
       filter: brightness(0.7);
     }
 
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      color: #888;
+      border-top: 1px solid #222;
+      font-size: 0.9em;
+      margin-top: 60px;
+    }
+
     @media (max-width: 768px) {
       header img {
         height: 100px;
@@ -138,60 +163,68 @@
   </header>
 
   <main>
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Kolín vs Zlín" class="bg">
-      <div class="card-content">
-        <div class="teams">Kolín vs Zlín</div>
-        <div class="time">Start: 16:00</div>
-        <div class="countdown" id="kolin"></div>
-      </div>
-    </div>
+    <h1>Všechny přenosy</h1>
 
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Frýdek-Místek vs Přerov" class="bg">
-      <div class="card-content">
-        <div class="teams">Frýdek-Místek vs Přerov</div>
-        <div class="time">Start: 17:00</div>
-        <div class="countdown" id="frydek"></div>
-      </div>
-    </div>
+    <div class="grid">
+      <a href="/live/maxaliga/2025-11-01/KOL-ZLN" class="card">
+        <img src="https://i.imgur.com/sAXUtuX.png" alt="Kolín vs Zlín" class="bg">
+        <div class="card-content">
+          <div class="teams">Kolín vs Zlín</div>
+          <div class="time">Start: 16:00</div>
+          <div class="countdown" id="kolin"></div>
+        </div>
+      </a>
 
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Litoměřice vs Sokolov" class="bg">
-      <div class="card-content">
-        <div class="teams">Litoměřice vs Sokolov</div>
-        <div class="time">Start: 17:00</div>
-        <div class="countdown" id="litomerice"></div>
-      </div>
-    </div>
+      <a href="/live/maxaliga/2025-11-01/FRM-PRE" class="card">
+        <img src="https://i.imgur.com/LQKhPnn.png" alt="Frýdek-Místek vs Přerov" class="bg">
+        <div class="card-content">
+          <div class="teams">Frýdek-Místek vs Přerov</div>
+          <div class="time">Start: 17:00</div>
+          <div class="countdown" id="frydek"></div>
+        </div>
+      </a>
 
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Pardubice B vs Třebíč" class="bg">
-      <div class="card-content">
-        <div class="teams">Pardubice B vs Třebíč</div>
-        <div class="time">Start: 17:00</div>
-        <div class="countdown" id="pardubice"></div>
-      </div>
-    </div>
+      <a href="/live/maxaliga/2025-11-01/LTM-SOK" class="card">
+        <img src="https://i.imgur.com/mphHtG5.png" alt="Litoměřice vs Sokolov" class="bg">
+        <div class="card-content">
+          <div class="teams">Litoměřice vs Sokolov</div>
+          <div class="time">Start: 17:00</div>
+          <div class="countdown" id="litomerice"></div>
+        </div>
+      </a>
 
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Vsetín vs Tábor" class="bg">
-      <div class="card-content">
-        <div class="teams">Vsetín vs Tábor</div>
-        <div class="time">Start: 17:00</div>
-        <div class="countdown" id="vsetin"></div>
-      </div>
-    </div>
+      <a href="/live/maxaliga/2025-11-01/PCE-TRE" class="card">
+        <img src="https://i.imgur.com/9OKTPea.png" alt="Pardubice B vs Třebíč" class="bg">
+        <div class="card-content">
+          <div class="teams">Pardubice B vs Třebíč</div>
+          <div class="time">Start: 17:00</div>
+          <div class="countdown" id="pardubice"></div>
+        </div>
+      </a>
 
-    <div class="card">
-      <img src="https://i.imgur.com/sAXUtuX.png" alt="Jihlava vs Slavia Praha" class="bg">
-      <div class="card-content">
-        <div class="teams">Jihlava vs Slavia Praha</div>
-        <div class="time">Start: 18:30</div>
-        <div class="countdown" id="jihlava"></div>
-      </div>
+      <a href="/live/maxaliga/2025-11-01/VSE-TAB" class="card">
+        <img src="https://i.imgur.com/R0wuDi3.png" alt="Vsetín vs Tábor" class="bg">
+        <div class="card-content">
+          <div class="teams">Vsetín vs Tábor</div>
+          <div class="time">Start: 17:00</div>
+          <div class="countdown" id="vsetin"></div>
+        </div>
+      </a>
+
+      <a href="/live/maxaliga/2025-11-01/JIH-SLA" class="card">
+        <img src="https://i.imgur.com/FqTq5mf.png" alt="Jihlava vs Slavia Praha" class="bg">
+        <div class="card-content">
+          <div class="teams">Jihlava vs Slavia Praha</div>
+          <div class="time">Start: 18:30</div>
+          <div class="countdown" id="jihlava"></div>
+        </div>
+      </a>
     </div>
   </main>
+
+  <footer>
+    © 2025 Hokejíček – Všechna práva vyhrazena.
+  </footer>
 
   <script>
     const tomorrow = new Date();
