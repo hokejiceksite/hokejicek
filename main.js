@@ -1,53 +1,37 @@
-const matches = [
-  {
-    title: "HC Rytíři Vlašim vs HC Benešov",
-    league: "Krajská liga",
-    startTime: "2025-10-31T18:00:00",
-    thumbnail: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Ice_hockey_puck_on_ice.jpg",
-    link: "/live1.html"
-  },
-  {
-    title: "Mountfield HK vs HC Sparta Praha",
-    league: "TELH",
-    startTime: "2025-11-02T17:30:00",
-    thumbnail: "https://upload.wikimedia.org/wikipedia/commons/9/97/Hockey_ice_rink.jpg",
-    link: "/live2.html"
-  },
-  {
-    title: "Florida Panthers vs Boston Bruins",
-    league: "NHL",
-    startTime: "2025-11-03T01:00:00",
-    thumbnail: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Ice_hockey_players.jpg",
-    link: "/live3.html"
-  }
-];
-
-function renderMatches() {
+function loadMatches() {
+  const matches = JSON.parse(localStorage.getItem("hokejicek_matches") || "[]");
   const container = document.getElementById("matches");
   container.innerHTML = "";
-  matches.forEach((m, index) => {
+
+  if (matches.length === 0) {
+    container.innerHTML =
+      "<p style='text-align:center;color:#9fb0c6;'>Zatím žádné přenosy nejsou naplánované.</p>";
+    return;
+  }
+
+  matches.forEach((m, i) => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <img src="${m.thumbnail}" alt="${m.title}" class="thumb">
+      <img src="${m.image}" alt="${m.title}" class="thumb">
       <div class="card-content">
         <h3>${m.title}</h3>
         <div class="league">${m.league}</div>
-        <div class="timer" id="timer${index}"></div>
-      </div>
-    `;
-    card.addEventListener("click", () => window.location.href = m.link);
+        <div class="timer" id="timer${i}"></div>
+      </div>`;
+    card.onclick = () => window.location.href = m.link;
     container.appendChild(card);
-    updateTimer(m.startTime, `timer${index}`);
-    setInterval(() => updateTimer(m.startTime, `timer${index}`), 1000);
+    updateTimer(m.time, `timer${i}`);
+    setInterval(() => updateTimer(m.time, `timer${i}`), 1000);
   });
 }
 
 function updateTimer(startTime, id) {
-  const now = new Date().getTime();
+  const el = document.getElementById(id);
+  if (!el) return;
+  const now = Date.now();
   const matchTime = new Date(startTime).getTime();
   const diff = matchTime - now;
-  const el = document.getElementById(id);
 
   if (diff <= 0) {
     el.textContent = "🎥 Živě";
@@ -55,11 +39,20 @@ function updateTimer(startTime, id) {
     return;
   }
 
-  const h = Math.floor(diff / (1000 * 60 * 60));
-  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-  el.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  el.textContent = `${h.toString().padStart(2, "0")}:${m
+    .toString()
+    .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
-window.addEventListener("DOMContentLoaded", renderMatches);
+// Tajná klávesová zkratka pro admin (Shift + A + D + M)
+let seq = "";
+document.addEventListener("keydown", (e) => {
+  if (e.shiftKey) seq += e.key.toUpperCase();
+  if (seq.endsWith("ADM")) window.location.href = "/admin/index.html";
+  if (seq.length > 4) seq = "";
+});
+
+window.addEventListener("DOMContentLoaded", loadMatches);
