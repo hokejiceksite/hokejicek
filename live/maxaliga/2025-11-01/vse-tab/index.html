@@ -1,0 +1,48 @@
+
+
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>MAXA LIGA</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: black;
+    }
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+  <!-- Clappr -->
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+</head>
+<body>
+  <div id="player"></div>
+
+  <script>
+    const player = new Clappr.Player({
+      source: "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/68f2221250c8e37c3b1dcf10.m3u8",
+      parentId: "#player",
+      width: "100%",
+      height: "100%",
+      autoPlay: true,
+      mute: false,
+      mediacontrol: { seekbar: "#E53935" },
+    });
+
+    // Jakmile jsou k dispozici úrovně kvality, nastaví se ta nejlepší
+    player.on(Clappr.Events.PLAYBACK_LEVELS_AVAILABLE, function(levels) {
+      if (levels && levels.length > 0) {
+        player.core.activePlayback.currentLevel = levels.length - 1; // nejlepší kvalita
+      }
+    });
+  </script>
+
+</body>
+</html>
