@@ -1,21 +1,41 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hokejíček – Živé přenosy</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css" />
   <script defer src="main.js"></script>
 </head>
 <body>
-  <header class="header">
-    <h1>🏒 Hokejíček – Živé přenosy</h1>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="/" class="logo-link">
+        <img src="img/hokejicek-logo.png" alt="Hokejíček logo" class="logo" />
+        <span class="brand">Hokejíček</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Hlavní stránka</a>
+        <a href="#matches">Přenosy</a>
+        <a href="/gdpr/index.html">GDPR</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="grid" id="matches"></main>
+  <main class="container main-content">
+    <section id="hero">
+      <h1>🏒 Živé přenosy a záznamy hokejových zápasů</h1>
+      <p class="subtitle">Sleduj regionální hokej v moderním stylu přímo na Hokejíček.site</p>
+    </section>
+
+    <section id="matches" class="matches-grid"></section>
+  </main>
 
   <footer>
-    <p>© 2025 Hokejíček | hokejicek.site</p>
+    <div class="container footer-inner">
+      <small>© 2025 Hokejíček | hokejicek.site</small>
+      <span id="hidden-admin" hidden></span>
+    </div>
   </footer>
 </body>
 </html>
