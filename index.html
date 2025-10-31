@@ -1,41 +1,233 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček – Živé přenosy</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="main.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hokejíček – Přenosy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #0b0b0b;
+      color: #fff;
+    }
+
+    /* 🔹 Horní lišta */
+    header {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      padding: 5px 24px;
+      border-bottom: 1px solid #222;
+      z-index: 10;
+      height: 55px;
+    }
+
+    header img {
+      height: 130px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+    }
+
+    header img:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    nav {
+      margin-left: auto;
+      z-index: 2;
+    }
+
+    nav a {
+      color: #eee;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 500;
+      font-size: 1.05em;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #4da3ff;
+    }
+
+    /* 🔹 Mřížka zápasů */
+    main {
+      max-width: 1300px;
+      margin: 70px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #1a1a1a;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(77,163,255,0.3);
+    }
+
+    .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
+      padding: 15px;
+    }
+
+    .teams {
+      font-size: 1.05em;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .time {
+      font-size: 0.9em;
+      color: #aaa;
+    }
+
+    .countdown {
+      font-size: 0.9em;
+      color: #4da3ff;
+      font-family: monospace;
+    }
+
+    .bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.7);
+    }
+
+    @media (max-width: 768px) {
+      header img {
+        height: 100px;
+      }
+      nav a {
+        font-size: 0.9em;
+        margin-left: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a href="/" class="logo-link">
-        <img src="img/hokejicek-logo.png" alt="Hokejíček logo" class="logo" />
-        <span class="brand">Hokejíček</span>
-      </a>
-      <nav class="nav-links">
-        <a href="/">Hlavní stránka</a>
-        <a href="#matches">Přenosy</a>
-        <a href="/gdpr/index.html">GDPR</a>
-      </nav>
-    </div>
+
+  <header>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+    <nav>
+      <a href="/">Hlavní stránka</a>
+      <a href="/prenosy">Přenosy</a>
+      <a href="/gdpr/index.html">GDPR</a>
+    </nav>
   </header>
 
-  <main class="container main-content">
-    <section id="hero">
-      <h1>🏒 Živé přenosy a záznamy hokejových zápasů</h1>
-      <p class="subtitle">Sleduj regionální hokej v moderním stylu přímo na Hokejíček.site</p>
-    </section>
+  <main>
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Kolín vs Zlín" class="bg">
+      <div class="card-content">
+        <div class="teams">Kolín vs Zlín</div>
+        <div class="time">Start: 16:00</div>
+        <div class="countdown" id="kolin"></div>
+      </div>
+    </div>
 
-    <section id="matches" class="matches-grid"></section>
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Frýdek-Místek vs Přerov" class="bg">
+      <div class="card-content">
+        <div class="teams">Frýdek-Místek vs Přerov</div>
+        <div class="time">Start: 17:00</div>
+        <div class="countdown" id="frydek"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Litoměřice vs Sokolov" class="bg">
+      <div class="card-content">
+        <div class="teams">Litoměřice vs Sokolov</div>
+        <div class="time">Start: 17:00</div>
+        <div class="countdown" id="litomerice"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Pardubice B vs Třebíč" class="bg">
+      <div class="card-content">
+        <div class="teams">Pardubice B vs Třebíč</div>
+        <div class="time">Start: 17:00</div>
+        <div class="countdown" id="pardubice"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Vsetín vs Tábor" class="bg">
+      <div class="card-content">
+        <div class="teams">Vsetín vs Tábor</div>
+        <div class="time">Start: 17:00</div>
+        <div class="countdown" id="vsetin"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/sAXUtuX.png" alt="Jihlava vs Slavia Praha" class="bg">
+      <div class="card-content">
+        <div class="teams">Jihlava vs Slavia Praha</div>
+        <div class="time">Start: 18:30</div>
+        <div class="countdown" id="jihlava"></div>
+      </div>
+    </div>
   </main>
 
-  <footer>
-    <div class="container footer-inner">
-      <small>© 2025 Hokejíček | hokejicek.site</small>
-      <span id="hidden-admin" hidden></span>
-    </div>
-  </footer>
+  <script>
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const baseDate = tomorrow.toISOString().split('T')[0];
+
+    const matches = [
+      { id: 'kolin', time: '16:00' },
+      { id: 'frydek', time: '17:00' },
+      { id: 'litomerice', time: '17:00' },
+      { id: 'pardubice', time: '17:00' },
+      { id: 'vsetin', time: '17:00' },
+      { id: 'jihlava', time: '18:30' },
+    ];
+
+    function updateCountdown() {
+      const now = new Date();
+      matches.forEach(match => {
+        const matchTime = new Date(`${baseDate}T${match.time}:00`);
+        const diff = matchTime - now;
+        const el = document.getElementById(match.id);
+
+        if (diff <= 0) {
+          el.textContent = "Live now!";
+          el.style.color = "#00ff88";
+        } else {
+          const h = Math.floor(diff / 1000 / 60 / 60);
+          const m = Math.floor((diff / 1000 / 60) % 60);
+          el.textContent = `${h}h ${m}m remaining`;
+        }
+      });
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 60000);
+  </script>
+
 </body>
 </html>
