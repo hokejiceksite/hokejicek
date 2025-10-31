@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hokejicek Extraliga Embed</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: black;
+    }
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+
+  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+</head>
+<body>
+  <div id="player"></div>
+
+  <script>
+    const player = new Clappr.Player({
+      source: "https://agmipobm-ns1.captain.vpplayer.net/ygGE_SHqz-hL4UWICxIzqw==,7991601123/encode/vjsoauuw/hls/master_file.m3u8",
+      parentId: "#player",
+      width: "100%",
+      height: "100%",
+      autoPlay: true,
+      mute: false,
+      mediacontrol: { seekbar: "#B27D57" },
+    });
+
+player.on(Clappr.Events.PLAYBACK_LEVELS_AVAILABLE, function(levels) {
+      if (levels && levels.length > 0) {
+        player.core.activePlayback.currentLevel = levels.length - 1; // nejlepší kvalita
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: 'zitkptgwk8',
+    });
+  </script>
+
+</body>
+</html>
