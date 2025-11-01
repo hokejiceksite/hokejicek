@@ -1,43 +1,145 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hokejíček Admin Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Hokejíček</title>
   <style>
-    body{background:#0b0b0b;color:#fff;font-family:Segoe UI,Arial;padding:20px}
-    button{background:#4da3ff;border:none;padding:6px 12px;border-radius:6px;color:#fff;cursor:pointer;margin:4px}
-    .card{background:#111;padding:10px;border-radius:6px;margin:10px 0}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #0b0b0b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .panel {
+      background: #111;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      max-width: 380px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      background: #222;
+      color: white;
+      font-size: 1em;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #2196f3;
+    }
+    #status {
+      margin-top: 15px;
+      color: #4da3ff;
+      font-size: 0.95em;
+    }
+    #logout {
+      display: none;
+      margin-top: 15px;
+      background: #dc3545;
+    }
   </style>
 </head>
 <body>
-  <h1>Admin Panel</h1>
-  <div id="reports"></div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script>
+  <div class="panel" id="loginPanel">
+    <h2>🔒 Admin přihlášení</h2>
+    <input type="text" id="username" placeholder="Uživatelské jméno" required>
+    <input type="password" id="password" placeholder="Heslo" required>
+    <button onclick="login()">Přihlásit se</button>
+    <div id="status"></div>
+  </div>
+
+  <div class="panel" id="adminPanel" style="display: none;">
+    <h2>✅ Vítejte, <span id="adminName"></span>!</h2>
+    <p>Jste přihlášen jako administrátor Hokejíčku.</p>
+    <button id="logout" onclick="logout()">Odhlásit se</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBtf3bEzJU5et-Q11j38QHNMHyOeoOb98A",
       authDomain: "hokejicek-2fe46.firebaseapp.com",
       databaseURL: "https://hokejicek-2fe46-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "hokejicek-2fe46",
-      storageBucket: "hokejicek-2fe46.appspot.com",
+      storageBucket: "hokejicek-2fe46.firebasestorage.app",
       messagingSenderId: "980610969771",
       appId: "1:980610969771:web:1b03ca9715204ef6bd47ee",
       measurementId: "G-M0FJ2RMY9V"
     };
-    firebase.initializeApp(firebaseConfig);
 
-    const auth = firebase.auth();
-    const db = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
-    const email = prompt("Uživatelské jméno (např. adminhokejicek):");
-    const pass = prompt("Heslo:");
-    firebase.auth().signInWithEmailAndPassword(`${email}@hokejicek.local`, pass)
-      .then(() => alert("Přihlášeno jako admin."))
-      .catch(e => alert("Chyba přihlášení: " + e.message));
+    // 🟢 Přihlášení admina
+    async function login() {
+      const username = document.getElementById("username").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const status = document.getElementById("status");
+
+      if (!username || !password) {
+        status.innerText = "Vyplňte všechny údaje.";
+        return;
+      }
+
+      const email = `${username}@hokejicek.site`;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 🔍 Ověření admina
+        const adminRef = ref(db, "admins/" + user.uid);
+        const snapshot = await get(adminRef);
+
+        if (snapshot.exists() && snapshot.val() === true) {
+          document.getElementById("loginPanel").style.display = "none";
+          document.getElementById("adminPanel").style.display = "block";
+          document.getElementById("adminName").innerText = username;
+          document.getElementById("logout").style.display = "inline-block";
+          status.innerText = "";
+        } else {
+          status.innerText = "🚫 Tento účet nemá admin oprávnění.";
+          await signOut(auth);
+        }
+      } catch (error) {
+        status.innerText = "❌ Chyba přihlášení: " + error.message;
+      }
+    }
+
+    // 🔴 Odhlášení
+    async function logout() {
+      await signOut(auth);
+      document.getElementById("adminPanel").style.display = "none";
+      document.getElementById("loginPanel").style.display = "block";
+      document.getElementById("status").innerText = "Byl jste odhlášen.";
+    }
   </script>
+
 </body>
 </html>
