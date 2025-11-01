@@ -3,79 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hokejíček Admin</title>
+  <title>Hokejíček Admin Panel</title>
   <style>
-    body{background:#0b0b0b;color:#fff;font-family:Segoe UI,Arial;margin:0;padding:20px}
-    .card{background:#111;padding:12px;border-radius:8px;margin-bottom:10px}
-    button{background:#4da3ff;border:none;padding:6px;border-radius:6px;color:#fff;cursor:pointer}
+    body{background:#0b0b0b;color:#fff;font-family:Segoe UI,Arial;padding:20px}
+    button{background:#4da3ff;border:none;padding:6px 12px;border-radius:6px;color:#fff;cursor:pointer;margin:4px}
+    .card{background:#111;padding:10px;border-radius:6px;margin:10px 0}
   </style>
 </head>
 <body>
-  <h1>Admin console</h1>
+  <h1>Admin Panel</h1>
   <div id="reports"></div>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBtf3bEzJU5et-Q11j38QHNMHyOeoOb98A",
-  authDomain: "hokejicek-2fe46.firebaseapp.com",
-  databaseURL: "https://hokejicek-2fe46-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "hokejicek-2fe46",
-  storageBucket: "hokejicek-2fe46.firebasestorage.app",
-  messagingSenderId: "980610969771",
-  appId: "1:980610969771:web:1b03ca9715204ef6bd47ee",
-  measurementId: "G-M0FJ2RMY9V"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtf3bEzJU5et-Q11j38QHNMHyOeoOb98A",
+      authDomain: "hokejicek-2fe46.firebaseapp.com",
+      databaseURL: "https://hokejicek-2fe46-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hokejicek-2fe46",
+      storageBucket: "hokejicek-2fe46.appspot.com",
+      messagingSenderId: "980610969771",
+      appId: "1:980610969771:web:1b03ca9715204ef6bd47ee",
+      measurementId: "G-M0FJ2RMY9V"
+    };
     firebase.initializeApp(firebaseConfig);
+
     const auth = firebase.auth();
     const db = firebase.database();
-    const reportsRef = db.ref('reports');
 
-    // jednoduché přihlášení pro admina (stejný princip - uživatel musí být v /admins)
-    const email = prompt('Admin email (uživatelské jméno):');
-    const pass = prompt('Heslo:');
-    if(!email || !pass) alert('Nebyl zadán přístup.');
-
-    auth.signInWithEmailAndPassword(email+'@hokejicek.local', pass).then(userCred=>{
-      const uid = userCred.user.uid;
-      db.ref('admins').child(uid).once('value').then(snap=>{
-        if(!snap.exists()) return alert('Nejsi admin.');
-        // load reports
-        reportsRef.on('value', s=>{
-          const el = document.getElementById('reports');
-          el.innerHTML='';
-          s.forEach(r=>{
-            const rep = r.val();
-            const div = document.createElement('div');
-            div.className='card';
-            div.innerHTML = `<div><strong>Report</strong> ${new Date(rep.time).toLocaleString()}</div>
-              <div>messageId: ${rep.messageId}</div>
-              <div>reporter: ${rep.reporterId}</div>`;
-            const btnView = document.createElement('button'); btnView.textContent='Zobraz zprávu';
-            btnView.onclick = ()=> {
-              db.ref('messages').child(rep.messageId).once('value').then(ms => {
-                const m = ms.val();
-                alert('Zpráva: '+(m?m.text:'(nenalezeno)') + '\n od: ' + (m?m.username:'?'));
-              });
-            };
-            const btnDel = document.createElement('button'); btnDel.textContent='Smazat zprávu';
-            btnDel.onclick = ()=> {
-              if(confirm('Smazat zprávu?')) db.ref('messages').child(rep.messageId).remove();
-            };
-            const btnBan = document.createElement('button'); btnBan.textContent='Ban uživatele';
-            btnBan.onclick = ()=> {
-              db.ref('messages').child(rep.messageId).once('value').then(ms => {
-                const m = ms.val();
-                if(m && m.userId) db.ref('bans').child(m.userId).set(true);
-              });
-            };
-            div.appendChild(btnView); div.appendChild(btnDel); div.appendChild(btnBan);
-            el.appendChild(div);
-          });
-        });
-      });
-    }).catch(e=> alert('Chyba: '+e.message));
+    const email = prompt("Uživatelské jméno (např. adminhokejicek):");
+    const pass = prompt("Heslo:");
+    firebase.auth().signInWithEmailAndPassword(`${email}@hokejicek.local`, pass)
+      .then(() => alert("Přihlášeno jako admin."))
+      .catch(e => alert("Chyba přihlášení: " + e.message));
   </script>
 </body>
 </html>
