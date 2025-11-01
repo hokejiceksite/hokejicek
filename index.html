@@ -10,7 +10,6 @@
       font-family: "Segoe UI", Arial, sans-serif;
       background-color: #0b0b0b;
       color: #fff;
-      overflow: hidden; /* ❌ Zakáže scrollování */
     }
 
     /* 🔹 Horní lišta */
@@ -56,7 +55,6 @@
       color: #4da3ff;
     }
 
-    /* 🔹 Hlavní sekce */
     main {
       max-width: 1300px;
       margin: 70px auto;
@@ -72,7 +70,6 @@
       letter-spacing: 1px;
     }
 
-    /* 🔹 Mřížka zápasů */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -139,16 +136,6 @@
       font-size: 0.9em;
       margin-top: 60px;
     }
-
-    @media (max-width: 768px) {
-      header img {
-        height: 100px;
-      }
-      nav a {
-        font-size: 0.9em;
-        margin-left: 15px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -163,10 +150,10 @@
   </header>
 
   <main>
-    <h1>Všechny přenosy</h1>
+    <h1>VŠECHNY PŘENOSY</h1>
 
     <div class="grid">
-      <a href="/live/maxaliga/2025-11-01/kol-zln" class="card">
+      <a href="/live/maxaliga/2025-11-01/KOL-ZLN" class="card">
         <img src="https://i.imgur.com/sAXUtuX.png" alt="Kolín vs Zlín" class="bg">
         <div class="card-content">
           <div class="teams">Kolín vs Zlín</div>
@@ -175,7 +162,7 @@
         </div>
       </a>
 
-      <a href="/live/maxaliga/2025-11-01/frm-pre" class="card">
+      <a href="/live/maxaliga/2025-11-01/FRM-PRE" class="card">
         <img src="https://i.imgur.com/LQKhPnn.png" alt="Frýdek-Místek vs Přerov" class="bg">
         <div class="card-content">
           <div class="teams">Frýdek-Místek vs Přerov</div>
@@ -184,7 +171,7 @@
         </div>
       </a>
 
-      <a href="/live/maxaliga/2025-11-01/ltm-sok" class="card">
+      <a href="/live/maxaliga/2025-11-01/LTM-SOK" class="card">
         <img src="https://i.imgur.com/mphHtG5.png" alt="Litoměřice vs Sokolov" class="bg">
         <div class="card-content">
           <div class="teams">Litoměřice vs Sokolov</div>
@@ -193,7 +180,7 @@
         </div>
       </a>
 
-      <a href="/live/maxaliga/2025-11-01/pce-tre" class="card">
+      <a href="/live/maxaliga/2025-11-01/PCE-TRE" class="card">
         <img src="https://i.imgur.com/9OKTPea.png" alt="Pardubice B vs Třebíč" class="bg">
         <div class="card-content">
           <div class="teams">Pardubice B vs Třebíč</div>
@@ -202,7 +189,7 @@
         </div>
       </a>
 
-      <a href="/live/maxaliga/2025-11-01/vse-tab" class="card">
+      <a href="/live/maxaliga/2025-11-01/VSE-TAB" class="card">
         <img src="https://i.imgur.com/R0wuDi3.png" alt="Vsetín vs Tábor" class="bg">
         <div class="card-content">
           <div class="teams">Vsetín vs Tábor</div>
@@ -211,7 +198,7 @@
         </div>
       </a>
 
-      <a href="/live/maxaliga/2025-11-01/jih-sla" class="card">
+      <a href="/live/maxaliga/2025-11-01/JIH-SLA" class="card">
         <img src="https://i.imgur.com/FqTq5mf.png" alt="Jihlava vs Slavia Praha" class="bg">
         <div class="card-content">
           <div class="teams">Jihlava vs Slavia Praha</div>
@@ -227,9 +214,7 @@
   </footer>
 
   <script>
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const baseDate = tomorrow.toISOString().split('T')[0];
+    const matchDay = "2025-11-01"; // dnešní datum ✅
 
     const matches = [
       { id: 'kolin', time: '16:00' },
@@ -243,8 +228,8 @@
     function updateCountdown() {
       const now = new Date();
       matches.forEach(match => {
-        const matchTime = new Date(`${baseDate}T${match.time}:00`);
-        const diff = matchTime - now;
+        const target = new Date(`${matchDay}T${match.time}:00`);
+        const diff = target - now;
         const el = document.getElementById(match.id);
 
         if (diff <= 0) {
@@ -253,13 +238,14 @@
         } else {
           const h = Math.floor(diff / 1000 / 60 / 60);
           const m = Math.floor((diff / 1000 / 60) % 60);
-          el.textContent = `${h}h ${m}m remaining`;
+          const s = Math.floor((diff / 1000) % 60);
+          el.textContent = `${h}h ${m}m ${s}s remaining`;
         }
       });
     }
 
     updateCountdown();
-    setInterval(updateCountdown, 60000);
+    setInterval(updateCountdown, 1000);
   </script>
 
 </body>
