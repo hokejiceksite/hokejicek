@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hokejíček – Přenosy</title>
+  <title>Hokejíček – Přenosy TELH</title>
+
+
   <style>
     body {
       margin: 0;
@@ -12,85 +14,83 @@
       color: #fff;
     }
 
-    /* 🔹 Horní lišta */
+    /* Horní lišta */
     header {
-      position: relative;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       background: #111;
-      padding: 5px 24px;
+      padding: 10px 25px;
       border-bottom: 1px solid #222;
-      z-index: 10;
       height: 55px;
     }
 
     header img {
-      height: 130px;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      height: 100px;
       transition: transform 0.3s ease;
     }
 
     header img:hover {
-      transform: translateY(-50%) scale(1.05);
+      transform: scale(1.05);
     }
 
     nav {
       margin-left: auto;
-      z-index: 2;
     }
 
     nav a {
       color: #eee;
       text-decoration: none;
-      margin-left: 25px;
+      margin-left: 20px;
       font-weight: 500;
-      font-size: 1.05em;
-      transition: color 0.2s;
+      font-size: 1em;
     }
 
     nav a:hover {
       color: #4da3ff;
     }
 
-    main {
-      max-width: 1300px;
-      margin: 70px auto;
-      padding: 0 20px;
-    }
-
     h1 {
       text-align: center;
-      font-size: 2em;
-      margin-bottom: 40px;
       color: #4da3ff;
-      text-transform: uppercase;
+      margin-top: 70px;
+      font-size: 1.9em;
       letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
-    .grid {
+    /* Mřížka zápasů */
+    main {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 25px;
     }
 
-    a.card {
+    .card {
       position: relative;
-      aspect-ratio: 16/9;
       border-radius: 14px;
       overflow: hidden;
       background: #1a1a1a;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+      min-height: 190px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      text-decoration: none;
-      color: inherit;
+      cursor: pointer;
     }
 
-    a.card:hover {
+    .card:hover {
       transform: scale(1.02);
       box-shadow: 0 0 30px rgba(77,163,255,0.3);
+    }
+
+    .bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6);
+      position: absolute;
+      inset: 0;
     }
 
     .card-content {
@@ -98,12 +98,12 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.9));
       padding: 15px;
     }
 
     .teams {
-      font-size: 1.05em;
+      font-size: 1.1em;
       font-weight: 600;
       margin-bottom: 5px;
     }
@@ -119,27 +119,15 @@
       font-family: monospace;
     }
 
-    .bg {
-      position: absolute;
-      inset: 0;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      filter: brightness(0.7);
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      color: #888;
-      border-top: 1px solid #222;
-      font-size: 0.9em;
-      margin-top: 60px;
+    @media (max-width: 768px) {
+      h1 { font-size: 1.5em; margin-top: 60px; }
+      .card { min-height: 160px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Horní lišta -->
   <header>
     <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
     <nav>
@@ -149,103 +137,107 @@
     </nav>
   </header>
 
+  <h1>Všechny přenosy TELH</h1>
+
   <main>
-    <h1>VŠECHNY PŘENOSY</h1>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/tri-pce')">
+      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Třinec vs Pardubice">
+      <div class="card-content">
+        <div class="teams">Třinec vs Pardubice</div>
+        <div class="time">Start: 15:00</div>
+        <div class="countdown" id="m1"></div>
+      </div>
+    </div>
 
-    <div class="grid">
-      <a href="/live/maxaliga/2025-11-01/kol-zln" class="card">
-        <img src="https://i.imgur.com/sAXUtuX.png" alt="Kolín vs Zlín" class="bg">
-        <div class="card-content">
-          <div class="teams">Kolín vs Zlín</div>
-          <div class="time">Start: 16:00</div>
-          <div class="countdown" id="kolin"></div>
-        </div>
-      </a>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/lit-hkm')">
+      <img src="https://i.imgur.com/l20G0U1.png" class="bg" alt="Litvínov vs Mountfield HK">
+      <div class="card-content">
+        <div class="teams">Litvínov vs Mountfield HK</div>
+        <div class="time">Start: 15:30</div>
+        <div class="countdown" id="m2"></div>
+      </div>
+    </div>
 
-      <a href="/live/maxaliga/2025-11-01/frm-pre" class="card">
-        <img src="https://i.imgur.com/LQKhPnn.png" alt="Frýdek-Místek vs Přerov" class="bg">
-        <div class="card-content">
-          <div class="teams">Frýdek-Místek vs Přerov</div>
-          <div class="time">Start: 17:00</div>
-          <div class="countdown" id="frydek"></div>
-        </div>
-      </a>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kla-plz')">
+      <img src="https://i.imgur.com/LcEkhmU.png" class="bg" alt="Kladno vs Plzeň">
+      <div class="card-content">
+        <div class="teams">Kladno vs Plzeň</div>
+        <div class="time">Start: 16:00</div>
+        <div class="countdown" id="m3"></div>
+      </div>
+    </div>
 
-      <a href="/live/maxaliga/2025-11-01/ltm-sok" class="card">
-        <img src="https://i.imgur.com/mphHtG5.png" alt="Litoměřice vs Sokolov" class="bg">
-        <div class="card-content">
-          <div class="teams">Litoměřice vs Sokolov</div>
-          <div class="time">Start: 17:00</div>
-          <div class="countdown" id="litomerice"></div>
-        </div>
-      </a>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/spa-mbl')">
+      <img src="https://i.imgur.com/VarJIUB.png" class="bg" alt="Sparta Praha vs Mladá Boleslav">
+      <div class="card-content">
+        <div class="teams">Sparta Praha vs Mladá Boleslav</div>
+        <div class="time">Start: 16:00</div>
+        <div class="countdown" id="m4"></div>
+      </div>
+    </div>
 
-      <a href="/live/maxaliga/2025-11-01/pce-tre" class="card">
-        <img src="https://i.imgur.com/9OKTPea.png" alt="Pardubice B vs Třebíč" class="bg">
-        <div class="card-content">
-          <div class="teams">Pardubice B vs Třebíč</div>
-          <div class="time">Start: 17:00</div>
-          <div class="countdown" id="pardubice"></div>
-        </div>
-      </a>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/vit-olo')">
+      <img src="https://i.imgur.com/TRo85Rr.png" class="bg" alt="Vítkovice vs Olomouc">
+      <div class="card-content">
+        <div class="teams">Vítkovice vs Olomouc</div>
+        <div class="time">Start: 16:00</div>
+        <div class="countdown" id="m5"></div>
+      </div>
+    </div>
 
-      <a href="/live/maxaliga/2025-11-01/vse-tab" class="card">
-        <img src="https://i.imgur.com/R0wuDi3.png" alt="Vsetín vs Tábor" class="bg">
-        <div class="card-content">
-          <div class="teams">Vsetín vs Tábor</div>
-          <div class="time">Start: 17:00</div>
-          <div class="countdown" id="vsetin"></div>
-        </div>
-      </a>
-
-      <a href="/live/maxaliga/2025-11-01/jih-sla" class="card">
-        <img src="https://i.imgur.com/FqTq5mf.png" alt="Jihlava vs Slavia Praha" class="bg">
-        <div class="card-content">
-          <div class="teams">Jihlava vs Slavia Praha</div>
-          <div class="time">Start: 18:30</div>
-          <div class="countdown" id="jihlava"></div>
-        </div>
-      </a>
+    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kom-ced')">
+      <img src="https://i.imgur.com/ChQrU1f.png" class="bg" alt="Kometa Brno vs České Budějovice">
+      <div class="card-content">
+        <div class="teams">Kometa Brno vs České Budějovice</div>
+        <div class="time">Start: 17:00</div>
+        <div class="countdown" id="m6"></div>
+      </div>
     </div>
   </main>
 
-  <footer>
-    © 2025 Hokejíček – Všechna práva vyhrazena.
-  </footer>
-
+  <!-- Reklamy -->
   <script>
-    const matchDay = "2025-11-01"; // dnešní datum ✅
+    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
+  </script>
 
+  <!-- Přesměrování -->
+  <script>
+    function goTo(url) {
+      window.location.href = url;
+    }
+  </script>
+
+  <!-- Countdown -->
+  <script>
     const matches = [
-      { id: 'kolin', time: '16:00' },
-      { id: 'frydek', time: '17:00' },
-      { id: 'litomerice', time: '17:00' },
-      { id: 'pardubice', time: '17:00' },
-      { id: 'vsetin', time: '17:00' },
-      { id: 'jihlava', time: '18:30' },
+      { id: "m1", time: "15:00" },
+      { id: "m2", time: "15:30" },
+      { id: "m3", time: "16:00" },
+      { id: "m4", time: "16:00" },
+      { id: "m5", time: "16:00" },
+      { id: "m6", time: "17:00" }
     ];
 
     function updateCountdown() {
       const now = new Date();
-      matches.forEach(match => {
-        const target = new Date(`${matchDay}T${match.time}:00`);
-        const diff = target - now;
-        const el = document.getElementById(match.id);
-
+      const today = now.toISOString().split('T')[0];
+      matches.forEach(m => {
+        const el = document.getElementById(m.id);
+        const start = new Date(`${today}T${m.time}:00`);
+        const diff = start - now;
         if (diff <= 0) {
           el.textContent = "Live now!";
           el.style.color = "#00ff88";
         } else {
           const h = Math.floor(diff / 1000 / 60 / 60);
-          const m = Math.floor((diff / 1000 / 60) % 60);
-          const s = Math.floor((diff / 1000) % 60);
-          el.textContent = `${h}h ${m}m ${s}s remaining`;
+          const min = Math.floor((diff / 1000 / 60) % 60);
+          el.textContent = `${h}h ${min}m remaining`;
         }
       });
     }
 
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    setInterval(updateCountdown, 60000);
   </script>
 
 </body>
