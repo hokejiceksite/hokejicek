@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hokejíček – Přenosy TELH</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hokejíček – TELH Přenosy</title>
 
-  <!-- Popup reklamy -->
+  <!-- 💰 POPUP reklama - HLAVIČKA -->
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
   <style>
@@ -16,35 +16,27 @@
       color: #fff;
     }
 
-    /* Horní lišta */
     header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       background: #111;
-      padding: 10px 25px;
+      padding: 5px 24px;
       border-bottom: 1px solid #222;
       height: 55px;
     }
 
     header img {
       height: 100px;
-      transition: transform 0.3s ease;
-    }
-
-    header img:hover {
-      transform: scale(1.05);
-    }
-
-    nav {
-      margin-left: auto;
     }
 
     nav a {
       color: #eee;
       text-decoration: none;
-      margin-left: 20px;
+      margin-left: 25px;
       font-weight: 500;
-      font-size: 1em;
+      font-size: 1.05em;
+      transition: color 0.2s;
     }
 
     nav a:hover {
@@ -54,45 +46,35 @@
     h1 {
       text-align: center;
       color: #4da3ff;
-      margin-top: 70px;
-      font-size: 1.9em;
+      margin-top: 50px;
+      margin-bottom: 40px;
+      font-size: 2em;
       letter-spacing: 1px;
-      text-transform: uppercase;
     }
 
-    /* Mřížka zápasů */
     main {
-      max-width: 1400px;
-      margin: 60px auto;
-      padding: 0 30px;
+      max-width: 1300px;
+      margin: 0 auto 60px auto;
+      padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 40px 45px; /* víc prostoru mezi kartami */
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 35px;
     }
 
     .card {
       position: relative;
-      border-radius: 18px;
+      aspect-ratio: 16/9;
+      border-radius: 20px;
       overflow: hidden;
       background: #1a1a1a;
-      min-height: 210px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
       cursor: pointer;
     }
 
     .card:hover {
       transform: scale(1.03);
-      box-shadow: 0 0 35px rgba(77,163,255,0.35);
-    }
-
-    .bg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.65);
-      position: absolute;
-      inset: 0;
+      box-shadow: 0 0 30px rgba(77,163,255,0.4);
     }
 
     .card-content {
@@ -101,36 +83,52 @@
       left: 0;
       width: 100%;
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.9));
-      padding: 18px;
+      padding: 15px;
     }
 
     .teams {
       font-size: 1.15em;
       font-weight: 600;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .time {
       font-size: 0.9em;
-      color: #ccc;
+      color: #bbb;
     }
 
     .countdown {
-      font-size: 0.95em;
-      color: #4da3ff;
+      font-size: 0.9em;
+      color: #00ff99;
       font-family: monospace;
     }
 
+    .bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.85);
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.9em;
+      padding: 20px 0;
+      border-top: 1px solid #222;
+    }
+
     @media (max-width: 768px) {
-      h1 { font-size: 1.5em; margin-top: 60px; }
-      .card { min-height: 180px; }
-      main { gap: 25px; grid-template-columns: 1fr; }
+      .card {
+        aspect-ratio: 4/3;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Horní lišta -->
   <header>
     <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
     <nav>
@@ -140,7 +138,7 @@
     </nav>
   </header>
 
-  <h1>Všechny přenosy TELH</h1>
+  <h1>VŠECHNY PŘENOSY TELH</h1>
 
   <main>
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/tri-pce')">
@@ -153,7 +151,7 @@
     </div>
 
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/lit-hkm')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Litvínov vs Mountfield HK">
+      <img src="https://i.imgur.com/CGZf5SG.png" class="bg" alt="Litvínov vs Mountfield HK">
       <div class="card-content">
         <div class="teams">Litvínov vs Mountfield HK</div>
         <div class="time">Start: 15:30</div>
@@ -162,7 +160,7 @@
     </div>
 
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kla-plz')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Kladno vs Plzeň">
+      <img src="https://i.imgur.com/jSWQIgg.png" class="bg" alt="Kladno vs Plzeň">
       <div class="card-content">
         <div class="teams">Kladno vs Plzeň</div>
         <div class="time">Start: 16:00</div>
@@ -171,7 +169,7 @@
     </div>
 
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/spa-mbl')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Sparta Praha vs Mladá Boleslav">
+      <img src="https://i.imgur.com/vntfJ82.png" class="bg" alt="Sparta Praha vs Mladá Boleslav">
       <div class="card-content">
         <div class="teams">Sparta Praha vs Mladá Boleslav</div>
         <div class="time">Start: 16:00</div>
@@ -180,7 +178,7 @@
     </div>
 
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/vit-olo')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Vítkovice vs Olomouc">
+      <img src="https://i.imgur.com/STOIMTh.png" class="bg" alt="Vítkovice vs Olomouc">
       <div class="card-content">
         <div class="teams">Vítkovice vs Olomouc</div>
         <div class="time">Start: 16:00</div>
@@ -189,7 +187,7 @@
     </div>
 
     <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kom-ced')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Kometa Brno vs České Budějovice">
+      <img src="https://i.imgur.com/4vzCi0d.png" class="bg" alt="Kometa Brno vs České Budějovice">
       <div class="card-content">
         <div class="teams">Kometa Brno vs České Budějovice</div>
         <div class="time">Start: 17:00</div>
@@ -198,50 +196,51 @@
     </div>
   </main>
 
-  <!-- Reklamy -->
-  <script>
-    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
+  <footer>© 2025 Hokejíček – Všechna práva vyhrazena.</footer>
+
+  <!-- 💰 POPUP reklama - PATIČKA -->
+  <script type="text/javascript">
+    aclib.runAutoTag({
+      zoneId: 'zitkptgwk8',
+    });
   </script>
 
-  <!-- Přesměrování -->
   <script>
     function goTo(url) {
       window.location.href = url;
     }
-  </script>
 
-  <!-- Countdown -->
-  <script>
+    const today = new Date().toISOString().split('T')[0];
     const matches = [
-      { id: "m1", time: "15:00" },
-      { id: "m2", time: "15:30" },
-      { id: "m3", time: "16:00" },
-      { id: "m4", time: "16:00" },
-      { id: "m5", time: "16:00" },
-      { id: "m6", time: "17:00" }
+      { id: 'm1', time: '15:00' },
+      { id: 'm2', time: '15:30' },
+      { id: 'm3', time: '16:00' },
+      { id: 'm4', time: '16:00' },
+      { id: 'm5', time: '16:00' },
+      { id: 'm6', time: '17:00' }
     ];
 
-    function updateCountdown() {
+    function updateCountdowns() {
       const now = new Date();
-      const today = now.toISOString().split('T')[0];
-      matches.forEach(m => {
-        const el = document.getElementById(m.id);
-        const start = new Date(`${today}T${m.time}:00`);
-        const diff = start - now;
+      matches.forEach(match => {
+        const el = document.getElementById(match.id);
+        const matchTime = new Date(`${today}T${match.time}:00`);
+        const diff = matchTime - now;
+
         if (diff <= 0) {
           el.textContent = "Live now!";
           el.style.color = "#00ff88";
         } else {
           const h = Math.floor(diff / 1000 / 60 / 60);
-          const min = Math.floor((diff / 1000 / 60) % 60);
-          el.textContent = `${h}h ${min}m remaining`;
+          const m = Math.floor((diff / 1000 / 60) % 60);
+          el.textContent = `Začíná za ${h}h ${m}m`;
+          el.style.color = "#ffaa00";
         }
       });
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 60000);
+    updateCountdowns();
+    setInterval(updateCountdowns, 60000);
   </script>
-
 </body>
 </html>
