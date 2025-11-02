@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček – TELH Přenosy</title>
+  <title>Hokejíček | Přenosy TELH</title>
 
-  <!-- 💰 POPUP reklama - HLAVIČKA -->
+  <!-- 🧩 Pop-up reklamy (hlavička) -->
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
   <style>
@@ -16,6 +16,7 @@
       color: #fff;
     }
 
+    /* 🔹 Horní lišta */
     header {
       display: flex;
       justify-content: space-between;
@@ -24,10 +25,25 @@
       padding: 5px 24px;
       border-bottom: 1px solid #222;
       height: 55px;
+      position: relative;
     }
 
     header img {
-      height: 100px;
+      height: 140px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+      z-index: 5;
+    }
+
+    header img:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    nav {
+      margin-left: auto;
+      z-index: 10;
     }
 
     nav a {
@@ -45,36 +61,45 @@
 
     h1 {
       text-align: center;
+      margin-top: 90px;
       color: #4da3ff;
-      margin-top: 50px;
-      margin-bottom: 40px;
       font-size: 2em;
       letter-spacing: 1px;
     }
 
+    /* 🔹 Mřížka zápasů */
     main {
       max-width: 1300px;
-      margin: 0 auto 60px auto;
+      margin: 40px auto 80px auto;
       padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 35px;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
     }
 
     .card {
       position: relative;
-      aspect-ratio: 16/9;
-      border-radius: 20px;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
       overflow: hidden;
       background: #1a1a1a;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
     }
 
     .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 30px rgba(77,163,255,0.4);
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(77,163,255,0.3);
+    }
+
+    .bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.75);
     }
 
     .card-content {
@@ -82,53 +107,45 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.9));
-      padding: 15px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
+      padding: 14px;
     }
 
     .teams {
-      font-size: 1.15em;
+      font-size: 1.05em;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .time {
       font-size: 0.9em;
-      color: #bbb;
+      color: #aaa;
     }
 
     .countdown {
       font-size: 0.9em;
-      color: #00ff99;
+      color: #4da3ff;
       font-family: monospace;
     }
 
-    .bg {
-      position: absolute;
-      inset: 0;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      filter: brightness(0.85);
-    }
-
-    footer {
-      text-align: center;
-      color: #888;
-      font-size: 0.9em;
-      padding: 20px 0;
-      border-top: 1px solid #222;
-    }
-
     @media (max-width: 768px) {
-      .card {
-        aspect-ratio: 4/3;
+      header img {
+        height: 110px;
+      }
+      nav a {
+        font-size: 0.9em;
+        margin-left: 15px;
+      }
+      main {
+        grid-template-columns: 1fr;
+        gap: 20px;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- 🏒 Horní lišta -->
   <header>
     <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
     <nav>
@@ -196,51 +213,23 @@
     </div>
   </main>
 
-  <footer>© 2025 Hokejíček – Všechna práva vyhrazena.</footer>
+  <footer style="text-align:center; color:#777; padding:20px; font-size:0.9em;">
+    © 2025 Hokejíček – všechna práva vyhrazena.
+  </footer>
 
-  <!-- 💰 POPUP reklama - PATIČKA -->
+  <!-- 🔁 Funkce přechodu -->
+  <script>
+    function goTo(url) {
+      window.location.href = url;
+    }
+  </script>
+
+  <!-- 🧩 Pop-up reklamy (patička) -->
   <script type="text/javascript">
     aclib.runAutoTag({
       zoneId: 'zitkptgwk8',
     });
   </script>
 
-  <script>
-    function goTo(url) {
-      window.location.href = url;
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-    const matches = [
-      { id: 'm1', time: '15:00' },
-      { id: 'm2', time: '15:30' },
-      { id: 'm3', time: '16:00' },
-      { id: 'm4', time: '16:00' },
-      { id: 'm5', time: '16:00' },
-      { id: 'm6', time: '17:00' }
-    ];
-
-    function updateCountdowns() {
-      const now = new Date();
-      matches.forEach(match => {
-        const el = document.getElementById(match.id);
-        const matchTime = new Date(`${today}T${match.time}:00`);
-        const diff = matchTime - now;
-
-        if (diff <= 0) {
-          el.textContent = "Live now!";
-          el.style.color = "#00ff88";
-        } else {
-          const h = Math.floor(diff / 1000 / 60 / 60);
-          const m = Math.floor((diff / 1000 / 60) % 60);
-          el.textContent = `Začíná za ${h}h ${m}m`;
-          el.style.color = "#ffaa00";
-        }
-      });
-    }
-
-    updateCountdowns();
-    setInterval(updateCountdowns, 60000);
-  </script>
 </body>
 </html>
