@@ -3,71 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Extraliga | Hokejíček Live</title>
+  <title>Hokejíček Live | Test přenosu</title>
 
-  <!-- Clappr přehrávač -->
+  <!-- 🎬 Clappr -->
   <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
 
-  <!-- Reklamy -->
+  <!-- 📢 Reklamní skript -->
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
+  <!-- 🔒 Ochrana proti AdBlocku -->
+  <script src="https://hokejicek.site/js/adblock_protection.js"></script>
+
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background-color: #0b0b0b;
       color: #fff;
     }
 
-    body.locked > *:not(#adblock-warning) {
-      display: none !important;
-    }
-
-    /* 🔒 AdBlock upozornění */
-    #adblock-warning {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.96);
-      z-index: 999999;
-      color: white;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      font-family: "Segoe UI", Arial, sans-serif;
-      padding: 20px;
-    }
-
-    #adblock-warning.active {
-      display: flex;
-    }
-
-    #adblock-warning h1 {
-      color: #ff4747;
-      font-size: 2em;
-      margin-bottom: 0.5em;
-    }
-
-    #adblock-warning p {
-      color: #ccc;
-      font-size: 1.1em;
-      max-width: 500px;
-      margin: 0 auto 1.2em;
-    }
-
-    #adblock-warning button {
-      background: #4da3ff;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1em;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* 🔹 Lišta */
     header {
       display: flex;
       justify-content: space-between;
@@ -110,7 +64,6 @@
       color: #4da3ff;
     }
 
-    /* Layout */
     main {
       display: flex;
       justify-content: center;
@@ -126,7 +79,7 @@
       background: #181818;
       border-radius: 20px;
       padding: 15px;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,7 +92,7 @@
       border-radius: 16px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
       background: #000;
     }
 
@@ -154,7 +107,7 @@
       background: #181818;
       border-radius: 20px;
       padding: 15px;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -203,16 +156,9 @@
     }
   </style>
 </head>
-<body class="locked">
+<body>
 
-  <!-- 🛑 AdBlock varování -->
-  <div id="adblock-warning">
-    <h1>⚠️ Přenosy nejsou zdarma</h1>
-    <p>Prosím vypněte AdBlock, poté obnovte stránku. Děkujeme za podporu Hokejíčku ❤️</p>
-    <button onclick="location.reload()">🔄 Zkusit znovu</button>
-  </div>
-
-  <!-- 🏒 Lišta -->
+  <!-- 🏒 Horní lišta -->
   <header>
     <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
     <nav>
@@ -240,17 +186,12 @@
     </div>
   </main>
 
-  <!-- 📢 Reklamní kód -->
-  <script type="text/javascript">
-    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
-  </script>
-
-  <!-- 🎥 Clappr Player -->
+  <!-- 🎥 Clappr přehrávač -->
   <script>
     const sources = [
-      "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690215bd3829c1557f606882.m3u8",
-      "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/690215bd3829c1557f606882.m3u8",
-      "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690215bd3829c1557f606882.m3u8"
+      "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690221143829c1557f6068d9.m3u8",
+      "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/690221143829c1557f6068d9.m3u8",
+      "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690221143829c1557f6068d9.m3u8"
     ];
 
     let player = null;
@@ -258,14 +199,17 @@
     async function checkSources() {
       for (const url of sources) {
         try {
-          const r = await fetch(url, { method: "HEAD" });
-          if (r.ok) {
+          const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+          if (res.ok) {
             startPlayer(url);
             return;
           }
-        } catch {}
+        } catch (e) {
+          console.warn("Zdroj nefunkční:", url);
+        }
       }
-      setTimeout(checkSources, 30000);
+      // Pokud nic nefunguje, zkus znovu za 60 sekund
+      setTimeout(checkSources, 60000);
     }
 
     function startPlayer(url) {
@@ -273,50 +217,17 @@
       player = new Clappr.Player({
         source: url,
         parentId: "#player",
-        autoPlay: true,
         width: "100%",
         height: "100%",
+        autoPlay: true,
         mute: false,
         mediacontrol: { seekbar: "#4da3ff", buttons: "#4da3ff" },
         poster: "https://hokejicek.site/files/png/hokejicek-logo.png",
+        playback: { hlsjsConfig: { maxBufferLength: 30 } },
       });
     }
 
     checkSources();
-  </script>
-
-  <!-- 🧠 AdBlock detekce -->
-  <script>
-    async function detectAdblock() {
-      let blocked = false;
-
-      // 1️⃣ test - script od Google Ads
-      try {
-        await fetch("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: "HEAD", mode: "no-cors" });
-      } catch {
-        blocked = true;
-      }
-
-      // 2️⃣ test - element simulující reklamu
-      const bait = document.createElement("div");
-      bait.className = "ad adsbox ad-banner ad-container";
-      bait.style.cssText = "width:1px;height:1px;position:absolute;left:-9999px;top:-9999px;";
-      document.body.appendChild(bait);
-      await new Promise(r => setTimeout(r, 250));
-      if (bait.offsetHeight === 0 || getComputedStyle(bait).display === "none") blocked = true;
-      bait.remove();
-
-      if (typeof window.aclib === "undefined") blocked = true;
-
-      if (blocked) {
-        document.body.classList.add("locked");
-        document.getElementById("adblock-warning").classList.add("active");
-      } else {
-        document.body.classList.remove("locked");
-      }
-    }
-
-    window.addEventListener("load", detectAdblock);
   </script>
 
 </body>
