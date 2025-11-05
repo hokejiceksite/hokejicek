@@ -69,17 +69,17 @@
 
     /* 🔹 Mřížka zápasů */
     main {
-      max-width: 1300px;
-      margin: 40px auto 80px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 60px auto 80px auto;
       padding: 0 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 30px;
     }
 
     .card {
       position: relative;
       aspect-ratio: 16 / 9;
+      width: 380px;
       border-radius: 16px;
       overflow: hidden;
       background: #1a1a1a;
@@ -136,10 +136,6 @@
         font-size: 0.9em;
         margin-left: 15px;
       }
-      main {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
     }
   </style>
 </head>
@@ -155,73 +151,54 @@
     </nav>
   </header>
 
-  <h1>VŠECHNY PŘENOSY TELH</h1>
+  <h1>VŠECHNY PŘENOSY</h1>
 
-  <main>
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/tri-pce')">
-      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Třinec vs Pardubice">
+<main>
+    <div class="card">
+      <img src="https://i.imgur.com/9MEJ7Na.png" class="bg" alt="Finsko vs Česko">
       <div class="card-content">
-        <div class="teams">Třinec vs Pardubice</div>
-        <div class="time">Start: 15:00</div>
-        <div class="countdown" id="m1"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/lit-hkm')">
-      <img src="https://i.imgur.com/CGZf5SG.png" class="bg" alt="Litvínov vs Mountfield HK">
-      <div class="card-content">
-        <div class="teams">Litvínov vs Mountfield HK</div>
-        <div class="time">Start: 15:30</div>
-        <div class="countdown" id="m2"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kla-plz')">
-      <img src="https://i.imgur.com/jSWQIgg.png" class="bg" alt="Kladno vs Plzeň">
-      <div class="card-content">
-        <div class="teams">Kladno vs Plzeň</div>
+        <div class="teams">Finsko vs Česko</div>
         <div class="time">Start: 16:00</div>
-        <div class="countdown" id="m3"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/spa-mbl')">
-      <img src="https://i.imgur.com/vntfJ82.png" class="bg" alt="Sparta Praha vs Mladá Boleslav">
-      <div class="card-content">
-        <div class="teams">Sparta Praha vs Mladá Boleslav</div>
-        <div class="time">Start: 16:00</div>
-        <div class="countdown" id="m4"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/vit-olo')">
-      <img src="https://i.imgur.com/STOIMTh.png" class="bg" alt="Vítkovice vs Olomouc">
-      <div class="card-content">
-        <div class="teams">Vítkovice vs Olomouc</div>
-        <div class="time">Start: 16:00</div>
-        <div class="countdown" id="m5"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="goTo('/live/extraliga/2025-11-02/kom-ced')">
-      <img src="https://i.imgur.com/4vzCi0d.png" class="bg" alt="Kometa Brno vs České Budějovice">
-      <div class="card-content">
-        <div class="teams">Kometa Brno vs České Budějovice</div>
-        <div class="time">Start: 17:00</div>
-        <div class="countdown" id="m6"></div>
+        <div class="countdown" id="countdown"></div>
       </div>
     </div>
   </main>
-
   <footer style="text-align:center; color:#777; padding:20px; font-size:0.9em;">
     © 2025 Hokejíček – všechna práva vyhrazena.
   </footer>
 
-  <!-- 🔁 Funkce přechodu -->
+  <!-- ⏱️ Odpočet -->
   <script>
-    function goTo(url) {
-      window.location.href = url;
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 1); // zítra
+    targetDate.setHours(16, 0, 0, 0);
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        document.getElementById("countdown").innerHTML = "Zápas právě probíhá!";
+        return;
+      }
+
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+      let text = "";
+      if (days > 0) text += days + "d ";
+      text +=
+        ("0" + hours).slice(-2) + ":" +
+        ("0" + minutes).slice(-2) + ":" +
+        ("0" + seconds).slice(-2);
+
+      document.getElementById("countdown").innerHTML = "⏱️ " + text;
     }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
   </script>
 
   <!-- 🧩 Pop-up reklamy (patička) -->
