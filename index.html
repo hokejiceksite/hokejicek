@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček | Přenosy TELH</title>
+  <title>Hokejíček | Přenosy</title>
 
   <!-- 🧩 Pop-up reklamy (hlavička) -->
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
@@ -153,25 +153,26 @@
 
   <h1>VŠECHNY PŘENOSY</h1>
 
-<main>
-    <div class="card">
-      <img src="https://i.imgur.com/9MEJ7Na.png" class="bg" alt="Finsko vs Česko">
+  <main>
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
+      <img src="https://i.imgur.com/9MEJ7Na.png" class="bg" alt="Švédsko vs Česko">
       <div class="card-content">
-        <div class="teams">Finsko vs Česko</div>
-        <div class="time">Start: 16:00</div>
+        <div class="teams">Švédsko vs Česko</div>
+        <div class="time">Start: 19:00</div>
         <div class="countdown" id="countdown"></div>
       </div>
     </div>
   </main>
+
   <footer style="text-align:center; color:#777; padding:20px; font-size:0.9em;">
     © 2025 Hokejíček – všechna práva vyhrazena.
   </footer>
 
   <!-- ⏱️ Odpočet -->
   <script>
+    // Nastavení dnešního zápasu na 19:00
     const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 1); // zítra
-    targetDate.setHours(16, 0, 0, 0);
+    targetDate.setHours(19, 0, 0, 0);
 
     function updateCountdown() {
       const now = new Date().getTime();
