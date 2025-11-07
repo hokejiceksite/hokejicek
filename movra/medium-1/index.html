@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medium 1</title>
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+    }
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <script>
+    new Clappr.Player({
+      source: "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690217ff3829c1557f606893_source/index.m3u8",
+      parentId: "#player",
+      width: "100%",
+      height: "100%",
+      autoPlay: true,
+      mute: false
+    });
+  </script>
+</body>
+</html>
