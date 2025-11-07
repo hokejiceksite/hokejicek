@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medium 1</title>
+  <title>Hokejíček | Fullscreen Player</title>
+  <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png">
   <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
   <style>
     html, body {
       margin: 0;
       height: 100%;
       background: #000;
+      overflow: hidden;
     }
     #player {
       width: 100%;
@@ -19,6 +22,7 @@
 </head>
 <body>
   <div id="player"></div>
+
   <script>
     new Clappr.Player({
       source: "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690217ff3829c1557f606893_source/index.m3u8",
@@ -26,8 +30,14 @@
       width: "100%",
       height: "100%",
       autoPlay: true,
-      mute: false
+      mute: false,
+      mediacontrol: { seekbar: "#4da3ff", buttons: "#ffffff" },
+      poster: "https://hokejicek.site/files/png/hokejicek-logo.png"
     });
+  </script>
+
+  <script type="text/javascript">
+    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
   </script>
 </body>
 </html>
