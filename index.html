@@ -67,19 +67,29 @@
       letter-spacing: 1px;
     }
 
+    h2 {
+      text-align: center;
+      color: #ccc;
+      margin-top: 70px;
+      font-size: 1.6em;
+    }
+
     /* 🔹 Mřížka zápasů */
     main {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
       justify-content: center;
       align-items: center;
-      margin: 60px auto 80px auto;
-      padding: 0 20px;
+      margin: 40px auto 80px auto;
+      padding: 0 40px;
+      max-width: 1200px;
     }
 
     .card {
       position: relative;
       aspect-ratio: 16 / 9;
-      width: 380px;
+      width: 100%;
       border-radius: 16px;
       overflow: hidden;
       background: #1a1a1a;
@@ -122,20 +132,17 @@
       color: #aaa;
     }
 
-    .countdown {
+    .status {
       font-size: 0.9em;
       color: #4da3ff;
       font-family: monospace;
     }
 
-    @media (max-width: 768px) {
-      header img {
-        height: 110px;
-      }
-      nav a {
-        font-size: 0.9em;
-        margin-left: 15px;
-      }
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 20px;
+      font-size: 0.9em;
     }
   </style>
 </head>
@@ -151,62 +158,91 @@
     </nav>
   </header>
 
-  <h1>VŠECHNY PŘENOSY</h1>
-
+  <h1>🏒 Nejzajímavější přenosy</h1>
   <main>
     <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-      <img src="https://i.imgur.com/9MEJ7Na.png" class="bg" alt="Švédsko vs Česko">
+      <img src="https://i.imgur.com/5ONhklJ.png" class="bg" alt="Vsetín vs Třebíč">
       <div class="card-content">
-        <div class="teams">Švédsko vs Česko</div>
-        <div class="time">Start: 19:00</div>
-        <div class="countdown" id="countdown"></div>
+        <div class="teams">Vsetín vs Třebíč</div>
+        <div class="time">Start: 17:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
+      <img src="https://i.imgur.com/9dA88Hg.png" class="bg" alt="Sokolov vs Jihlava">
+      <div class="card-content">
+        <div class="teams">Sokolov vs Jihlava</div>
+        <div class="time">Start: 17:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
+      <img src="https://i.imgur.com/0WVNJ6O.png" class="bg" alt="Chomutov vs Frýdek-Místek">
+      <div class="card-content">
+        <div class="teams">Chomutov vs Frýdek-Místek</div>
+        <div class="time">Start: 17:30 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
       </div>
     </div>
   </main>
 
-  <footer style="text-align:center; color:#777; padding:20px; font-size:0.9em;">
+  <h2>📺 Všechny přenosy</h2>
+  <main>
+    <div class="card" onclick="location.href='#'">
+      <img src="https://i.imgur.com/XU4SxIh.png" class="bg" alt="Kolín vs Litoměřice">
+      <div class="card-content">
+        <div class="teams">Kolín vs Litoměřice</div>
+        <div class="time">Start: 16:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='#'">
+      <img src="https://i.imgur.com/kO5L7xT.png" class="bg" alt="Poruba vs Zlín">
+      <div class="card-content">
+        <div class="teams">Poruba vs Zlín</div>
+        <div class="time">Start: 16:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='#'">
+      <img src="https://i.imgur.com/QE1v2wh.png" class="bg" alt="Tábor vs Přerov">
+      <div class="card-content">
+        <div class="teams">Tábor vs Přerov</div>
+        <div class="time">Start: 17:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='#'">
+      <img src="https://i.imgur.com/5ONhklJ.png" class="bg" alt="Vsetín vs Třebíč">
+      <div class="card-content">
+        <div class="teams">Vsetín vs Třebíč</div>
+        <div class="time">Start: 17:00 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='#'">
+      <img src="https://i.imgur.com/0WVNJ6O.png" class="bg" alt="Chomutov vs Frýdek-Místek">
+      <div class="card-content">
+        <div class="teams">Chomutov vs Frýdek-Místek</div>
+        <div class="time">Start: 17:30 • 8. listopadu 2025</div>
+        <div class="status">🟢 Zápas právě probíhá</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
     © 2025 Hokejíček – všechna práva vyhrazena.
   </footer>
 
-  <!-- ⏱️ Odpočet -->
-  <script>
-    // Nastavení dnešního zápasu na 19:00
-    const targetDate = new Date();
-    targetDate.setHours(19, 0, 0, 0);
-
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance <= 0) {
-        document.getElementById("countdown").innerHTML = "Zápas právě probíhá!";
-        return;
-      }
-
-      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((distance / (1000 * 60)) % 60);
-      const seconds = Math.floor((distance / 1000) % 60);
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-      let text = "";
-      if (days > 0) text += days + "d ";
-      text +=
-        ("0" + hours).slice(-2) + ":" +
-        ("0" + minutes).slice(-2) + ":" +
-        ("0" + seconds).slice(-2);
-
-      document.getElementById("countdown").innerHTML = "⏱️ " + text;
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-  </script>
-
   <!-- 🧩 Pop-up reklamy (patička) -->
   <script type="text/javascript">
-    aclib.runAutoTag({
-      zoneId: 'zitkptgwk8',
-    });
+    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
   </script>
 
 </body>
