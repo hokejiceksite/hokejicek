@@ -1,200 +1,109 @@
-// Cloudflare Worker: stream proxy + picker
-// Routes:
-//  - GET  /stream.m3u8    -> proxied HLS manifest (rewritten segment URLs)
-//  - GET  /seg?u=<b64>    -> proxied TS/fmp4 segment (u = base64 of absolute origin segment URL)
-//  - GET  /health         -> simple status
-//
-// Konfigurace: edituj URLS list níže.
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hokejíček – Stream přehrávač</title>
+  <style>
+    body { background: #0b0b0b; color: #fff; font-family: Arial, sans-serif; margin: 0; text-align: center; }
+    header { background: #111; padding: 12px; font-size: 20px; border-bottom: 1px solid #222; }
+    video { width: 90%; max-width: 960px; margin-top: 20px; background: #000; border-radius: 12px; }
+    #status { margin-top: 10px; font-size: 15px; color: #aaa; }
+    button { background: #1a73e8; border: none; padding: 10px 20px; border-radius: 8px; color: #fff; font-size: 16px; cursor: pointer; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <header>🏒 Hokejíček – Automatický výběr streamu</header>
+  <video id="video" controls playsinline></video>
+  <div id="status">Status: hledám funkční zdroj...</div>
+  <button id="retry">🔄 Zkusit znovu</button>
 
-const URLS = [
-  // blobs0 / blobs1 / blobs2 s ID 690221713829c1557f6068dd
-  'https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690217ff3829c1557f606893.m3u8',
-  'https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/690217ff3829c1557f606893.m3u8',
-  'https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690217ff3829c1557f606893.m3u8'
-];
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script>
+    const SOURCES = [
+      "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690221713829c1557f6068dd.m3u8",
+      "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/690221713829c1557f6068dd.m3u8",
+      "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690221713829c1557f6068dd.m3u8"
+    ];
+    const CHECK_INTERVAL = 10000; // 10s
+    const video = document.getElementById("video");
+    const status = document.getElementById("status");
+    const retryBtn = document.getElementById("retry");
+    let currentHls = null;
+    let timer = null;
 
-// TTL (ms) jak dlouho bude volba fungujícího originu cachována
-const CHOSEN_TTL = 10 * 1000; // 10 sekund
+    function setStatus(text) { status.textContent = "Status: " + text; }
 
-// timeout pro pokus fetch (ms)
-const FETCH_TIMEOUT = 8000;
-
-addEventListener('fetch', event => {
-  event.respondWith(handle(event.request));
-});
-
-async function handle(req) {
-  const url = new URL(req.url);
-  if (url.pathname === '/health') {
-    return new Response(JSON.stringify({ ok: true, ts: Date.now() }), { status: 200, headers: { 'Content-Type': 'application/json' }});
-  }
-  if (url.pathname === '/stream.m3u8') {
-    return handleStreamManifest(req);
-  }
-  if (url.pathname === '/seg') {
-    return handleSegment(req);
-  }
-  return new Response('Not found', { status: 404 });
-}
-
-async function handleStreamManifest(req) {
-  // 1) zkus načíst uloženou volbu z cache
-  const cacheKey = new Request('https://__hokejicek_stream_choice__/choice');
-  const cached = await caches.default.match(cacheKey);
-  let chosen = null;
-  if (cached) {
-    try {
-      const j = await cached.json();
-      if (j && j.origin && j.expires && Date.now() < j.expires) {
-        chosen = j.origin;
+    async function testSource(url) {
+      try {
+        const res = await fetch(url, { method: "HEAD", mode: "no-cors" });
+        // fetch s no-cors vrací opaque, takže nevíme status — zkusíme fallback s GET
+        const test = await fetch(url, { method: "GET" });
+        return test.ok;
+      } catch {
+        return false;
       }
-    } catch (e) {
-      // ignore
     }
-  }
 
-  // 2) pokud není, proveď postupnou kontrolu URL
-  if (!chosen) {
-    chosen = await pickWorkingUrl(URLS);
-    if (chosen) {
-      const payload = JSON.stringify({ origin: chosen, expires: Date.now() + CHOSEN_TTL });
-      const resp = new Response(payload, { headers: { 'Content-Type': 'application/json' }});
-      // uložíme do cache – bude platné CHOSEN_TTL
-      // caches.default.put neumožňuje TTL přímo; my řídíme expiraci v uloženém JSONu
-      eventualCachePut(cacheKey, resp.clone()).catch(()=>{});
-    } else {
-      return new Response('No working source found', { status: 502 });
-    }
-  }
-
-  // 3) stáhnout manifest z chosen origin
-  let manifestResp;
-  try {
-    manifestResp = await fetchWithTimeout(chosen, { cf: { cacheEverything: false } }, FETCH_TIMEOUT);
-  } catch (e) {
-    // pokud fetch selže - smažeme cache entry a vrátíme 502
-    await caches.default.delete(cacheKey).catch(()=>{});
-    return new Response('Failed to fetch manifest from chosen origin', { status: 502 });
-  }
-
-  if (!manifestResp.ok) {
-    await caches.default.delete(cacheKey).catch(()=>{});
-    return new Response('Origin returned ' + manifestResp.status, { status: 502 });
-  }
-
-  const manifestText = await manifestResp.text();
-  // 4) zkontroluj, že v manifestu je #EXTM3U (základní validace)
-  if (!/#EXTM3U/.test(manifestText)) {
-    await caches.default.delete(cacheKey).catch(()=>{});
-    return new Response('Invalid manifest', { status: 502 });
-  }
-
-  // 5) přepiš segment URL na proxované odkazy: /seg?u=<base64(url)>
-  const rewritten = rewriteManifest(manifestText, chosen, new URL(req.url));
-  return new Response(rewritten, { status: 200, headers: { 'Content-Type': 'application/vnd.apple.mpegurl' }});
-}
-
-async function handleSegment(req) {
-  const url = new URL(req.url);
-  const u = url.searchParams.get('u');
-  if (!u) return new Response('Missing u', { status: 400 });
-  let originSeg;
-  try {
-    originSeg = atob(u);
-  } catch (e) {
-    return new Response('Bad u param', { status: 400 });
-  }
-
-  // fetch the segment from origin (server-side) and stream to client
-  try {
-    const segResp = await fetchWithTimeout(originSeg, { cf: { cacheEverything: false } }, FETCH_TIMEOUT);
-    if (!segResp.ok) return new Response('Origin segment error: ' + segResp.status, { status: 502 });
-
-    // forward most headers needed (content-type, content-length)
-    const headers = new Headers();
-    const ct = segResp.headers.get('Content-Type');
-    if (ct) headers.set('Content-Type', ct);
-    const cl = segResp.headers.get('Content-Length');
-    if (cl) headers.set('Content-Length', cl);
-
-    // Optionally cache segments in Cloudflare cache (careful with size) - commented out
-    // return segResp; // directly return (streams)
-    // We'll stream the response back preserving status and headers
-    const body = await segResp.arrayBuffer();
-    return new Response(body, { status: 200, headers });
-  } catch (e) {
-    return new Response('Segment fetch error', { status: 502 });
-  }
-}
-
-// Helper: sequentially check list of urls for 200 && manifest-ish content
-async function pickWorkingUrl(urls) {
-  for (const u of urls) {
-    try {
-      const res = await fetchWithTimeout(u, { method: 'GET', cf: { cacheEverything: false } }, FETCH_TIMEOUT);
-      if (!res || !res.ok) continue;
-      // simple check: content-type or manifest body contains #EXTM3U
-      const ct = res.headers.get('Content-Type') || '';
-      if (/mpegurl|vnd\.apple|application\/x-mpegurl|text\/vtt/i.test(ct)) {
-        return u;
+    async function findWorkingSource() {
+      setStatus("Zkouším dostupnost zdrojů...");
+      for (const url of SOURCES) {
+        const ok = await testSource(url);
+        if (ok) {
+          setStatus("Nalezen funkční zdroj ✅");
+          return url;
+        }
       }
-      // else read small prefix to find EXT tag
-      const text = await res.text();
-      if (/#EXTM3U/.test(text)) return u;
-    } catch (e) {
-      // ignore -> try next
+      setStatus("Žádný zdroj není momentálně dostupný ❌");
+      return null;
     }
-  }
-  return null;
-}
 
-// rewrite manifest: resolve relative URLs to absolute (base=origin), then replace each segment URL with /seg?u=<b64>
-function rewriteManifest(manifestText, origin, requestUrlObj) {
-  const lines = manifestText.split(/\r?\n/);
-  const out = [];
-  for (let i=0;i<lines.length;i++){
-    const line = lines[i];
-    if (!line || line.startsWith('#')) {
-      out.push(line);
-      continue;
+    function playStream(url) {
+      if (currentHls) currentHls.destroy();
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        currentHls = hls;
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {});
+          setStatus("Stream přehráván ✔️");
+        });
+        hls.on(Hls.Events.ERROR, (e, data) => {
+          if (data && data.fatal) {
+            setStatus("Chyba přehrávání, zkouším další zdroj...");
+            hls.destroy();
+            startSearchLoop();
+          }
+        });
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = url;
+        video.play();
+        setStatus("Stream přehráván (nativně)");
+      } else {
+        setStatus("Tento prohlížeč nepodporuje HLS");
+      }
     }
-    // line is a URI (segment or nested playlist). Resolve absolute url relative to origin
-    let resolved;
-    try {
-      resolved = new URL(line, origin).toString();
-    } catch(e) {
-      // fallback: push original
-      out.push(line);
-      continue;
+
+    async function startSearchLoop() {
+      clearInterval(timer);
+      const url = await findWorkingSource();
+      if (url) playStream(url);
+      timer = setInterval(async () => {
+        if (video.paused || video.readyState < 2) {
+          const u = await findWorkingSource();
+          if (u) playStream(u);
+        }
+      }, CHECK_INTERVAL);
     }
-    const encoded = btoa(resolved);
-    // proxy through our worker
-    const segProxy = new URL('/seg', requestUrlObj.origin);
-    segProxy.searchParams.set('u', encoded);
-    out.push(segProxy.toString());
-  }
-  return out.join('\n');
-}
 
-// small fetch with timeout
-async function fetchWithTimeout(resource, opts = {}, timeout = 8000) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  try {
-    const res = await fetch(resource, Object.assign({ signal: controller.signal }, opts));
-    clearTimeout(id);
-    return res;
-  } catch (e) {
-    clearTimeout(id);
-    throw e;
-  }
-}
+    retryBtn.addEventListener("click", () => {
+      if (currentHls) currentHls.destroy();
+      startSearchLoop();
+    });
 
-// helper to put into cache without awaiting errors (best-effort)
-async function eventualCachePut(keyReq, resp) {
-  try {
-    await caches.default.put(keyReq, resp);
-  } catch (e) {
-    // ignore
-  }
-}
+    // Spustí hned při načtení
+    startSearchLoop();
+  </script>
+</body>
+</html>
