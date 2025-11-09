@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hokejíček Live | Stream 1</title>
   <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png">
-  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
   <script src="https://hokejicek.site/js/adblock_protection.js"></script>
   <style>
@@ -71,19 +70,12 @@
       justify-content: center;
       height: 78vh;
     }
-    .video-box {
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 0 25px rgba(0,0,0,0.6);
-      background: #000;
-    }
-    #player {
+    iframe.video-embed {
       width: 100%;
       height: 100%;
       border: none;
+      border-radius: 16px;
+      background: #000;
     }
     .chat-box {
       flex: 1.1;
@@ -145,9 +137,13 @@
 
   <main>
     <div class="video-wrapper">
-      <div class="video-box">
-        <div id="player"></div>
-      </div>
+      <iframe
+        class="video-embed"
+        src="https://hokejicek.site/movra/medium-1"
+        title="Hokejíček Stream 1"
+        allowfullscreen
+        allow="autoplay; fullscreen">
+      </iframe>
     </div>
 
     <div class="chat-box">
@@ -156,40 +152,10 @@
     </div>
   </main>
 
-  <script>
-    const sources = [
-      "https://hokejicek.site/movra/medium-1",
-    ];
-    let player = null;
-    async function checkSources() {
-      for (const url of sources) {
-        try {
-          const res = await fetch(url, { method: "HEAD", cache: "no-store" });
-          if (res.ok) {
-            startPlayer(url);
-            return;
-          }
-        } catch (e) {
-          console.warn("Zdroj nefunkční:", url);
-        }
-      }
-      setTimeout(checkSources, 60000);
-    }
-    function startPlayer(url) {
-      if (player) player.destroy();
-      player = new Clappr.Player({
-        source: url,
-        parentId: "#player",
-        width: "100%",
-        height: "100%",
-        autoPlay: true,
-        mute: false,
-        mediacontrol: { seekbar: "#4da3ff", buttons: "#4da3ff" },
-        poster: "https://hokejicek.site/files/png/hokejicek-logo.png",
-        playback: { hlsjsConfig: { maxBufferLength: 30 } }
-      });
-    }
-    checkSources();
+  <script type="text/javascript">
+    aclib.runPop({
+      zoneId: '8327598',
+    });
   </script>
 </body>
 </html>
