@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček | Přenos Sokolov vs Frýdek-Místek</title>
+  <title>Hokejíček | Dnešní přenosy</title>
   <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png" />
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
   <style>
@@ -49,17 +49,23 @@
     nav a:hover {
       color: #4da3ff;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
-      margin-top: 90px;
       color: #4da3ff;
+    }
+    h1 {
+      margin-top: 90px;
       font-size: 2em;
-      letter-spacing: 1px;
+    }
+    h2 {
+      margin-top: 60px;
+      font-size: 1.6em;
     }
     main {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
+      gap: 20px;
       margin: 40px auto 80px auto;
       padding: 0 40px;
     }
@@ -67,7 +73,7 @@
       position: relative;
       aspect-ratio: 16 / 9;
       width: 100%;
-      max-width: 480px;
+      max-width: 340px;
       border-radius: 16px;
       overflow: hidden;
       background: #1a1a1a;
@@ -76,7 +82,7 @@
       cursor: pointer;
     }
     .card:hover {
-      transform: scale(1.02);
+      transform: scale(1.03);
       box-shadow: 0 0 30px rgba(77,163,255,0.3);
     }
     .bg {
@@ -127,14 +133,70 @@
     </nav>
   </header>
 
-  <h1>📺 Všechny přenosy</h1>
+  <h1>🔥 Nejzajímavější zápasy</h1>
   <main>
     <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-      <img src="https://i.imgur.com/2Llzpwl.png" class="bg" alt="Sokolov vs Frýdek-Místek">
+      <img src="https://i.imgur.com/etFJCCW.png" class="bg" alt="Slavia Praha vs Kolín">
       <div class="card-content">
-        <div class="teams">Sokolov vs Frýdek-Místek</div>
-        <div class="time">Start: 16:00 • 9. listopadu 2025</div>
-        <div class="countdown" data-hour="16" data-id="1"></div>
+        <div class="teams">Slavia Praha vs Kolín</div>
+        <div class="time">Start: 17:00 • dnes</div>
+        <div class="countdown" data-hour="17" data-id="1"></div>
+      </div>
+    </div>
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
+      <img src="https://i.imgur.com/UlVorlH.png" class="bg" alt="Zlín vs Přerov">
+      <div class="card-content">
+        <div class="teams">Zlín vs Přerov</div>
+        <div class="time">Start: 17:30 • dnes</div>
+        <div class="countdown" data-hour="17" data-minute="30" data-id="2"></div>
+      </div>
+    </div>
+  </main>
+
+  <h2>📺 Všechny zápasy</h2>
+  <main>
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
+      <img src="https://i.imgur.com/etFJCCW.png" class="bg" alt="Slavia Praha vs Kolín">
+      <div class="card-content">
+        <div class="teams">Slavia Praha vs Kolín</div>
+        <div class="time">Start: 17:00 • dnes</div>
+        <div class="countdown" data-hour="17"></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
+      <img src="https://i.imgur.com/Yq4qxZp.png" class="bg" alt="Jihlava vs Pardubice B">
+      <div class="card-content">
+        <div class="teams">Jihlava vs Pardubice B</div>
+        <div class="time">Start: 17:30 • dnes</div>
+        <div class="countdown" data-hour="17" data-minute="30"></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
+      <img src="https://i.imgur.com/UlVorlH.png" class="bg" alt="Zlín vs Přerov">
+      <div class="card-content">
+        <div class="teams">Zlín vs Přerov</div>
+        <div class="time">Start: 17:30 • dnes</div>
+        <div class="countdown" data-hour="17" data-minute="30"></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream4'">
+      <img src="https://i.imgur.com/Q8LYWPp.png" class="bg" alt="Tábor vs Chomutov">
+      <div class="card-content">
+        <div class="teams">Tábor vs Chomutov</div>
+        <div class="time">Start: 18:00 • dnes</div>
+        <div class="countdown" data-hour="18"></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="location.href='https://hokejicek.site/live/stream5'">
+      <img src="https://i.imgur.com/ucvSXGf.png" class="bg" alt="Třebíč vs Poruba">
+      <div class="card-content">
+        <div class="teams">Třebíč vs Poruba</div>
+        <div class="time">Start: 18:00 • dnes</div>
+        <div class="countdown" data-hour="18"></div>
       </div>
     </div>
   </main>
