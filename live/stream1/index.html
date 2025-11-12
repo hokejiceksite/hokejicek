@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček | Dnešní přenosy</title>
-  <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hokejíček Live | Stream 1</title>
+  <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png">
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
   <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+  <script src="https://hokejicek.site/js/adblock_protection.js"></script>
   <style>
     body {
       margin: 0;
@@ -49,78 +51,85 @@
     nav a:hover {
       color: #4da3ff;
     }
-    h1, h2 {
-      text-align: center;
-      color: #4da3ff;
-    }
-    h1 {
-      margin-top: 90px;
-      font-size: 2em;
-    }
-    h2 {
-      margin-top: 60px;
-      font-size: 1.6em;
-    }
     main {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 18px;
-      margin: 40px auto 80px auto;
-      padding: 0 40px;
-      max-width: 1080px;
+      align-items: flex-start;
+      padding: 25px;
+      gap: 25px;
+      min-height: calc(100vh - 55px);
+      box-sizing: border-box;
     }
-    .card {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      width: 100%;
-      max-width: 340px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #1a1a1a;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
+    .video-wrapper {
+      flex: 2.5;
+      background: #181818;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 78vh;
     }
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 30px rgba(77,163,255,0.3);
-    }
-    .bg {
-      position: absolute;
-      inset: 0;
+    .video-box {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      filter: brightness(0.75);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      background: #000;
     }
-    .card-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
+    #player {
       width: 100%;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
-      padding: 14px;
+      height: 100%;
+      border: none;
     }
-    .teams {
-      font-size: 1.05em;
-      font-weight: 600;
-      margin-bottom: 5px;
+    .chat-box {
+      flex: 1.1;
+      background: #181818;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      height: 78vh;
     }
-    .time {
-      font-size: 0.9em;
-      color: #aaa;
-    }
-    .countdown {
-      font-size: 0.9em;
-      color: #4da3ff;
-      font-family: monospace;
-    }
-    footer {
+    .chat-header {
+      background: #141414;
+      padding: 10px;
       text-align: center;
-      color: #777;
-      padding: 20px;
-      font-size: 0.9em;
+      font-weight: 600;
+      color: #4da3ff;
+      border-bottom: 1px solid #222;
+      border-radius: 12px 12px 0 0;
+      text-transform: uppercase;
+      font-size: 0.95em;
+    }
+    .chat-embed {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+      border-radius: 0 0 12px 12px;
+    }
+    @media (max-width: 950px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+      .video-wrapper, .chat-box {
+        width: 95%;
+        max-width: 900px;
+        height: 50vh;
+      }
+      .chat-box {
+        margin-top: 20px;
+      }
+      header img {
+        height: 110px;
+      }
     }
   </style>
 </head>
@@ -134,110 +143,55 @@
     </nav>
   </header>
 
-  <h1>Nejzajímavější přenosy</h1>
   <main>
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-      <img src="https://i.imgur.com/etFJCCW.png" class="bg" alt="Slavia Praha vs Kolín">
-      <div class="card-content">
-        <div class="teams">Slavia Praha vs Kolín</div>
-        <div class="time">Start: 17:00 • dnes</div>
-        <div class="countdown" data-hour="17" data-id="1"></div>
+    <div class="video-wrapper">
+      <div class="video-box">
+        <div id="player"></div>
       </div>
     </div>
 
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-      <img src="https://i.imgur.com/UlVorlH.png" class="bg" alt="Zlín vs Přerov">
-      <div class="card-content">
-        <div class="teams">Zlín vs Přerov</div>
-        <div class="time">Start: 17:30 • dnes</div>
-        <div class="countdown" data-hour="17" data-minute="30" data-id="2"></div>
-      </div>
+    <div class="chat-box">
+      <div class="chat-header">Live Chat</div>
+      <iframe class="chat-embed" src="https://hokejicek.site/livechat/index.html" title="Live Chat"></iframe>
     </div>
   </main>
-
-  <h2>Všechny přenosy</h2>
-
-  <!-- První řada – 3 zápasy -->
-  <main>
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-      <img src="https://i.imgur.com/etFJCCW.png" class="bg" alt="Slavia Praha vs Kolín">
-      <div class="card-content">
-        <div class="teams">Slavia Praha vs Kolín</div>
-        <div class="time">Start: 17:00 • dnes</div>
-        <div class="countdown" data-hour="17"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-      <img src="https://i.imgur.com/Yq4qxZp.png" class="bg" alt="Jihlava vs Pardubice B">
-      <div class="card-content">
-        <div class="teams">Jihlava vs Pardubice B</div>
-        <div class="time">Start: 17:30 • dnes</div>
-        <div class="countdown" data-hour="17" data-minute="30"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
-      <img src="https://i.imgur.com/UlVorlH.png" class="bg" alt="Zlín vs Přerov">
-      <div class="card-content">
-        <div class="teams">Zlín vs Přerov</div>
-        <div class="time">Start: 17:30 • dnes</div>
-        <div class="countdown" data-hour="17" data-minute="30"></div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Druhá řada – 2 zápasy -->
-  <main style="justify-content:center;">
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream4'">
-      <img src="https://i.imgur.com/Q8LYWPp.png" class="bg" alt="Tábor vs Chomutov">
-      <div class="card-content">
-        <div class="teams">Tábor vs Chomutov</div>
-        <div class="time">Start: 18:00 • dnes</div>
-        <div class="countdown" data-hour="18"></div>
-      </div>
-    </div>
-
-    <div class="card" onclick="location.href='https://hokejicek.site/live/stream5'">
-      <img src="https://i.imgur.com/ucvSXGf.png" class="bg" alt="Třebíč vs Poruba">
-      <div class="card-content">
-        <div class="teams">Třebíč vs Poruba</div>
-        <div class="time">Start: 18:00 • dnes</div>
-        <div class="countdown" data-hour="18"></div>
-      </div>
-    </div>
-  </main>
-
-  <footer>© 2025 Hokejíček – všechna práva vyhrazena.</footer>
 
   <script>
-    function updateCountdowns() {
-      const countdowns = document.querySelectorAll(".countdown");
-      const now = new Date();
-      countdowns.forEach(el => {
-        const hour = parseInt(el.dataset.hour);
-        const minute = parseInt(el.dataset.minute) || 0;
-        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
-        const diff = target - now;
-        if (diff <= 0) {
-          el.innerHTML = "Zápas právě probíhá";
-        } else {
-          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-          const minutes = Math.floor((diff / (1000 * 60)) % 60);
-          const seconds = Math.floor((diff / 1000) % 60);
-          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-          let text = "";
-          if (days > 0) text += days + "d ";
-          text += ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
-          el.innerHTML = text;
+    const sources = [
+      "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690218cf40899867ab484db5.m3u8",
+      "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs/690218cf40899867ab484db5.m3u8",
+      "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690218cf40899867ab484db5.m3u8"
+    ];
+    let player = null;
+    async function checkSources() {
+      for (const url of sources) {
+        try {
+          const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+          if (res.ok) {
+            startPlayer(url);
+            return;
+          }
+        } catch (e) {
+          console.warn("Zdroj nefunkční:", url);
         }
+      }
+      setTimeout(checkSources, 60000);
+    }
+    function startPlayer(url) {
+      if (player) player.destroy();
+      player = new Clappr.Player({
+        source: url,
+        parentId: "#player",
+        width: "100%",
+        height: "100%",
+        autoPlay: true,
+        mute: false,
+        mediacontrol: { seekbar: "#4da3ff", buttons: "#4da3ff" },
+        poster: "https://hokejicek.site/files/png/hokejicek-logo.png",
+        playback: { hlsjsConfig: { maxBufferLength: 30 } }
       });
     }
-    setInterval(updateCountdowns, 1000);
-    updateCountdowns();
-  </script>
-  <script type="text/javascript">
-    aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
+    checkSources();
   </script>
 </body>
 </html>
