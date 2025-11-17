@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hokejíček Live | Stream 6</title>
+  <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png">
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+  <script src="https://hokejicek.site/js/adblock_protection.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #0b0b0b;
+      color: #fff;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      padding: 5px 24px;
+      border-bottom: 1px solid #222;
+      height: 55px;
+      position: relative;
+    }
+    header img {
+      height: 140px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+      z-index: 5;
+    }
+    header img:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
+    nav {
+      margin-left: auto;
+      z-index: 10;
+    }
+    nav a {
+      color: #eee;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 500;
+      font-size: 1.05em;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #4da3ff;
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 25px;
+      gap: 25px;
+      min-height: calc(100vh - 55px);
+      box-sizing: border-box;
+    }
+    .video-wrapper {
+      flex: 2.5;
+      background: #181818;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 78vh;
+    }
+    .video-box {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      background: #000;
+    }
+    #player {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .chat-box {
+      flex: 1.1;
+      background: #181818;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      height: 78vh;
+    }
+    .chat-header {
+      background: #141414;
+      padding: 10px;
+      text-align: center;
+      font-weight: 600;
+      color: #4da3ff;
+      border-bottom: 1px solid #222;
+      border-radius: 12px 12px 0 0;
+      text-transform: uppercase;
+      font-size: 0.95em;
+    }
+    .chat-embed {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+      border-radius: 0 0 12px 12px;
+    }
+    @media (max-width: 950px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+      .video-wrapper, .chat-box {
+        width: 95%;
+        max-width: 900px;
+        height: 50vh;
+      }
+      .chat-box {
+        margin-top: 20px;
+      }
+      header img {
+        height: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
+    <nav>
+      <a href="/">Hlavní stránka</a>
+      <a href="/prenosy">Přenosy</a>
+      <a href="/gdpr/index.html">GDPR</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="video-wrapper">
+      <div class="video-box">
+        <div id="player"></div>
+      </div>
+    </div>
+
+    <div class="chat-box">
+      <div class="chat-header">Live Chat</div>
+      <iframe class="chat-embed" src="https://hokejicek.site/livechat/index.html" title="Live Chat"></iframe>
+    </div>
+  </main>
+
+  <script>
+    const sources = [
+      "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/690219003829c1557f6068a1.m3u8",
+      "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/690219003829c1557f6068a1.m3u8",
+      "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/690219003829c1557f6068a1.m3u8"
+    ];
+    let player = null;
+    async function checkSources() {
+      for (const url of sources) {
+        try {
+          const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+          if (res.ok) {
+            startPlayer(url);
+            return;
+          }
+        } catch (e) {
+          console.warn("Zdroj nefunkční:", url);
+        }
+      }
+      setTimeout(checkSources, 60000);
+    }
+    function startPlayer(url) {
+      if (player) player.destroy();
+      player = new Clappr.Player({
+        source: url,
+        parentId: "#player",
+        width: "100%",
+        height: "100%",
+        autoPlay: true,
+        mute: false,
+        mediacontrol: { seekbar: "#4da3ff", buttons: "#4da3ff" },
+        poster: "https://hokejicek.site/files/png/hokejicek-logo.png",
+        playback: { hlsjsConfig: { maxBufferLength: 30 } }
+      });
+    }
+    checkSources();
+  </script>
+</body>
+</html>
