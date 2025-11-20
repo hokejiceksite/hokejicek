@@ -29,7 +29,6 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      transition: transform 0.3s ease;
       z-index: 5;
     }
     nav {
@@ -42,7 +41,6 @@
       margin-left: 25px;
       font-weight: 500;
       font-size: 1.05em;
-      transition: color 0.2s;
     }
     nav a:hover {
       color: #4da3ff;
@@ -76,8 +74,8 @@
       overflow: hidden;
       background: #1a1a1a;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
+      transition: .2s;
     }
     .card:hover {
       transform: scale(1.03);
@@ -94,7 +92,6 @@
     .card-content {
       position: absolute;
       bottom: 0;
-      left: 0;
       width: 100%;
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
       padding: 14px;
@@ -130,95 +127,44 @@
 <h1>Nejzajímavější přenosy</h1>
 
 <main>
-
   <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-    <img src="https://i.imgur.com/lSygMg4.png" class="bg">
+    <img src="https://i.imgur.com/JoQPprf.png" class="bg">
     <div class="card-content">
-      <div class="teams">Přerov vs Slavia Praha</div>
-      <div class="time">17:30 • 19. 11. 2025</div>
-      <div class="countdown" data-hour="17" data-minute="30"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-    <img src="https://i.imgur.com/rPGGPMU.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Vsetín vs Sokolov</div>
-      <div class="time">17:30 • 19. 11. 2025</div>
-      <div class="countdown" data-hour="17" data-minute="30"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
-    <img src="https://i.imgur.com/kv4sxQX.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Kolín vs Pardubice B</div>
-      <div class="time">18:00 • 19. 11. 2025</div>
+      <div class="teams">Pardubice vs Karlovy Vary</div>
+      <div class="time">18:00 • 20. 11. 2025</div>
       <div class="countdown" data-hour="18"></div>
     </div>
   </div>
-
 </main>
 
 <h2>Všechny přenosy</h2>
 
 <main>
 
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream6'">
-    <img src="https://i.imgur.com/GVlL6Nu.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Chomutov vs Litoměřice</div>
-      <div class="time">16:30 • 19. 11. 2025</div>
-      <div class="countdown" data-hour="16" data-minute="30"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream7'">
-    <img src="https://i.imgur.com/2VFwyZP.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Frýdek-Místek vs Zlín</div>
-      <div class="time">17:00 • 19. 11. 2025</div>
-      <div class="countdown" data-hour="17"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-    <img src="https://i.imgur.com/lSygMg4.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Přerov vs Slavia Praha</div>
-      <div class="time">17:30 • 19. 11. 2025</div>
-    </div>
-  </div>
-
   <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-    <img src="https://i.imgur.com/rPGGPMU.png" class="bg">
+    <img src="https://i.imgur.com/V0l96FC.png" class="bg">
     <div class="card-content">
-      <div class="teams">Vsetín vs Sokolov</div>
-      <div class="time">17:30 • 19. 11. 2025</div>
+      <div class="teams">Plzeň vs Litvínov</div>
+      <div class="time">17:30 • 20. 11. 2025</div>
+      <div class="countdown" data-hour="17" data-minute="30"></div>
     </div>
   </div>
 
   <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
-    <img src="https://i.imgur.com/kv4sxQX.png" class="bg">
+    <img src="https://i.imgur.com/Q0KLuLP.png" class="bg">
     <div class="card-content">
-      <div class="teams">Kolín vs Pardubice B</div>
-      <div class="time">18:00 • 19. 11. 2025</div>
+      <div class="teams">Vítkovice vs Třinec</div>
+      <div class="time">17:30 • 20. 11. 2025</div>
+      <div class="countdown" data-hour="17" data-minute="30"></div>
     </div>
   </div>
 
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream4'">
-    <img src="https://i.imgur.com/1fLWFKC.png" class="bg">
+  <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
+    <img src="https://i.imgur.com/JoQPprf.png" class="bg">
     <div class="card-content">
-      <div class="teams">Poruba vs Jihlava</div>
-      <div class="time">18:00 • 19. 11. 2025</div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream5'">
-    <img src="https://i.imgur.com/D5C0wsp.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Tábor vs Třebíč</div>
-      <div class="time">18:00 • 19. 11. 2025</div>
+      <div class="teams">Pardubice vs Karlovy Vary</div>
+      <div class="time">18:00 • 20. 11. 2025</div>
+      <div class="countdown" data-hour="18"></div>
     </div>
   </div>
 
@@ -229,9 +175,9 @@
 </footer>
 
 <script type="text/javascript">
-  aclib.runAutoTag({
-    zoneId: 'zitkptgwk8',
-  });
+    aclib.runAutoTag({
+        zoneId: 'zitkptgwk8',
+    });
 </script>
 
 </body>
