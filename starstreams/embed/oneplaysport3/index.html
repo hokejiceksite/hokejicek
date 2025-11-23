@@ -1,0 +1,47 @@
+s<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPV Stream</title>
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  width:100%;
+  background:#000;
+  overflow:hidden;
+}
+#player{
+  width:100vw;
+  height:100vh;
+}
+</style>
+</head>
+<body>
+
+<div id="player"></div>
+
+<script>
+new Clappr.Player({
+  source:"https://15-str02-prod.tv.cetin.cz/tok_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNTI0MDc1NDk5Iiwic2lwIjoiIiwicGF0aCI6IiIsInNlc3Npb25fY2RuX2lkIjoiOTcyMjAwM2RmMDMyZDhjNiIsInNlc3Npb25faWQiOiIiLCJjbGllbnRfaWQiOiI4MDA0OTMzIiwiZGV2aWNlX2lkIjoiY2ZlZTE0YmEtZjI5Mi00ZWQxLWFiZjgtMzVkMjlhODZkMjU1IiwibWF4X3Nlc3Npb25zIjoxMDAsInVybCI6Imh0dHBzOi8vMTk0LjIyOC43Ny4zMCIsInNlc3Npb25fdGltZW91dCI6MzYwMCwiYXVkIjoiMTIiLCJzb3VyY2VzIjpbODRdfQ==.HLjMZgXD8Mcg9N03Dk_Br3rfSwR8huPmwPadQ4MYxRnWBvnQ-AMGqj6pVyQDXew-e92kZVYC7j7_3-T6jY7E9A==/live/1140/hls-aes/index.m3u8",
+  parentId:"#player",
+  autoPlay:true,
+  width:"100%",
+  height:"100%",
+  fullscreenEnabled:true,
+  mediacontrol:{seekbar:"#00c8ff",buttons:"#00c8ff"},
+  playback:{
+    hlsjsConfig:{
+      startLevel:-1,
+      capLevelToPlayerSize:false,
+      autoStartLoad:true
+    }
+  }
+});
+</script>
+
+</body>
+</html>
