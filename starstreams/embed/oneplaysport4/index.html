@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PPV Stream</title>
+<title>Hokejicek - Embed</title>
 <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 <style>
 html,body{
   margin:0;
@@ -29,6 +30,7 @@ new Clappr.Player({
   source:"https://15-str07-prod.tv.cetin.cz/tok_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNTI0MDc1NDYzIiwic2lwIjoiIiwicGF0aCI6IiIsInNlc3Npb25fY2RuX2lkIjoiZmUwODM3MThmNjM5ZDM0ZCIsInNlc3Npb25faWQiOiIiLCJjbGllbnRfaWQiOiI4MDA0OTMzIiwiZGV2aWNlX2lkIjoiY2ZlZTE0YmEtZjI5Mi00ZWQxLWFiZjgtMzVkMjlhODZkMjU1IiwibWF4X3Nlc3Npb25zIjoxMDAsInVybCI6Imh0dHBzOi8vMTk0LjIyOC43Ny4zMCIsInNlc3Npb25fdGltZW91dCI6MzYwMCwiYXVkIjoiNzMiLCJzb3VyY2VzIjpbODRdfQ==.xCBOvfLeP6OQUjTQMPojqWNKi9nk3VYbfpQjYFyMjM71UlEylrDDKYTD3yq1_7rFNpa6cp9AavuPh60OV8byDw==/live/2051/hls-aes/index.m3u8",
   parentId:"#player",
   autoPlay:true,
+  mute:false,
   width:"100%",
   height:"100%",
   fullscreenEnabled:true,
@@ -40,6 +42,12 @@ new Clappr.Player({
       autoStartLoad:true
     }
   }
+});
+</script>
+
+<script type="text/javascript">
+aclib.runAutoTag({
+    zoneId:'zitkptgwk8'
 });
 </script>
 
