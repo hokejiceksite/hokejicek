@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded",()=>{
     const overlay=document.getElementById("adblock-overlay");
-
     const bait=document.createElement("div");
     bait.style.width="1px";
     bait.style.height="1px";
@@ -8,25 +7,21 @@ document.addEventListener("DOMContentLoaded",()=>{
     bait.style.top="-1000px";
     bait.className="adsbox banner adunit ad ads advertisement";
     document.body.appendChild(bait);
-
     setTimeout(()=>{
-        const hidden =
-            bait.offsetHeight===0 ||
-            bait.clientHeight===0 ||
-            window.getComputedStyle(bait).display==="none" ||
-            window.getComputedStyle(bait).visibility==="hidden";
-
+        const hidden=
+            bait.offsetHeight===0||
+            bait.clientHeight===0||
+            getComputedStyle(bait).display==="none"||
+            getComputedStyle(bait).visibility==="hidden";
         bait.remove();
-
         if(hidden){
             overlay.style.display="flex";
         }else{
             overlay.style.display="none";
-            if(typeof startStream==="function") startStream();
+            startStream();
         }
     },300);
 });
-
 document.addEventListener("click",e=>{
-    if(e.target.id==="adblock-retry") location.reload();
+    if(e.target.id==="adblock-retry")location.reload();
 });
