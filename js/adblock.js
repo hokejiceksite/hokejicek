@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     bait.style.height = "1px";
     document.body.appendChild(bait);
 
+    let imgBlocked = false;
+
+    const img = new Image();
+    img.src = "https://ad.doubleclick.net/favicon.ico?_=" + Date.now();
+    img.onerror = () => imgBlocked = true;
+
     setTimeout(() => {
         const style = getComputedStyle(bait);
         const baitBlocked =
@@ -24,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
             mode: "no-cors"
         })
         .then(() => {
-            if (!baitBlocked) {
+            if (!baitBlocked && !imgBlocked) {
                 overlay.style.display = "none";
-                if (typeof startPlayer === "function") startPlayer();
+                if (typeof checkSources === "function") checkSources();
             } else {
                 overlay.style.display = "flex";
             }
@@ -35,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.style.display = "flex";
         });
 
-    }, 300);
+    }, 500);
 });
 
 document.addEventListener("click", e => {
