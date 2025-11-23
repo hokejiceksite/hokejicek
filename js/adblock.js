@@ -1,25 +1,32 @@
-function detectAdblock(callback){
-    let detected = false;
+document.addEventListener("DOMContentLoaded",()=>{
+    const overlay=document.getElementById("adblock-overlay");
 
-    const bait = document.createElement("div");
-    bait.className = "adsbox banner adunit";
+    const bait=document.createElement("div");
+    bait.style.width="1px";
+    bait.style.height="1px";
     bait.style.position="absolute";
     bait.style.top="-1000px";
+    bait.className="adsbox banner adunit ad ads advertisement";
     document.body.appendChild(bait);
 
     setTimeout(()=>{
         const hidden =
-            bait.offsetParent===null ||
             bait.offsetHeight===0 ||
-            bait.clientHeight===0;
-
-        const aclibBlocked = window.__aclibBlocked === true;
-
-        if(aclibBlocked && hidden){
-            detected = true;
-        }
+            bait.clientHeight===0 ||
+            window.getComputedStyle(bait).display==="none" ||
+            window.getComputedStyle(bait).visibility==="hidden";
 
         bait.remove();
-        callback(detected);
-    },500);
-}
+
+        if(hidden){
+            overlay.style.display="flex";
+        }else{
+            overlay.style.display="none";
+            if(typeof startStream==="function") startStream();
+        }
+    },300);
+});
+
+document.addEventListener("click",e=>{
+    if(e.target.id==="adblock-retry") location.reload();
+});
