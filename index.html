@@ -1,64 +1,56 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zápasy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website under construction</title>
 
 <style>
-body{margin:0;background:#0f0f16;color:#fff;font-family:Arial}
-.container{max-width:1600px;margin:auto;padding:20px}
-h2{margin-top:30px}
-.match{
-  background:#171722;
-  border:1px solid #26263a;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:12px;
-}
-.league{font-size:13px;color:#9a9ab0}
-.teams{font-weight:bold;font-size:18px}
-.time{margin-top:5px;color:#9a9ab0}
-.live{border-left:4px solid #ff3b3b}
+  body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0f16, #1a1a2e, #0f0f16);
+    color:#ffffff;
+  }
+
+  .box{
+    max-width:600px;
+    padding:42px 34px;
+    text-align:center;
+    background:rgba(20,20,32,0.85);
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  h1{
+    margin:0 0 14px;
+    font-size:30px;
+    font-weight:600;
+    letter-spacing:0.3px;
+  }
+
+  p{
+    margin:0;
+    font-size:15px;
+    color:#c7c7d8;
+    line-height:1.6;
+  }
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<h2>🔴 Live</h2>
-<div id="live"></div>
-
-<h2>🕒 Nadcházející</h2>
-<div id="upcoming"></div>
-
-</div>
-
-<script>
-fetch("zapasy.json")
-  .then(r => r.json())
-  .then(data => {
-
-    data.live.forEach(m => {
-      document.getElementById("live").innerHTML += `
-        <div class="match live">
-          <div class="league">${m.league}</div>
-          <div class="teams">${m.home} vs ${m.away}</div>
-          <div class="time">${m.time}</div>
-        </div>`;
-    });
-
-    data.upcoming.forEach(m => {
-      document.getElementById("upcoming").innerHTML += `
-        <div class="match">
-          <div class="league">${m.league}</div>
-          <div class="teams">${m.home} vs ${m.away}</div>
-          <div class="time">${m.time}</div>
-        </div>`;
-    });
-
-  });
-</script>
+  <div class="box">
+    <h1>Website under construction</h1>
+    <p>
+      This website is currently being prepared.<br>
+      Content will be available soon.
+    </p>
+  </div>
 
 </body>
 </html>
