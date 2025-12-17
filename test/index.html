@@ -1,191 +1,64 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček | Stream 1</title>
-  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zápasy</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #0b0b0b;
-      color: #fff;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #111;
-      padding: 5px 24px;
-      border-bottom: 1px solid #222;
-      height: 55px;
-      position: relative;
-    }
-
-    header img {
-      height: 140px;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: transform 0.3s ease;
-      z-index: 5;
-    }
-
-    header img:hover {
-      transform: translateY(-50%) scale(1.05);
-    }
-
-    nav {
-      margin-left: auto;
-      z-index: 10;
-    }
-
-    nav a {
-      color: #eee;
-      text-decoration: none;
-      margin-left: 25px;
-      font-weight: 500;
-      font-size: 1.05em;
-      transition: color 0.2s;
-    }
-
-    nav a:hover {
-      color: #4da3ff;
-    }
-
-    main {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 25px;
-      gap: 25px;
-      min-height: calc(100vh - 55px);
-      box-sizing: border-box;
-    }
-
-    .video-wrapper {
-      flex: 2.5;
-      background: #181818;
-      border-radius: 20px;
-      padding: 15px;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 78vh;
-    }
-
-    .video-box {
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      background: #000;
-    }
-
-    #player {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .chat-box {
-      flex: 1.1;
-      background: #181818;
-      border-radius: 20px;
-      padding: 15px;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.6);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      height: 78vh;
-    }
-
-    .chat-header {
-      background: #141414;
-      padding: 10px;
-      text-align: center;
-      font-weight: 600;
-      color: #4da3ff;
-      border-bottom: 1px solid #222;
-      border-radius: 12px 12px 0 0;
-      text-transform: uppercase;
-      font-size: 0.95em;
-    }
-
-    .chat-embed {
-      flex: 1;
-      border: none;
-      width: 100%;
-      height: 100%;
-      border-radius: 0 0 12px 12px;
-    }
-
-    @media (max-width: 950px) {
-      main {
-        flex-direction: column;
-        align-items: center;
-      }
-      .video-wrapper, .chat-box {
-        width: 95%;
-        max-width: 900px;
-        height: 50vh;
-      }
-      .chat-box {
-        margin-top: 20px;
-      }
-      header img {
-        height: 110px;
-      }
-    }
-  </style>
+<style>
+body{margin:0;background:#0f0f16;color:#fff;font-family:Arial}
+.container{max-width:1600px;margin:auto;padding:20px}
+h2{margin-top:30px}
+.match{
+  background:#171722;
+  border:1px solid #26263a;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:12px;
+}
+.league{font-size:13px;color:#9a9ab0}
+.teams{font-weight:bold;font-size:18px}
+.time{margin-top:5px;color:#9a9ab0}
+.live{border-left:4px solid #ff3b3b}
+</style>
 </head>
+
 <body>
+<div class="container">
 
-  <header>
-    <img src="https://hokejicek.site/files/png/hokejicek-logo.png" alt="Hokejíček logo">
-    <nav>
-      <a href="/">Hlavní stránka</a>
-      <a href="/prenosy">Přenosy</a>
-      <a href="/gdpr/index.html">GDPR</a>
-    </nav>
-  </header>
+<h2>🔴 Live</h2>
+<div id="live"></div>
 
-  <main>
-    <div class="video-wrapper">
-      <div class="video-box">
-        <div id="player"></div>
-      </div>
-    </div>
+<h2>🕒 Nadcházející</h2>
+<div id="upcoming"></div>
 
-    <div class="chat-box">
-      <div class="chat-header">Live Chat</div>
-      <iframe class="chat-embed" src="https://hokejicek.site/livechat/index.html" title="Live Chat"></iframe>
-    </div>
-  </main>
+</div>
 
-  <script>
-    new Clappr.Player({
-      source: "https://stream1.long-mode-0a14.workers.dev/index.m3u8",
-      parentId: "#player",
-      width: "100%",
-      height: "100%",
-      autoPlay: true,
-      mute: false,
-      mediacontrol: { seekbar: "#4da3ff", buttons: "#ffffff" },
-      playback: { hlsjsConfig: { maxBufferLength: 30 } }
+<script>
+fetch("zapasy.json")
+  .then(r => r.json())
+  .then(data => {
+
+    data.live.forEach(m => {
+      document.getElementById("live").innerHTML += `
+        <div class="match live">
+          <div class="league">${m.league}</div>
+          <div class="teams">${m.home} vs ${m.away}</div>
+          <div class="time">${m.time}</div>
+        </div>`;
     });
-  </script>
 
-  <script type="text/javascript">
-    aclib.runAutoTag({ zoneId: "zitkptgwk8" });
-  </script>
+    data.upcoming.forEach(m => {
+      document.getElementById("upcoming").innerHTML += `
+        <div class="match">
+          <div class="league">${m.league}</div>
+          <div class="teams">${m.home} vs ${m.away}</div>
+          <div class="time">${m.time}</div>
+        </div>`;
+    });
+
+  });
+</script>
 
 </body>
 </html>
