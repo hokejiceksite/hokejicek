@@ -1,220 +1,62 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hokejíček | Dnešní přenosy</title>
-  <link rel="icon" type="image/png" href="https://hokejicek.site/files/png/faviconn.png" />
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zápasy</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #0b0b0b;
-      color: #fff;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #111;
-      padding: 5px 24px;
-      border-bottom: 1px solid #222;
-      height: 55px;
-      position: relative;
-    }
-    header img {
-      height: 140px;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 5;
-    }
-    nav {
-      margin-left: auto;
-      z-index: 10;
-    }
-    nav a {
-      color: #eee;
-      text-decoration: none;
-      margin-left: 25px;
-      font-weight: 500;
-      font-size: 1.05em;
-    }
-    nav a:hover {
-      color: #4da3ff;
-    }
-    h1, h2 {
-      text-align: center;
-      color: #4da3ff;
-    }
-    h1 {
-      margin-top: 90px;
-      font-size: 2em;
-    }
-    h2 {
-      margin-top: 60px;
-      font-size: 1.6em;
-    }
-    main {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-      margin: 40px auto 80px auto;
-      padding: 0 40px;
-      max-width: 1480px;
-    }
-    .card {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      width: calc(25% - 18px);
-      border-radius: 16px;
-      overflow: hidden;
-      background: #1a1a1a;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      cursor: pointer;
-      transition: .2s;
-    }
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 30px rgba(77,163,255,0.3);
-    }
-    .bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.75);
-    }
-    .card-content {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
-      padding: 14px;
-    }
-    .teams { font-size: 1.05em; font-weight: 600; margin-bottom: 5px; }
-    .time { font-size: 0.9em; color: #aaa; }
-    .countdown { font-size: 0.9em; color: #4da3ff; font-family: monospace; }
-
-    @media (max-width: 1200px) { .card { width: calc(33.33% - 18px); } }
-    @media (max-width: 900px) { .card { width: calc(50% - 18px); } }
-    @media (max-width: 600px) { .card { width: 100%; } }
-
-    footer {
-      text-align: center;
-      color: #777;
-      padding: 20px;
-      font-size: 0.9em;
-    }
-  </style>
+<style>
+body{margin:0;background:#0f0f16;color:#fff;font-family:Arial}
+.container{max-width:1600px;margin:auto;padding:20px}
+h2{margin-top:30px}
+.match{
+  background:#171722;
+  border:1px solid #26263a;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:12px;
+}
+.league{font-size:13px;color:#9a9ab0}
+.teams{font-weight:bold;font-size:18px}
+.time{margin-top:5px;color:#9a9ab0}
+.live{border-left:4px solid #ff3b3b}
+</style>
 </head>
 
 <body>
+<div class="container">
 
-<header>
-  <img src="https://hokejicek.site/files/png/hokejicek-logo.png">
-  <nav>
-    <a href="/">Hlavní stránka</a>
-    <a href="/prenosy">Přenosy</a>
-    <a href="/gdpr">GDPR</a>
-  </nav>
-</header>
+<h2>🔴 Live</h2>
+<div id="live"></div>
 
-<h1>Nejzajímavější přenosy</h1>
+<h2>🕒 Nadcházející</h2>
+<div id="upcoming"></div>
 
-<main>
+</div>
 
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-    <img src="https://i.imgur.com/DjdqaVo.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Kladno vs Sparta Praha</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
+<script>
+fetch("zapasy.json")
+  .then(r => r.json())
+  .then(data => {
 
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-    <img src="https://i.imgur.com/lBPgXf6.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Liberec vs Mountfield HK</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
+    data.live.forEach(m => {
+      document.getElementById("live").innerHTML += `
+        <div class="match live">
+          <div class="league">${m.league}</div>
+          <div class="teams">${m.home} vs ${m.away}</div>
+          <div class="time">${m.time}</div>
+        </div>`;
+    });
 
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
-    <img src="https://i.imgur.com/FrRBbU4.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Mladá Boleslav vs Plzeň</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
+    data.upcoming.forEach(m => {
+      document.getElementById("upcoming").innerHTML += `
+        <div class="match">
+          <div class="league">${m.league}</div>
+          <div class="teams">${m.home} vs ${m.away}</div>
+          <div class="time">${m.time}</div>
+        </div>`;
+    });
 
-</main>
-
-<h2>Všechny přenosy</h2>
-
-<main>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream1'">
-    <img src="https://i.imgur.com/DjdqaVo.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Kladno vs Sparta Praha</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream2'">
-    <img src="https://i.imgur.com/lBPgXf6.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Liberec vs Mountfield HK</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream3'">
-    <img src="https://i.imgur.com/FrRBbU4.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Mladá Boleslav vs Plzeň</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream4'">
-    <img src="https://i.imgur.com/d9hJr8x.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Vítkovice vs Pardubice</div>
-      <div class="time">16:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="16"></div>
-    </div>
-  </div>
-
-  <div class="card" onclick="location.href='https://hokejicek.site/live/stream5'">
-    <img src="https://i.imgur.com/hhLiwuI.png" class="bg">
-    <div class="card-content">
-      <div class="teams">Olomouc vs České Budějovice</div>
-      <div class="time">17:00 • 23. 11. 2025</div>
-      <div class="countdown" data-hour="17"></div>
-    </div>
-  </div>
-
-</main>
-
-<footer>
-  © 2025 Hokejíček – všechna práva vyhrazena.
-</footer>
-
-<script type="text/javascript">
-  aclib.runAutoTag({
-      zoneId: 'zitkptgwk8',
   });
 </script>
 
