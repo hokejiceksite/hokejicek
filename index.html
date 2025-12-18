@@ -6,7 +6,8 @@
 <title>HOKEJICEK.site</title>
 <link rel="icon" href="/favicon.ico">
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
 <style>
 :root{
@@ -27,6 +28,7 @@ body{
 }
 a{color:inherit;text-decoration:none}
 
+/* NAVBAR */
 .nav{
   position:sticky;
   top:0;
@@ -61,8 +63,12 @@ a{color:inherit;text-decoration:none}
   background:rgba(255,255,255,.04);
   font-weight:700;
 }
-.nav-btn svg{width:18px;height:18px}
+.nav-btn svg{
+  width:18px;
+  height:18px;
+}
 
+/* LAYOUT */
 .wrapper{
   max-width:var(--max);
   margin:auto;
@@ -91,12 +97,12 @@ a{color:inherit;text-decoration:none}
   border-bottom:1px solid var(--border);
 }
 
+/* ROZPIS */
 .schedule{
   padding:12px;
   display:grid;
   gap:10px;
 }
-
 .match{
   padding:12px;
   border-radius:14px;
@@ -108,9 +114,8 @@ a{color:inherit;text-decoration:none}
 .match-title{font-weight:800}
 .match-meta{font-size:13px;color:var(--muted)}
 
-.player-wrap{
-  padding:20px;
-}
+/* PŘENOS */
+.player-wrap{padding:20px}
 
 .video{
   width:100%;
@@ -131,30 +136,19 @@ a{color:inherit;text-decoration:none}
   gap:18px;
   padding:48px 36px;
 }
-
 .placeholder img{
   width:100%;
   max-width:620px;
 }
-
 .placeholder h2{
   margin:0;
   font-size:28px;
   font-weight:900;
 }
-
 .placeholder p{
   margin:0;
   font-size:16px;
   color:var(--muted);
-}
-
-video{
-  width:100%;
-  height:100%;
-  border-radius:18px;
-  background:#000;
-  display:none;
 }
 
 .stream-buttons{
@@ -162,20 +156,17 @@ video{
   gap:12px;
   margin-top:16px;
 }
-
 .stream-btn{
   flex:1;
   padding:12px;
   border-radius:12px;
   border:1px solid var(--border);
   background:rgba(255,255,255,.12);
-  color:#ffffff;
+  color:#fff;
   font-weight:900;
   cursor:pointer;
 }
-.stream-btn:hover{
-  background:rgba(255,255,255,.18);
-}
+.stream-btn:hover{background:rgba(255,255,255,.18)}
 
 .chat iframe{
   width:100%;
@@ -191,6 +182,7 @@ video{
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
     <div class="nav-links">
+
       <a class="nav-btn" href="/">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -198,6 +190,7 @@ video{
         </svg>
         Home
       </a>
+
       <a class="nav-btn" href="/tv">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="7" width="20" height="15" rx="2"/>
@@ -205,6 +198,7 @@ video{
         </svg>
         TV
       </a>
+
     </div>
   </div>
 </div>
@@ -221,12 +215,20 @@ video{
       <div class="panel-head">Přenos</div>
       <div class="player-wrap">
         <div class="video">
+
           <div class="placeholder" id="placeholder">
             <img src="https://i.imgur.com/LWZmB9W.png" alt="">
             <h2>Tipsport Extraliga & Maxa Liga</h2>
             <p>Sleduj oficiální přenosy pouze na HOKEJICEK.site</p>
           </div>
-          <video id="video" controls autoplay></video>
+
+          <video
+            id="player"
+            class="video-js vjs-fill vjs-big-play-centered"
+            controls
+            preload="auto">
+          </video>
+
         </div>
 
         <div class="stream-buttons" id="streamButtons">
@@ -246,17 +248,12 @@ video{
 
 <script>
 let currentMatch = null;
-let hls = null;
+const player = videojs('player');
 
 fetch("./matches.json")
-  .then(r => {
-    if (!r.ok) throw new Error("matches.json nelze načíst");
-    return r.json();
-  })
+  .then(r => r.json())
   .then(data => {
     const box = document.getElementById("schedule");
-    box.innerHTML = "";
-
     data.matches.forEach(m => {
       const div = document.createElement("div");
       div.className = "match";
@@ -267,39 +264,28 @@ fetch("./matches.json")
       div.onclick = () => selectMatch(m);
       box.appendChild(div);
     });
-  })
-  .catch(() => {
-    document.getElementById("schedule").innerHTML =
-      "<div class='match'>Nelze načíst rozpis</div>";
   });
 
 function selectMatch(m){
   currentMatch = m;
   document.getElementById("placeholder").style.display = "none";
-  document.getElementById("video").style.display = "block";
   document.getElementById("streamButtons").style.display = "flex";
   loadStream("commentary");
 }
 
 function loadStream(type){
-  if (!currentMatch) return;
+  if(!currentMatch) return;
 
   const urls = type === "commentary"
     ? currentMatch.streams.commentary
     : currentMatch.streams.ambient;
 
-  const src = urls[0];
+  player.src({
+    src: urls[0],
+    type: "application/x-mpegURL"
+  });
 
-  const video = document.getElementById("video");
-  if (hls) { hls.destroy(); hls = null; }
-
-  if (Hls.isSupported()){
-    hls = new Hls();
-    hls.loadSource(src);
-    hls.attachMedia(video);
-  } else {
-    video.src = src;
-  }
+  player.play();
 }
 </script>
 
