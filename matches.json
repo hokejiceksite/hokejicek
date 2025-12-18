@@ -1,0 +1,40 @@
+{
+  "matches": [
+    {
+      "home": "HC Rytíři Vlašim",
+      "away": "HC Vodní Lvi Benešov",
+      "league": "Krajská liga",
+      "date": "20. 12. 2025 · 17:30",
+      "streams": {
+        "commentary": [
+          "/streams/vlasim/main1.m3u8",
+          "/streams/vlasim/main2.m3u8",
+          "/streams/vlasim/main3.m3u8"
+        ],
+        "ambient": [
+          "/streams/vlasim/ice1.m3u8",
+          "/streams/vlasim/ice2.m3u8",
+          "/streams/vlasim/ice3.m3u8"
+        ]
+      }
+    },
+    {
+      "home": "HC Kometa Brno",
+      "away": "HC Sparta Praha",
+      "league": "Tipsport Extraliga",
+      "date": "22. 12. 2025 · 18:00",
+      "streams": {
+        "commentary": [
+          "/streams/kometa/main1.m3u8",
+          "/streams/kometa/main2.m3u8",
+          "/streams/kometa/main3.m3u8"
+        ],
+        "ambient": [
+          "/streams/kometa/ice1.m3u8",
+          "/streams/kometa/ice2.m3u8",
+          "/streams/kometa/ice3.m3u8"
+        ]
+      }
+    }
+  ]
+}
