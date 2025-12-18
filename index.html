@@ -238,71 +238,67 @@ video{
 
     <div class="panel chat">
       <div class="panel-head">Live chat</div>
-      <iframe
-        src="https://hokejicek.site/livechat"
-        referrerpolicy="no-referrer">
-      </iframe>
+      <iframe src="https://hokejicek.site/livechat"></iframe>
     </div>
 
   </div>
 </div>
 
 <script>
-let currentMatch=null;
-let hls=null;
+let currentMatch = null;
+let hls = null;
 
-fetch("/matches.json")
-.then(r=>r.json())
-.then(data=>{
-  const box=document.getElementById("schedule");
-  data.matches.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="match";
-    div.innerHTML=`
-      <div class="match-title">${m.home} vs ${m.away}</div>
-      <div class="match-meta">${m.league} · ${m.date}</div>
-    `;
-    div.onclick=()=>selectMatch(m);
-    box.appendChild(div);
+fetch("./matches.json")
+  .then(r => {
+    if (!r.ok) throw new Error("matches.json nelze načíst");
+    return r.json();
+  })
+  .then(data => {
+    const box = document.getElementById("schedule");
+    box.innerHTML = "";
+
+    data.matches.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "match";
+      div.innerHTML = `
+        <div class="match-title">${m.home} vs ${m.away}</div>
+        <div class="match-meta">${m.league} · ${m.date}</div>
+      `;
+      div.onclick = () => selectMatch(m);
+      box.appendChild(div);
+    });
+  })
+  .catch(() => {
+    document.getElementById("schedule").innerHTML =
+      "<div class='match'>Nelze načíst rozpis</div>";
   });
-});
 
 function selectMatch(m){
-  currentMatch=m;
-  document.getElementById("placeholder").style.display="none";
-  document.getElementById("video").style.display="block";
-  document.getElementById("streamButtons").style.display="flex";
+  currentMatch = m;
+  document.getElementById("placeholder").style.display = "none";
+  document.getElementById("video").style.display = "block";
+  document.getElementById("streamButtons").style.display = "flex";
   loadStream("commentary");
 }
 
-async function pickWorking(urls){
-  for(const u of urls){
-    try{
-      const r=await fetch(u,{method:"HEAD"});
-      if(r.ok) return u;
-    }catch(e){}
-  }
-  return null;
-}
+function loadStream(type){
+  if (!currentMatch) return;
 
-async function loadStream(type){
-  if(!currentMatch) return;
-  const urls=type==="commentary"
+  const urls = type === "commentary"
     ? currentMatch.streams.commentary
     : currentMatch.streams.ambient;
 
-  const src=await pickWorking(urls);
-  if(!src) return;
+  const src = urls[0];
 
-  const video=document.getElementById("video");
-  if(hls){hls.destroy();hls=null;}
+  const video = document.getElementById("video");
+  if (hls) { hls.destroy(); hls = null; }
 
-  if(Hls.isSupported()){
-    hls=new Hls();
+  if (Hls.isSupported()){
+    hls = new Hls();
     hls.loadSource(src);
     hls.attachMedia(video);
-  }else{
-    video.src=src;
+  } else {
+    video.src = src;
   }
 }
 </script>
