@@ -1,10 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live Stream</title>
+
+<!-- HLAVIČKA – POPUP REKLAMA -->
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
 <style>
 html, body {
@@ -51,8 +53,8 @@ html, body {
 
 <div id="servers">
     <button onclick="loadServer(1)">Česky</button>
-    <button onclick="loadServer(2)">Slovenky</button>
-    <button onclick="loadServer(2)">Polski</button>
+    <button onclick="loadServer(2)">Slovensky</button>
+    <button onclick="loadServer(3)">Polski</button>
 </div>
 
 <iframe
@@ -65,13 +67,20 @@ html, body {
 <script>
 const servers = {
     1: "https://gostream.sbs/play/goplay.php?id=4",
-    2: "https://gostream.sbs/play/goplay.php?id=85"
+    2: "https://gostream.sbs/play/goplay.php?id=85",
     3: "https://gostream.sbs/play/goplay.php?id=60"
 };
 
 function loadServer(id) {
     document.getElementById("player").src = servers[id];
 }
+</script>
+
+<!-- PATIČKA – POPUP REKLAMA -->
+<script type="text/javascript">
+    aclib.runAutoTag({
+        zoneId: 'zitkptgwk8'
+    });
 </script>
 
 </body>
