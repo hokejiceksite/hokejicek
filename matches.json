@@ -1,110 +1,110 @@
 {
   "matches": [
     {
-      "home": "Bílí Tygři Liberec",
-      "away": "HC Energie Karlovy Vary",
+      "home": "HC VERVA Litvínov",
+      "away": "BANES Motor České Budějovice",
+      "league": "Tipsport Extraliga",
+      "date": "2025-12-19 15:30",
+      "streams": {
+        "commentary": [
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a64b41e7e2c7b160e5833.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a64b41e7e2c7b160e5833.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a64b41e7e2c7b160e5833.m3u8"
+        ],
+        "ambient": [
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693ed4759f97f2f2ddbda645.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693ed4759f97f2f2ddbda645.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693ed4759f97f2f2ddbda645.m3u8"
+        ]
+      }
+    },
+    {
+      "home": "HC Energie Karlovy Vary",
+      "away": "HC Škoda Plzeň",
       "league": "Tipsport Extraliga",
       "date": "2025-12-19 16:00",
       "streams": {
         "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f1585dc8b398009459b.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f1585dc8b398009459b.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f1585dc8b398009459b.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/kv-plzen-com.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/kv-plzen-com.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/kv-plzen-com.m3u8"
         ],
         "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c3174b4e4af00beff2d8b.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c3174b4e4af00beff2d8b.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c3174b4e4af00beff2d8b.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/kv-plzen-amb.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/kv-plzen-amb.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/kv-plzen-amb.m3u8"
         ]
       }
     },
     {
-      "home": "Mountfield HK",
-      "away": "HC VERVA Litvínov",
+      "home": "HC Vítkovice Ridera",
+      "away": "Mountfield HK",
       "league": "Tipsport Extraliga",
       "date": "2025-12-19 16:00",
       "streams": {
         "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f0685dc8b3980094599.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f0685dc8b3980094599.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f0685dc8b3980094599.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/vitkovice-hk-com.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/vitkovice-hk-com.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/vitkovice-hk-com.m3u8"
         ],
         "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c31749f97f2f2ddbd9e30.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c31749f97f2f2ddbd9e30.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c31749f97f2f2ddbd9e30.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/vitkovice-hk-amb.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/vitkovice-hk-amb.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/vitkovice-hk-amb.m3u8"
         ]
       }
     },
     {
-      "home": "HC Škoda Plzeň",
-      "away": "Rytíři Kladno",
-      "league": "Tipsport Extraliga",
-      "date": "2025-12-19 16:30",
-      "streams": {
-        "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f251e7e2c7b160e582b.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f251e7e2c7b160e582b.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f251e7e2c7b160e582b.m3u8"
-        ],
-        "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c3f84b4e4af00beff2da0.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c3f84b4e4af00beff2da0.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c3f84b4e4af00beff2da0.m3u8"
-        ]
-      }
-    },
-    {
-      "home": "BANES Motor České Budějovice",
-      "away": "HC Kometa Brno",
+      "home": "HC Kometa Brno",
+      "away": "HC Dynamo Pardubice",
       "league": "Tipsport Extraliga",
       "date": "2025-12-19 17:00",
       "streams": {
         "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f5985dc8b39800945a1.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f5985dc8b39800945a1.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f5985dc8b39800945a1.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/kometa-pce-com.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/kometa-pce-com.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/kometa-pce-com.m3u8"
         ],
         "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c3f859f97f2f2ddbd9e41.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c3f859f97f2f2ddbd9e41.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c3f859f97f2f2ddbd9e41.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/kometa-pce-amb.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/kometa-pce-amb.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/kometa-pce-amb.m3u8"
         ]
       }
     },
     {
       "home": "HC Olomouc",
-      "away": "HC Vítkovice Ridera",
+      "away": "BK Mladá Boleslav",
       "league": "Tipsport Extraliga",
       "date": "2025-12-19 17:00",
       "streams": {
         "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f4485dc8b398009459f.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f4485dc8b398009459f.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f4485dc8b398009459f.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/olomouc-boleslav-com.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/olomouc-boleslav-com.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/olomouc-boleslav-com.m3u8"
         ],
         "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c3f84b4e4af00beff2da4.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c3f84b4e4af00beff2da4.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c3f84b4e4af00beff2da4.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/olomouc-boleslav-amb.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/olomouc-boleslav-amb.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/olomouc-boleslav-amb.m3u8"
         ]
       }
     },
     {
-      "home": "HC Dynamo Pardubice",
-      "away": "HC Oceláři Třinec",
+      "home": "HC Oceláři Třinec",
+      "away": "Rytíři Kladno",
       "league": "Tipsport Extraliga",
-      "date": "2025-12-19 17:00",
+      "date": "2025-12-19 17:30",
       "streams": {
         "commentary": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/694a5f351e7e2c7b160e582d.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/694a5f351e7e2c7b160e582d.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/694a5f351e7e2c7b160e582d.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/trinec-kladno-com.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/trinec-kladno-com.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/trinec-kladno-com.m3u8"
         ],
         "ambient": [
-          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/693c3f84b4e4af00beff2da2.m3u8",
-          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/693c3f84b4e4af00beff2da2.m3u8",
-          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/693c3f84b4e4af00beff2da2.m3u8"
+          "https://lasvideoblobs0prod-standard.b-cdn.net/vods/blobs0/trinec-kladno-amb.m3u8",
+          "https://lasvideoblobs1prod-standard.b-cdn.net/vods/blobs1/trinec-kladno-amb.m3u8",
+          "https://lasvideoblobs2prod-standard.b-cdn.net/vods/blobs2/trinec-kladno-amb.m3u8"
         ]
       }
     }
