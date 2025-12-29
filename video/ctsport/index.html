@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
+
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  position: fixed;
+}
+
+video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: #000;
+}
+</style>
+</head>
+<body>
+
+<video id="v" autoplay controls playsinline></video>
+
+<script>
+const WORKER_URL = "https://ctsport.long-mode-0a14.workers.dev";
+
+(async () => {
+  if (!shaka.Player.isBrowserSupported()) return;
+
+  const video = document.getElementById("v");
+  const player = new shaka.Player(video);
+
+  player.configure({
+    abr: {
+      enabled: true,
+      defaultBandwidthEstimate: 1e9
+    },
+    restrictions: {
+      maxWidth: Infinity,
+      maxHeight: Infinity,
+      maxPixels: Infinity
+    }
+  });
+
+  const mpd = await fetch(WORKER_URL).then(r => r.text());
+
+  if (!mpd.startsWith("http")) return;
+
+  await player.load(mpd);
+
+  video.onclick = () => {
+    if (!document.fullscreenElement)
+      video.requestFullscreen().catch(()=>{});
+  };
+})();
+</script>
+
+<script type="text/javascript">
+  aclib.runAutoTag({
+    zoneId: 'zitkptgwk8'
+  });
+</script>
+
+</body>
+</html>
