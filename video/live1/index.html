@@ -13,8 +13,6 @@ html,body{
   overflow:hidden;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
-
-/* pozadí */
 #wrap{
   position:fixed;
   inset:0;
@@ -24,16 +22,12 @@ html,body{
   align-items:center;
   justify-content:center;
 }
-
-/* karta */
 #card{
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:18px;
 }
-
-/* loader */
 #ring{
   width:64px;
   height:64px;
@@ -42,8 +36,6 @@ html,body{
   border-top-color:#4b8bff;
   animation:spin 1.2s linear infinite;
 }
-
-/* texty */
 #title{
   color:#fff;
   font-size:22px;
@@ -55,8 +47,6 @@ html,body{
   font-size:14px;
   letter-spacing:.6px;
 }
-
-/* video */
 video{
   position:fixed;
   inset:0;
@@ -66,10 +56,7 @@ video{
   background:#000;
   display:none;
 }
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 
@@ -88,7 +75,10 @@ video{
 <script>
 const CHANNEL_MIN = 28;
 const CHANNEL_MAX = 36;
-const INTERVAL = 15000;
+const CHECK_INTERVAL = 5000;
+
+const START = new Date("2025-12-29T18:57:00+01:00").getTime();
+const END   = new Date("2025-12-29T19:03:00+01:00").getTime();
 
 shaka.polyfill.installAll();
 const video = document.getElementById("v");
@@ -101,25 +91,32 @@ async function getMpd(ch){
       `https://api.ceskatelevize.cz/video/v1/playlist-live/v1/stream-data/channel/CH_${ch}`,
       { cache:"no-store" }
     );
+    if(!r.ok) return null;
     const d = await r.json();
-    return d?.streamUrls?.main || null;
-  }catch(e){
-    return null;
-  }
+    if(d?.streamUrls?.main && d.isBlocked === false){
+      return d.streamUrls.main;
+    }
+  }catch(e){}
+  return null;
 }
 
 (async ()=>{
   while(true){
-    for(let ch=CHANNEL_MIN; ch<=CHANNEL_MAX; ch++){
-      const mpd = await getMpd(ch);
-      if(mpd){
-        await player.load(mpd);
-        wrap.style.display="none";
-        video.style.display="block";
-        return;
+    const now = Date.now();
+
+    if(now >= START && now <= END){
+      for(let ch=CHANNEL_MIN; ch<=CHANNEL_MAX; ch++){
+        const mpd = await getMpd(ch);
+        if(mpd){
+          await player.load(mpd);
+          wrap.style.display="none";
+          video.style.display="block";
+          return;
+        }
       }
     }
-    await new Promise(r=>setTimeout(r,INTERVAL));
+
+    await new Promise(r=>setTimeout(r, CHECK_INTERVAL));
   }
 })();
 </script>
