@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stream JSON Viewer</title>
+<style>
+  :root { color-scheme: dark; }
+  body{margin:0;font-family:system-ui,sans-serif;background:#0b0f17;color:#fff;padding:16px}
+  .wrap{max-width:1100px;margin:0 auto}
+  textarea{width:100%;height:220px;background:#0e1630;color:#fff;border:1px solid #24365d;border-radius:12px;padding:12px;font-family:ui-monospace,Consolas,monospace}
+  button{margin-top:10px;background:#111a2e;color:#fff;border:1px solid #24365d;border-radius:12px;padding:10px 12px;cursor:pointer}
+  button:hover{border-color:#3f5ea6}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:#111a2e;border:1px solid #24365d;border-radius:14px;padding:12px}
+  .muted{opacity:.75;font-size:13px}
+  .k{opacity:.75;font-size:12px;margin-top:10px}
+  .v{word-break:break-all}
+  img{max-width:100%;border-radius:12px;border:1px solid #24365d}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 style="margin:0 0 6px">Stream JSON Viewer</h1>
+  <div class="muted">Vlož JSON z agentury a klikni „Načíst“. (Pouze náhled informací, nepřehrává.)</div>
+
+  <textarea id="jsonInput" placeholder='Sem vlož JSON...'></textarea>
+  <button id="loadBtn">Načíst</button>
+
+  <div class="grid" id="out" style="display:none">
+    <div class="card">
+      <div class="muted">Základ</div>
+      <div class="k">Název</div><div class="v" id="title"></div>
+      <div class="k">ID / Channel</div><div class="v" id="ids"></div>
+      <div class="k">Blocked</div><div class="v" id="blocked"></div>
+      <div class="k">Kvality</div><div class="v" id="quals"></div>
+      <div class="k">Audio</div><div class="v" id="audio"></div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Náhled</div>
+      <div id="imgWrap" class="k"></div>
+    </div>
+
+    <div class="card" style="grid-column:1/-1">
+      <div class="muted">Odkazy (pro interní přehled)</div>
+      <div class="k">Main</div><div class="v"><code id="mainUrl"></code></div>
+      <div class="k">Timeshift</div><div class="v"><code id="tsUrl"></code></div>
+      <div class="muted" style="margin-top:10px">
+        Pozn.: Tokeny a chráněné odkazy obvykle nefungují mimo oficiální přehrávač a mohou být DRM/časově omezené.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (id)=>document.getElementById(id);
+
+function safeText(el, text){ el.textContent = (text ?? "").toString(); }
+
+$("loadBtn").onclick = () => {
+  let obj;
+  try {
+    obj = JSON.parse($("jsonInput").value.trim());
+  } catch (e) {
+    alert("Neplatný JSON.");
+    return;
+  }
+
+  $("out").style.display = "grid";
+
+  safeText($("title"), obj.title || "");
+  safeText($("ids"), `id=${obj.id ?? ""} • assetId=${obj.assetId ?? ""} • channel=${obj.channel ?? ""}`);
+  safeText($("blocked"), obj.streamUrls?.isBlocked === true ? "true" : "false");
+
+  const aq = obj.streamUrls?.availableQualities || [];
+  const mq = obj.streamUrls?.manifestQualities || [];
+  safeText($("quals"), `available: ${aq.join(", ")} | manifest: ${mq.join(", ")}`);
+
+  const tracks = (obj.streamUrls?.audioTracks || []).map(t =>
+    `${t.language}/${t.codec}/${t.channels}${t.ad ? " (ad)" : ""}`
+  );
+  safeText($("audio"), tracks.join(" • "));
+
+  safeText($("mainUrl"), obj.streamUrls?.main || "");
+  safeText($("tsUrl"), obj.streamUrls?.timeshift || "");
+
+  const img = obj.previewImageUrl;
+  $("imgWrap").innerHTML = img
+    ? `<div class="k">previewImageUrl</div><img src="${img}" alt="Preview">`
+    : `<div class="k">previewImageUrl</div><div class="muted">Není</div>`;
+};
+</script>
+</body>
+</html>
