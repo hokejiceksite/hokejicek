@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hokejicek</title>
+
+<style>
+:root{color-scheme:dark}
+body{margin:0;font-family:system-ui,sans-serif;background:#0b0f17;color:#fff}
+header{padding:20px 24px;border-bottom:1px solid #1f2b46}
+header h1{margin:0;font-size:24px}
+header .sub{margin-top:4px;font-size:13px;opacity:.7}
+main{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 88px)}
+aside{padding:16px;border-right:1px solid #1f2b46}
+.league{margin-bottom:22px}
+.league h3{margin:0 0 8px;font-size:14px;opacity:.7}
+.match{background:#111a2e;border:1px solid #22304d;border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.match:hover{background:#16213b}
+.match.active{background:#1a2a4d;border-color:#355aa3}
+.match time{font-size:12px;opacity:.7}
+.match strong{display:block;margin-top:4px;font-size:14px}
+section{padding:18px}
+.player{background:#000;border-radius:18px;overflow:hidden;border:1px solid #22304d;margin-bottom:10px}
+.player iframe{width:100%;height:420px;border:0}
+.langs{display:flex;gap:8px;margin:10px 0 18px}
+.langs button{background:#111a2e;border:1px solid #22304d;color:#fff;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px}
+.langs button.active{background:#1a2a4d;border-color:#4b6fd8}
+.empty{padding:28px;opacity:.7;border:1px dashed #22304d;border-radius:18px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Hokejicek</h1>
+  <div class="sub">Dnešní hokejové přenosy</div>
+</header>
+
+<main>
+  <aside id="list"></aside>
+  <section id="players"></section>
+</main>
+
+<script>
+const LANGS=["Čeština","Slovenština","Polština","English"];
+
+/* ===== PROGRAM ===== */
+
+const SPENGLER = {
+  "2025-12-29": [
+    {
+      time: "15:10",
+      home: "Sparta Prague",
+      away: "Canada",
+      embeds: [
+        "https://gostream.sbs/play/goplay.php?id=4",
+        "https://gostream.sbs/play/goplay.php?id=24",
+        "https://gostream.sbs/play/goplay.php?id=60"
+      ]
+    },
+    {
+      time: "20:15",
+      home: "Davos",
+      away: "IFK Helsinki",
+      embeds: [
+        "https://gostream.sbs/play/goplay.php?id=4",
+        "https://gostream.sbs/play/goplay.php?id=24",
+        "https://gostream.sbs/play/goplay.php?id=35"
+      ]
+    }
+  ]
+};
+
+const U20 = {
+  "2025-12-29": [
+    {
+      time: "19:00",
+      home: "Germany U20",
+      away: "Sweden U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus/"
+      ]
+    },
+    {
+      time: "21:30",
+      home: "Finland U20",
+      away: "Czech Republic U20",
+      embeds: [
+        "https://gostream.sbs/play/goplay.php?id=4"
+      ]
+    }
+  ],
+
+  "2025-12-30": [
+    {
+      time: "00:00",
+      home: "Slovakia U20",
+      away: "USA U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus1/",
+        "https://gostream.sbs/play/goplay.php?id=24"
+      ]
+    },
+    {
+      time: "02:30",
+      home: "Canada U20",
+      away: "Denmark U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus2/"
+      ]
+    },
+    {
+      time: "20:00",
+      home: "Switzerland U20",
+      away: "Germany U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus/"
+      ]
+    },
+    {
+      time: "22:30",
+      home: "Latvia U20",
+      away: "Denmark U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus1/"
+      ]
+    }
+  ],
+
+  "2025-12-31": [
+    {
+      time: "19:00",
+      home: "Switzerland U20",
+      away: "Slovakia U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus/",
+        "https://gostream.sbs/play/goplay.php?id=24"
+      ]
+    },
+    {
+      time: "21:30",
+      home: "Czech Republic U20",
+      away: "Latvia U20",
+      embeds: [
+        "https://gostream.sbs/play/goplay.php?id=4"
+      ]
+    }
+  ],
+
+  "2026-01-01": [
+    {
+      time: "00:00",
+      home: "USA U20",
+      away: "Sweden U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus/"
+      ]
+    },
+    {
+      time: "02:30",
+      home: "Canada U20",
+      away: "Finland U20",
+      embeds: [
+        "https://hokejicek.site/video/ctsportplus1/"
+      ]
+    }
+  ]
+};
+
+/* ===== LOGIKA ===== */
+
+const list=document.getElementById("list");
+const players=document.getElementById("players");
+let first=true;
+
+function todayKey(){
+  const d=new Date();
+  return d.toISOString().slice(0,10);
+}
+const today=todayKey();
+
+function renderMatch(m){
+  players.innerHTML="";
+  if(!m.embeds || !m.embeds.length){
+    players.innerHTML='<div class="empty">Stream není k dispozici.</div>';
+    return;
+  }
+  const wrap=document.createElement("div");
+  wrap.className="player";
+  const iframe=document.createElement("iframe");
+  iframe.allowFullscreen=true;
+  iframe.src=m.embeds[0];
+  wrap.appendChild(iframe);
+  players.appendChild(wrap);
+
+  if(m.embeds.length>1){
+    const bar=document.createElement("div");
+    bar.className="langs";
+    m.embeds.forEach((src,i)=>{
+      const b=document.createElement("button");
+      b.textContent=LANGS[i]||("Zdroj "+(i+1));
+      if(i===0)b.classList.add("active");
+      b.onclick=()=>{
+        iframe.src=src;
+        document.querySelectorAll(".langs button").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active");
+      };
+      bar.appendChild(b);
+    });
+    players.appendChild(bar);
+  }
+}
+
+function renderLeague(title,matches){
+  if(!matches||!matches.length)return;
+  const block=document.createElement("div");
+  block.className="league";
+  block.innerHTML="<h3>"+title+"</h3>";
+  matches.forEach(m=>{
+    const d=document.createElement("div");
+    d.className="match";
+    d.innerHTML="<time>"+m.time+"</time><strong>"+m.home+" vs "+m.away+"</strong>";
+    d.onclick=()=>{
+      document.querySelectorAll(".match").forEach(x=>x.classList.remove("active"));
+      d.classList.add("active");
+      renderMatch(m);
+    };
+    block.appendChild(d);
+    if(first){
+      d.classList.add("active");
+      renderMatch(m);
+      first=false;
+    }
+  });
+  list.appendChild(block);
+}
+
+renderLeague("EUROPE – Spengler Cup (Davos)",SPENGLER[today]);
+renderLeague("WORLD – WCH U20",U20[today]);
+
+if(first){
+  players.innerHTML='<div class="empty">Na dnešek není žádný program.</div>';
+}
+
+/* ===== AUTO PŘEPÍNÁNÍ O PŮLNOCI ===== */
+const now=new Date();
+const midnight=new Date(now);
+midnight.setHours(24,0,0,0);
+setTimeout(()=>location.reload(),midnight-now);
+</script>
+
+</body>
+</html>
