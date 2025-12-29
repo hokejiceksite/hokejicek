@@ -37,6 +37,18 @@ const WORKER_URL = "https://ctsportplus.long-mode-0a14.workers.dev";
   const video = document.getElementById("v");
   const player = new shaka.Player(video);
 
+  player.configure({
+    abr: {
+      enabled: true,
+      defaultBandwidthEstimate: 1e9
+    },
+    restrictions: {
+      maxWidth: Infinity,
+      maxHeight: Infinity,
+      maxPixels: Infinity
+    }
+  });
+
   const mpd = await fetch(WORKER_URL).then(r => r.text());
 
   if (!mpd.startsWith("http")) return;
@@ -44,7 +56,7 @@ const WORKER_URL = "https://ctsportplus.long-mode-0a14.workers.dev";
   await player.load(mpd);
 
   video.onclick = () => {
-    if (!document.fullscreenElement)
+    if (!document.fullcreenElement)
       video.requestFullscreen().catch(()=>{});
   };
 })();
