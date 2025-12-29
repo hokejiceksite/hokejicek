@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
+  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
 
 <style>
@@ -56,10 +58,16 @@ const WORKER_URL = "https://ctsportplus4.long-mode-0a14.workers.dev";
   await player.load(mpd);
 
   video.onclick = () => {
-    if (!document.fullcreenElement)
+    if (!document.fullscreenElement)
       video.requestFullscreen().catch(()=>{});
   };
 })();
+</script>
+
+<script type="text/javascript">
+  aclib.runAutoTag({
+    zoneId: 'zitkptgwk8'
+  });
 </script>
 
 </body>
