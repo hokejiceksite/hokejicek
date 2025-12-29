@@ -3,22 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hokejicek</title>
+<title>Hokejíček</title>
 
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script id="aclib" src="//acscdn.com/script/aclib.js"></script>
 
 <style>
 :root{color-scheme:dark}
 body{margin:0;font-family:system-ui,sans-serif;background:#0b0f17;color:#fff}
-header{padding:20px 24px;border-bottom:1px solid #1f2b46}
+
+header{
+  padding:20px 24px;
+  border-bottom:1px solid #1f2b46
+}
 header h1{margin:0;font-size:24px}
 header .sub{margin-top:4px;font-size:13px;opacity:.7}
 
-main{display:grid;grid-template-columns:380px 1fr;min-height:calc(100vh - 88px)}
-aside{padding:16px;border-right:1px solid #1f2b46;overflow-y:auto}
+main{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  min-height:calc(100vh - 88px)
+}
+
+aside{
+  padding:16px;
+  border-right:1px solid #1f2b46;
+  overflow-y:auto
+}
 
 .category{margin-bottom:26px}
-.category h3{margin:0 0 10px;font-size:14px;opacity:.7}
+.category h3{
+  margin:0 0 10px;
+  font-size:14px;
+  opacity:.7
+}
 
 .match{
   background:#111a2e;
@@ -29,7 +46,10 @@ aside{padding:16px;border-right:1px solid #1f2b46;overflow-y:auto}
   cursor:pointer
 }
 .match:hover{background:#16213b}
-.match.active{background:#1a2a4d;border-color:#355aa3}
+.match.active{
+  background:#1a2a4d;
+  border-color:#355aa3
+}
 .match time{font-size:12px;opacity:.7}
 .match strong{display:block;margin-top:4px;font-size:14px}
 
@@ -48,8 +68,18 @@ section{
   overflow:hidden;
   border:1px solid #22304d
 }
-.player .ratio{position:relative;width:100%;aspect-ratio:16/9}
-.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .ratio{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9
+}
+.player iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0
+}
 
 .langs{
   display:flex;
@@ -67,7 +97,10 @@ section{
   cursor:pointer;
   font-size:13px
 }
-.langs button.active{background:#1a2a4d;border-color:#4b6fd8}
+.langs button.active{
+  background:#1a2a4d;
+  border-color:#4b6fd8
+}
 
 .empty{
   width:100%;
@@ -84,7 +117,7 @@ section{
 <body>
 
 <header>
-  <h1>Hokejicek</h1>
+  <h1>Hokejíček</h1>
   <div class="sub">Dnešní hokejové přenosy</div>
 </header>
 
@@ -94,122 +127,144 @@ section{
 </main>
 
 <script>
-const LANGS=["Čeština","Slovenština","Polština","English"];
+const LANGS = ["Čeština","Slovenština","Polština","English"];
 
-const SPENGLER={
-  "2025-12-29":[
-    {time:"15:10",home:"Sparta Prague",away:"Canada",embeds:[
-      "https://hokejicek.site/video/extrastream4/",
-      "https://gostream.sbs/play/goplay.php?id=24",
-      "https://gostream.sbs/play/goplay.php?id=60"
-    ]},
-   {time:"20:15",home:"Davos",away:"IFK Helsinki",embeds:[
-      "https://hokejicek.site/video/ctsport/",
-      "https://gostream.sbs/play/goplay.php?id=24",
-      "https://gostream.sbs/play/goplay.php?id=35"
-   ]}
-
-    ]}
+const SPENGLER = {
+  "2025-12-29": [
+    {
+      time:"15:10",
+      home:"Sparta Prague",
+      away:"Canada",
+      embeds:[
+        "https://hokejicek.site/video/extrastream4/",
+        "https://gostream.sbs/play/goplay.php?id=24",
+        "https://gostream.sbs/play/goplay.php?id=60"
+      ]
+    },
+    {
+      time:"20:15",
+      home:"Davos",
+      away:"IFK Helsinki",
+      embeds:[
+        "https://hokejicek.site/video/ctsport/",
+        "https://gostream.sbs/play/goplay.php?id=24",
+        "https://gostream.sbs/play/goplay.php?id=35"
+      ]
+    }
   ]
 };
 
-const U20={
-  "2025-12-29":[
-    {time:"19:00",home:"Germany U20",away:"Sweden U20",embeds:["https://hokejicek.site/video/extrastream/"]},
-    {time:"21:30",home:"Finland U20",away:"Czech Republic U20",embeds:["https://www.youtube.com/embed/sRRwL7ezvjg?si=qqoIUXK_gatNbGiu"]}
-  ],
-  "2025-12-30":[
-    {time:"00:00",home:"Slovakia U20",away:"USA U20",embeds:["https://hokejicek.site/video/extrastream1/","https://gostream.sbs/play/goplay.php?id=24"]},
-    {time:"02:30",home:"Canada U20",away:"Denmark U20",embeds:["https://hokejicek.site/video/extrastream2/"]},
-    {time:"20:00",home:"Switzerland U20",away:"Germany U20",embeds:["https://hokejicek.site/video/extrastream/"]},
-    {time:"22:30",home:"Latvia U20",away:"Denmark U20",embeds:["https://hokejicek.site/video/extrastream1/"]}
-  ],
-  "2025-12-31":[
-    {time:"19:00",home:"Switzerland U20",away:"Slovakia U20",embeds:["https://hokejicek.site/video/extrastream/","https://gostream.sbs/play/goplay.php?id=24"]},
-    {time:"21:30",home:"Czech Republic U20",away:"Latvia U20",embeds:["https://hokejicek.site/video/ctsport/"]}
-  ],
-  "2026-01-01":[
-    {time:"00:00",home:"USA U20",away:"Sweden U20",embeds:["https://hokejicek.site/video/extrastream/"]},
-    {time:"02:30",home:"Canada U20",away:"Finland U20",embeds:["https://hokejicek.site/video/extrastream1/"]}
+const U20 = {
+  "2025-12-29": [
+    {
+      time:"19:00",
+      home:"Germany U20",
+      away:"Sweden U20",
+      embeds:["https://hokejicek.site/video/extrastream/"]
+    },
+    {
+      time:"21:30",
+      home:"Finland U20",
+      away:"Czech Republic U20",
+      embeds:["https://www.youtube.com/embed/sRRwL7ezvjg"]
+    }
   ]
 };
 
-const list=document.getElementById("list");
-const players=document.getElementById("players");
-let first=true;
+const list = document.getElementById("list");
+const players = document.getElementById("players");
+let first = true;
 
 function todayKey(){
   return new Date().toISOString().slice(0,10);
 }
 
 function renderMatch(m){
-  players.innerHTML="";
-  const box=document.createElement("div");
-  box.className="player";
-  const ratio=document.createElement("div");
-  ratio.className="ratio";
-  const iframe=document.createElement("iframe");
-  iframe.allowFullscreen=true;
-  iframe.src=m.embeds[0];
+  players.innerHTML = "";
+
+  const box = document.createElement("div");
+  box.className = "player";
+
+  const ratio = document.createElement("div");
+  ratio.className = "ratio";
+
+  const iframe = document.createElement("iframe");
+  iframe.src = m.embeds[0];
+  iframe.allow = "autoplay; fullscreen; encrypted-media";
+  iframe.allowFullscreen = true;
+
   ratio.appendChild(iframe);
   box.appendChild(ratio);
   players.appendChild(box);
 
-  if(m.embeds.length>1){
-    const langs=document.createElement("div");
-    langs.className="langs";
+  if(m.embeds.length > 1){
+    const langs = document.createElement("div");
+    langs.className = "langs";
+
     m.embeds.forEach((src,i)=>{
-      const b=document.createElement("button");
-      b.textContent=LANGS[i]||("Zdroj "+(i+1));
-      if(i===0)b.classList.add("active");
-      b.onclick=()=>{
-        iframe.src=src;
+      const b = document.createElement("button");
+      b.textContent = LANGS[i] || ("Zdroj " + (i+1));
+      if(i === 0) b.classList.add("active");
+
+      b.onclick = () => {
+        iframe.src = src;
         langs.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
         b.classList.add("active");
       };
+
       langs.appendChild(b);
     });
+
     players.appendChild(langs);
   }
 }
 
 function renderCategory(title,data){
-  const today=todayKey();
-  if(!data[today])return;
-  const block=document.createElement("div");
-  block.className="category";
-  block.innerHTML="<h3>"+title+"</h3>";
+  const today = todayKey();
+  if(!data[today]) return;
+
+  const block = document.createElement("div");
+  block.className = "category";
+  block.innerHTML = "<h3>"+title+"</h3>";
+
   data[today].forEach(m=>{
-    const d=document.createElement("div");
-    d.className="match";
-    d.innerHTML="<time>"+m.time+"</time><strong>"+m.home+" vs "+m.away+"</strong>";
-    d.onclick=()=>{
+    const d = document.createElement("div");
+    d.className = "match";
+    d.innerHTML = "<time>"+m.time+"</time><strong>"+m.home+" vs "+m.away+"</strong>";
+
+    d.onclick = () => {
       document.querySelectorAll(".match").forEach(x=>x.classList.remove("active"));
       d.classList.add("active");
       renderMatch(m);
     };
+
     block.appendChild(d);
+
     if(first){
       d.classList.add("active");
       renderMatch(m);
-      first=false;
+      first = false;
     }
   });
+
   list.appendChild(block);
 }
 
-renderCategory("EUROPE – Spengler Cup (Davos)",SPENGLER);
-renderCategory("WORLD – WCH U20",U20);
+renderCategory("EUROPE – Spengler Cup (Davos)", SPENGLER);
+renderCategory("WORLD – WCH U20", U20);
 
 if(first){
-  players.innerHTML='<div class="empty">Dnes se žádný zápas nehraje.</div>';
+  players.innerHTML = '<div class="empty">Dnes se žádný zápas nehraje.</div>';
 }
 
-setTimeout(()=>location.reload(),new Date().setHours(24,0,0,0)-Date.now());
+// reload o půlnoci
+const midnight = new Date();
+midnight.setHours(24,0,0,0);
+setTimeout(()=>location.reload(), midnight - Date.now());
 </script>
 
-<script type="text/javascript">
-aclib.runAutoTag({zoneId:'zitkptgwk8'});
+<script>
+aclib.runAutoTag({ zoneId: 'zitkptgwk8' });
 </script>
 
 </body>
