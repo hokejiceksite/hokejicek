@@ -1,46 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fullscreen Player</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
 
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<style>
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-    }
-    iframe.player {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      border: 0;
-      z-index: 1;
-    }
-  </style>
+/* pozadí */
+#wrap{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 40%, #1b2a4a 0%, #0b1020 45%, #000 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* karta */
+#card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+/* loader */
+#ring{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,.15);
+  border-top-color:#4b8bff;
+  animation:spin 1.2s linear infinite;
+}
+
+/* texty */
+#title{
+  color:#fff;
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:1.2px;
+}
+#sub{
+  color:rgba(255,255,255,.6);
+  font-size:14px;
+  letter-spacing:.6px;
+}
+
+/* video */
+video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  display:none;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+</style>
 </head>
+
 <body>
 
-  <iframe
-    class="player"
-    src="https://wikisport.wiki/strm/26.php"
-    allow="autoplay; fullscreen; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+<div id="wrap">
+  <div id="card">
+    <div id="ring"></div>
+    <div id="title">PŘENOS SE PŘIPRAVUJE</div>
+    <div id="sub">Začínáme každým okamžikem</div>
+  </div>
+</div>
 
-  <script type="text/javascript">
-    aclib.runAutoTag({
-      zoneId: 'zitkptgwk8'
-    });
-  </script>
+<video id="v" autoplay controls playsinline></video>
+
+<script>
+const CHANNEL_MIN = 28;
+const CHANNEL_MAX = 36;
+const INTERVAL = 15000;
+
+shaka.polyfill.installAll();
+const video = document.getElementById("v");
+const wrap = document.getElementById("wrap");
+const player = new shaka.Player(video);
+
+async function getMpd(ch){
+  try{
+    const r = await fetch(
+      `https://api.ceskatelevize.cz/video/v1/playlist-live/v1/stream-data/channel/CH_${ch}`,
+      { cache:"no-store" }
+    );
+    const d = await r.json();
+    return d?.streamUrls?.main || null;
+  }catch(e){
+    return null;
+  }
+}
+
+(async ()=>{
+  while(true){
+    for(let ch=CHANNEL_MIN; ch<=CHANNEL_MAX; ch++){
+      const mpd = await getMpd(ch);
+      if(mpd){
+        await player.load(mpd);
+        wrap.style.display="none";
+        video.style.display="block";
+        return;
+      }
+    }
+    await new Promise(r=>setTimeout(r,INTERVAL));
+  }
+})();
+</script>
 
 </body>
 </html>
