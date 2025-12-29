@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hokejicek – ČT Sport Fullscreen</title>
+
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin:0; width:100%; height:100%; background:#000; overflow:hidden; }
+  #wrap { position:fixed; inset:0; background:#000; }
+  #video { width:100%; height:100%; background:#000; object-fit:contain; }
+  #hud{
+    position:fixed; left:12px; right:12px; top:12px;
+    display:flex; gap:10px; align-items:center; justify-content:space-between;
+    pointer-events:none;
+  }
+  .left, .right { display:flex; gap:10px; align-items:center; pointer-events:auto; }
+  .pill{
+    font: 13px system-ui, sans-serif;
+    padding:8px 10px; border-radius:999px;
+    background: rgba(20,26,44,.75);
+    border:1px solid rgba(80,110,190,.35);
+    color:#fff;
+    backdrop-filter: blur(6px);
+  }
+  button.pill{ cursor:pointer; }
+  button.pill:hover{ border-color: rgba(120,160,255,.65); }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
+</head>
+<body>
+
+<div id="wrap">
+  <video id="video" controls autoplay playsinline></video>
+</div>
+
+<div id="hud">
+  <div class="left">
+    <div class="pill" id="status">Načítám…</div>
+  </div>
+  <div class="right">
+    <button class="pill" id="fsBtn">Fullscreen</button>
+    <button class="pill" id="reloadBtn">Obnovit token</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://api.ceskatelevize.cz/video/v1/playlist-live/v1/stream-data/channel/CH_4";
+
+  const video = document.getElementById("video");
+  const statusEl = document.getElementById("status");
+  const fsBtn = document.getElementById("fsBtn");
+  const reloadBtn = document.getElementById("reloadBtn");
+
+  let player = null;
+
+  function setStatus(t){ statusEl.textContent = t; }
+
+  async function loadFromApi(){
+    try{
+      setStatus("Načítám stream data…");
+      const res = await fetch(API_URL, { credentials: "omit" });
+      if(!res.ok) throw new Error("API HTTP " + res.status);
+
+      const data = await res.json();
+
+      if(data?.streamUrls?.isBlocked){
+        setStatus("Stream je blokovaný");
+        return;
+      }
+
+      const manifestUrl = data?.streamUrls?.main;
+      if(!manifestUrl){
+        setStatus("Chybí streamUrls.main");
+        return;
+      }
+
+      if(!player){
+        shaka.polyfill.installAll();
+        if(!shaka.Player.isBrowserSupported()){
+          setStatus("Prohlížeč nepodporován");
+          return;
+        }
+        player = new shaka.Player(video);
+        player.addEventListener("error", (e) => {
+          console.error(e);
+          setStatus("Chyba přehrávání");
+        });
+      }
+
+      setStatus("Spouštím LIVE…");
+      await player.load(manifestUrl);
+      setStatus("LIVE");
+    }catch(err){
+      console.error(err);
+      setStatus("Nelze načíst (CORS / doména / síť)");
+    }
+  }
+
+  function toggleFullscreen(){
+    const el = document.documentElement;
+    if(!document.fullscreenElement){
+      (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen).call(el);
+    }else{
+      (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document);
+    }
+  }
+
+  fsBtn.onclick = () => toggleFullscreen();
+
+  reloadBtn.onclick = async () => {
+    try{
+      if(player) await player.unload();
+    }catch{}
+    loadFromApi();
+  };
+
+  document.addEventListener("fullscreenchange", () => {
+    fsBtn.textContent = document.fullscreenElement ? "Ukončit fullscreen" : "Fullscreen";
+  });
+
+  loadFromApi();
+</script>
+
+</body>
+</html>
