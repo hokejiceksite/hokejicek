@@ -167,19 +167,8 @@ a{color:inherit;text-decoration:none}
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
     <div class="nav-links">
-      <a class="nav-btn" href="/">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75V21h15V9.75"/>
-        </svg>
-        Home
-      </a>
-      <a class="nav-btn" href="/tv">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="7" width="20" height="15" rx="2"/>
-          <path d="m17 2-5 5-5-5"/>
-        </svg>
-        TV
-      </a>
+      <a class="nav-btn" href="/">Home</a>
+      <a class="nav-btn" href="/tv">TV</a>
     </div>
   </div>
 </div>
@@ -198,30 +187,18 @@ a{color:inherit;text-decoration:none}
         <div class="video">
 
           <div class="placeholder" id="placeholder">
-            <img src="https://i.imgur.com/LWZmB9W.png" alt="">
-            <h2>Tipsport Extraliga & MSJ U20</h2>
-            <p>Sleduj přímé přenosy na HOKEJICEK.site</p>
+            <img src="https://i.imgur.com/LWZmB9W.png">
+            <h2>Hokejové přenosy</h2>
+            <p>Vyber zápas ze seznamu</p>
           </div>
 
-          <video
-            id="player"
-            class="video-js vjs-fill vjs-big-play-centered"
-            controls
-            preload="auto">
-          </video>
+          <video id="player" class="video-js vjs-fill vjs-big-play-centered" controls preload="auto"></video>
 
-          <iframe
-            id="embedPlayer"
-            style="display:none;width:100%;height:100%;border:0;"
-            allowfullscreen>
-          </iframe>
+          <iframe id="embedPlayer" style="display:none;width:100%;height:100%;border:0;" allowfullscreen></iframe>
 
         </div>
 
-        <div class="stream-buttons" id="streamButtons">
-          <button class="stream-btn" onclick="loadStream('commentary')">🏒 Komentář</button>
-          <button class="stream-btn" onclick="loadStream('ambient')">🏒 Bez komentáře</button>
-        </div>
+        <div class="stream-buttons" id="streamButtons"></div>
       </div>
     </div>
 
@@ -235,7 +212,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 let currentMatch=null;
-let currentType="commentary";
+let currentType=null;
 let streamIndex=0;
 
 const today=new Date().toISOString().slice(0,10);
@@ -245,6 +222,8 @@ const videoEl=document.getElementById("player");
 const embedEl=document.getElementById("embedPlayer");
 const placeholder=document.getElementById("placeholder");
 const buttons=document.getElementById("streamButtons");
+
+const langMap={CZ:"Česky",SK:"Slovensky",EN:"English",PL:"Polski"};
 
 fetch("./matches.json").then(r=>r.json()).then(data=>{
   const day=data.days[today];
@@ -269,12 +248,27 @@ function selectMatch(m){
   embedEl.style.display="none";
   videoEl.style.display="none";
   buttons.style.display="none";
+  buttons.innerHTML="";
+
   if(m.streams){
     videoEl.style.display="block";
     buttons.style.display="flex";
+    buttons.innerHTML=`
+      <button class="stream-btn" onclick="loadStream('commentary')">🏒 Komentář</button>
+      <button class="stream-btn" onclick="loadStream('ambient')">🏒 Bez komentáře</button>
+    `;
     loadStream("commentary");
   }
+
   if(m.embeds){
+    buttons.style.display="flex";
+    m.embeds.forEach(e=>{
+      const b=document.createElement("button");
+      b.className="stream-btn";
+      b.textContent=langMap[e.language]||e.language;
+      b.onclick=()=>loadEmbed(e.url);
+      buttons.appendChild(b);
+    });
     loadEmbed(m.embeds[0].url);
   }
 }
