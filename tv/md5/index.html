@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fullscreen Player</title>
+
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/level-selector@latest/dist/level-selector.min.js"></script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+}
+#player{
+  width:100vw;
+  height:100vh;
+}
+</style>
+</head>
+<body>
+
+<div id="player"></div>
+
+<script>
+const STREAM_URL = "https://15-str08-prod.tv.cetin.cz/tok_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNTMwNDM5MTc3Iiwic2lwIjoiIiwicGF0aCI6Ii9saXZlLzIwNDcvaGxzLWFlcy8iLCJzZXNzaW9uX2Nkbl9pZCI6IjgwOWJlMzhlOTZkZGQ5NTMiLCJzZXNzaW9uX2lkIjoiIiwiY2xpZW50X2lkIjoiNzU5MTQ2NyIsImRldmljZV9pZCI6ImEyOGE4ZTYyLTJkMjYtNDA0Ni1iMGU0LTFiOTNhMjY4NmYxYSIsIm1heF9zZXNzaW9ucyI6MTAwLCJ1cmwiOiJodHRwczovLzE5NC4yMjguNzcuMzAiLCJzZXNzaW9uX3RpbWVvdXQiOjM2MDAsImF1ZCI6Ijc0Iiwic291cmNlcyI6Wzg0XX0=.KD8y56KgmaWJhOZaQosv_ecNY_LMFzRratRSLn7z4AGGiAqMaGIU5-XDAoiuj8nY8pOrrz6RI6Zf8NRbsKDyQA==/live/2047/hls-aes/index.m3u8";
+
+const player = new Clappr.Player({
+  source: STREAM_URL,
+  parentId: "#player",
+  width: "100%",
+  height: "100%",
+  autoPlay: true,
+  mute: false,
+  playInline: true,
+  fullscreenEnabled: true,
+  plugins: [LevelSelector],
+  levelSelectorConfig: {
+    title: "Kvalita"
+  },
+  hlsjsConfig: {
+    enableWorker: true,
+    lowLatencyMode: true,
+    autoStartLoad: true
+  }
+});
+
+/* 🔥 Vynucení nejvyšší kvality po načtení manifestu */
+player.on(Clappr.Events.PLAYER_PLAY, () => {
+  const hls = player.core.getCurrentPlayback()?._hls;
+  if (!hls) return;
+
+  hls.on(Hls.Events.MANIFEST_PARSED, () => {
+    hls.currentLevel = hls.levels.length - 1;
+    hls.autoLevelEnabled = false;
+  });
+});
+</script>
+
+<script>
+aclib.runPop({
+  zoneId: '8327598',
+});
+</script>
+
+</body>
+</html>
