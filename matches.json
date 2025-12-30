@@ -94,12 +94,12 @@
           ]
         },
         {
-          "competition": "Mistrovství světa juniorů U20",
+          "competition": "WCH U20",
           "matches": [
             {
               "home": "Švýcarsko U20",
               "away": "Slovensko U20",
-              "date": "2025-12-30 19:00",
+              "date": "2025-12-31 19:00",
               "embeds": [
                 { "language": "CZ", "url": "https://hokejicek.site/video/extrastream" },
                 { "language": "SK", "url": "https://gostream.sbs/play/goplay.php?id=24" }
@@ -108,7 +108,7 @@
             {
               "home": "Česko U20",
               "away": "Lotyšsko U20",
-              "date": "2025-12-30 21:30",
+              "date": "2025-12-31 21:30",
               "embeds": [
                 { "language": "CZ", "url": "https://hokejicek.site/video/ctsport" }
               ]
