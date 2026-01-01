@@ -159,7 +159,8 @@ const langMap={
   CZ:{name:"Česky",flag:"https://flagcdn.com/w20/cz.png"},
   SK:{name:"Slovenčina",flag:"https://flagcdn.com/w20/sk.png"},
   PL:{name:"Polski",flag:"https://flagcdn.com/w20/pl.png"},
-  EN:{name:"English",flag:"https://flagcdn.com/w20/gb.png"}
+  EN:{name:"English",flag:"https://flagcdn.com/w20/gb.png"},
+  SV:{name:"Svenska",flag:"https://flagcdn.com/w20/se.png"}
 };
 
 function getCzechDate(){
@@ -203,16 +204,6 @@ function selectMatch(m){
   buttons.style.display="none";
   buttons.innerHTML="";
 
-  if(m.streams){
-    videoEl.style.display="block";
-    buttons.style.display="flex";
-    buttons.innerHTML=`
-      <button class="stream-btn" onclick="loadStream('commentary')">🏒 Komentář</button>
-      <button class="stream-btn" onclick="loadStream('ambient')">🏒 Bez komentáře</button>
-    `;
-    loadStream("commentary");
-  }
-
   if(m.embeds){
     buttons.style.display="flex";
     m.embeds.forEach(e=>{
@@ -226,24 +217,6 @@ function selectMatch(m){
     loadEmbed(m.embeds[0].url);
   }
 }
-
-function loadStream(type){
-  if(!currentMatch||!currentMatch.streams)return;
-  currentType=type;
-  streamIndex=0;
-  tryNextStream();
-}
-
-function tryNextStream(){
-  const urls=currentMatch.streams[currentType];
-  if(!urls||streamIndex>=urls.length)return;
-  videoEl.style.display="block";
-  embedEl.style.display="none";
-  player.src({src:urls[streamIndex],type:"application/x-mpegURL"});
-  player.play().catch(()=>{});
-}
-
-player.on("error",()=>{streamIndex++;tryNextStream()});
 
 function loadEmbed(url){
   player.pause();
