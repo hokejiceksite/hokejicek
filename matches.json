@@ -12,8 +12,8 @@
               "date": "2026-01-02 20:00",
               "embeds": [
                 {
-                  "language": "SV",
-                  "url": "https://svt-live-channel.akamaized.net/l4/se/svt1/manifest.mpd"
+                  "language": "CZ",
+                  "url": "https://www.youtube.com/embed/oCq-Ga3dXVo?si=dppmSdcY-U1mlj34"
                 },
                 {
                   "language": "EN",
@@ -36,7 +36,7 @@
                 },
                 {
                   "language": "SV",
-                  "url": "https://svt-live-channel.akamaized.net/l4/se/svt1/manifest.mpd"
+                  "url": "https://redirect-srv.gostream.sbs/4444-5555-2451-2542/index.m3u8"
                 }
               ]
             }
@@ -51,8 +51,8 @@
               "date": "2026-01-02 18:30",
               "embeds": [
                 {
-                  "language": "SV",
-                  "url": "https://svt-live-channel.akamaized.net/l4/se/svt1/manifest.mpd"
+                  "language": "CZ",
+                  "url": "https://www.youtube.com/embed/oCq-Ga3dXVo?si=ObeddadccCQIwEb0"
                 }
               ]
             }
@@ -77,7 +77,7 @@
                 },
                 {
                   "language": "SV",
-                  "url": "https://svt-live-channel.akamaized.net/l4/se/svt1/manifest.mpd"
+                  "url": "https://redirect-srv.gostream.sbs/2145-3564-5842-3562/index.m3u8"
                 }
               ]
             },
@@ -96,7 +96,7 @@
                 },
                 {
                   "language": "SV",
-                  "url": "https://svt-live-channel.akamaized.net/l4/se/svt1/manifest.mpd"
+                  "url": "https://redirect-srv.gostream.sbs/2145-3564-5842-3562/index.m3u8"
                 }
               ]
             }
