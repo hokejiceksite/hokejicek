@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bora</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
+<style>
+:root{--bg:#070710;--border:rgba(255,255,255,.12);--text:#fff;--muted:rgba(255,255,255,.8);--accent:#f5d90a;--max:1600px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.hero{background:linear-gradient(90deg,rgba(7,7,16,.96),rgba(7,7,16,.4)),url("https://eboxcz-ott-images.ssl.cdn.cra.cz/r1320x742n/c8835a68-c4e6-4da6-b8dc-a8cdf51c1677.avif") center/cover no-repeat}
+.heroInner{max-width:var(--max);margin:auto;padding:90px 24px}
+.title{font-size:56px;font-weight:900}
+.subtitle{font-size:20px;color:var(--muted);margin:10px 0 24px}
+.actions{display:flex;gap:16px}
+.btn{border:0;border-radius:14px;padding:15px 26px;font-size:16px;font-weight:900;cursor:pointer}
+.play{background:var(--accent);color:#000}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0;color:var(--muted);font-weight:800}
+.badge{padding:6px 14px;border:1px solid var(--border);border-radius:999px}
+.desc{max-width:920px;font-size:16px;line-height:1.7;color:var(--muted)}
+.credits{margin-top:16px;color:var(--muted)}
+.wrap{max-width:var(--max);margin:auto;padding:60px 24px}
+.episodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.episode{border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer}
+.thumb{aspect-ratio:16/9;background-size:cover;background-position:center}
+.epInfo{padding:14px}
+.epTitle{font-weight:900}
+.epDesc{font-size:13px;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:999}
+.overlay.active{display:flex}
+.playerModal{width:min(1500px,96%);background:#000;border-radius:18px;overflow:hidden;position:relative}
+.back{position:absolute;top:14px;left:14px;z-index:2;background:rgba(0,0,0,.7);border:1px solid var(--border);color:#fff;padding:10px 16px;border-radius:12px;font-weight:900;cursor:pointer}
+video{width:100%;aspect-ratio:16/9;background:#000}
+.playerMeta{padding:16px;background:#0a0a12;border-top:1px solid var(--border)}
+pre{font-size:12px;color:#777;overflow:auto}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="heroInner">
+    <div class="title">Bora</div>
+    <div class="subtitle">1. série</div>
+    <div class="actions">
+      <button class="btn play" onclick="openPlayer(0)">▶ Přehrát</button>
+    </div>
+    <div class="meta">
+      <span>2025</span><span>1 série</span>
+      <span class="badge">Krimi</span><span class="badge">Komediální</span><span class="badge">15+</span>
+    </div>
+    <div class="desc">
+      Příběh šestidílné detektivky se otevírá ve chvíli, kdy na ostrov uprostřed Jadranu přijíždí skupinka Čechů a Slováků – účastníků speciálního kurzu „Setkání se smrtí“. Navzájem se neznají, vidí se poprvé v životě. Ve stejnou chvíli pobřeží zasáhne extrémně silná bouře. Nezkrotný přírodní živel odstřihne desítku účastníků s jejich vedoucím od zbytku světa. Objevují se konflikty, tenze ve skupině narůstá a atmosféra houstne. To největší drama má teprve přijít – zkouška charakterů, vztahů i schopnosti přežít v izolaci, kde každé rozhodnutí může mít fatální následky.
+    </div>
+    <div class="credits">
+      <strong>Režie:</strong> Zuzana Marianková, Marek Najbrt<br>
+      <strong>Hrají:</strong> Vojtěch Kotek, Klára Melíšková, Jan Révai, Elizaveta Maximová, Tomáš Maštalír
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="episodes">
+    <div class="episode" onclick="openPlayer(0)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/0493965a-352e-4f28-b5ef-a16a59423e5d')"></div>
+      <div class="epInfo"><div class="epTitle">1. díl – Smrt vám neuteče</div><div class="epDesc">Úvodní díl detektivního příběhu.</div></div>
+    </div>
+    <div class="episode" onclick="openPlayer(1)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/8aae1163-bbfe-40dd-b438-a18b85269c11')"></div>
+      <div class="epInfo"><div class="epTitle">2. díl – Jeden z nás</div><div class="epDesc">Napětí mezi účastníky narůstá.</div></div>
+    </div>
+    <div class="episode" onclick="openPlayer(2)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/ba78b740-2503-4ceb-835a-fd658506b60f')"></div>
+      <div class="epInfo"><div class="epTitle">3. díl – Poslední soud</div><div class="epDesc">Situace se dramaticky vyostřuje.</div></div>
+    </div>
+    <div class="episode" onclick="openPlayer(3)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/2c466a5b-c646-4e2d-afef-a4319b8fd8d1')"></div>
+      <div class="epInfo"><div class="epTitle">4. díl – Normální workshop</div><div class="epDesc">Zdánlivý klid před bouří.</div></div>
+    </div>
+    <div class="episode" onclick="openPlayer(4)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/e94f6aa2-bcfa-4af9-a267-244ec0a7d712')"></div>
+      <div class="epInfo"><div class="epTitle">5. díl – Mořská vlna</div><div class="epDesc">Události nabírají rychlý spád.</div></div>
+    </div>
+    <div class="episode" onclick="openPlayer(5)">
+      <div class="thumb" style="background-image:url('https://eboxcz-ott-images.ssl.cdn.cra.cz/r400x225n/e9009c84-1549-4ddd-9fd4-f9f3700d3d87')"></div>
+      <div class="epInfo"><div class="epTitle">6. díl – Na každou opici má boh palicu</div><div class="epDesc">Finále celé série.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="playerModal">
+    <button class="back" onclick="closePlayer()">← Zpět</button>
+    <video id="video" controls autoplay></video>
+    <div class="playerMeta">
+      <h3 id="playerTitle"></h3>
+      <p id="playerDesc"></p>
+      <pre id="drmDump"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+shaka.polyfill.installAll();
+const EPISODES=[
+  {title:"1. díl – Smrt vám neuteče",desc:"Úvodní díl detektivního příběhu.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/5219/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-wd1JqcIc.ism/mpdmod/.mpd",kid:"0d91e0dd94e06dd47f072bb667d9b33b",key:"791609879f0eba9b2890f2311b273b4c"},
+  {title:"2. díl – Jeden z nás",desc:"Napětí mezi účastníky narůstá.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/5699/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-6bWObxN8.ism/mpdmod/.mpd",kid:"3cf56cc207ce289cc52e2e3ea5edaa30",key:"622f5fb92b96504ea468f21b5ea27926"},
+  {title:"3. díl – Poslední soud",desc:"Situace se dramaticky vyostřuje.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/8107/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-iBoILRCJ.ism/mpdmod/.mpd",kid:"9f2d54b778e03950684fb59a3e62dadb",key:"c3a06dd7094b64ff22671ba4efcf73d5"},
+  {title:"4. díl – Normální workshop",desc:"Zdánlivý klid před bouří.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/8105/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-fIoO4b3N.ism/mpdmod/.mpd",kid:"6e46a798310986f00755bf8139b5fa9d",key:"e418ca018bbb387e12e40bdc0b046f9e"},
+  {title:"5. díl – Mořská vlna",desc:"Události nabírají rychlý spád.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/8677/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-seXIHCwB.ism/mpdmod/.mpd",kid:"c6ae9937f5ff0fdadb4888170a6d6d71",key:"6ea9067fff884c2592a0fb9e4bbd7934"},
+  {title:"6. díl – Na každou opici má boh palicu",desc:"Finále celé série.",mpd:"https://eboxcz-ott-vod-prep-prot.ssl.cdn.cra.cz/100007/8961/dash-s-axinom-sd1-sd2-sd3-sd4-hd1-hd2-zhC2fOp1.ism/mpdmod/.mpd",kid:"14f4802f8af1a09d5e5c9569f96bbaf9",key:"2873ec94af8593fa6a709b9acc161698"}
+];
+let player=null;
+async function openPlayer(i){
+  if(!shaka.Player.isBrowserSupported()) return;
+  const ep=EPISODES[i];
+  document.getElementById("overlay").classList.add("active");
+  document.getElementById("playerTitle").innerText=ep.title;
+  document.getElementById("playerDesc").innerText=ep.desc;
+  document.getElementById("drmDump").innerText=`MPD: ${ep.mpd}\nKID: ${ep.kid}\nKEY: ${ep.key}`;
+  const video=document.getElementById("video");
+  if(player){await player.destroy();}
+  player=new shaka.Player(video);
+  player.configure({drm:{clearKeys:{[ep.kid]:ep.key}}});
+  await player.load(ep.mpd);
+}
+async function closePlayer(){
+  document.getElementById("overlay").classList.remove("active");
+  if(player){await player.destroy();player=null;}
+}
+</script>
+
+</body>
+</html>
