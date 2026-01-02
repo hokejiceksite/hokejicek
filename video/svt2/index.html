@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Shaka M3U8 Player</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/shaka-player.ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/controls.min.css">
+
+  <style>
+    html,body{margin:0;height:100%;background:#000;overflow:hidden;}
+    #container{position:fixed;inset:0;background:#000;}
+    .shaka-video-container{width:100%;height:100%}
+    video{width:100%;height:100%;background:#000}
+    #err{
+      position:absolute;left:12px;right:12px;top:12px;
+      padding:10px 12px;border:1px solid rgba(255,255,255,.2);
+      background:rgba(0,0,0,.65);color:#fff;font:12px/1.4 system-ui;
+      border-radius:10px;display:none;white-space:pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container" data-shaka-player-container>
+  <div id="err"></div>
+  <video id="video" data-shaka-player autoplay playsinline></video>
+</div>
+
+<script>
+const STREAM_URL = "https://redirect-srv.gostream.sbs/4444-5555-2451-2542/index.m3u8";
+const errBox = document.getElementById("err");
+
+function showErr(msg){
+  errBox.style.display = "block";
+  errBox.textContent = msg;
+}
+
+async function init(){
+  try{
+    shaka.polyfill.installAll();
+
+    if(!shaka.Player.isBrowserSupported()){
+      showErr("Shaka: Tento prohlížeč není podporovaný.");
+      return;
+    }
+
+    const video = document.getElementById("video");
+    const container = document.getElementById("container");
+
+    const player = new shaka.Player(video);
+    const ui = new shaka.ui.Overlay(player, container, video);
+
+    // log chyb
+    player.addEventListener("error", (e) => {
+      const d = e.detail || {};
+      showErr(
+        "Shaka ERROR\n" +
+        "code: " + (d.code ?? "unknown") + "\n" +
+        "category: " + (d.category ?? "unknown") + "\n" +
+        "severity: " + (d.severity ?? "unknown") + "\n" +
+        "message: " + (d.message ?? "no message")
+      );
+      console.error("Shaka error detail:", d);
+    });
+
+    player.configure({
+      abr: { enabled: true, defaultBandwidthEstimate: 20e6 },
+      streaming: { rebufferingGoal: 2, bufferingGoal: 10 }
+    });
+
+    await player.load(STREAM_URL);
+
+    // autoplay může být bloknutý - ale aspoň se to načte
+    try { await video.play(); } catch(_) {}
+
+  } catch (e){
+    showErr("INIT FAIL:\n" + (e?.message || e));
+    console.error(e);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+
+</body>
+</html>
