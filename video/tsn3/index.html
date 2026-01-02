@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DASH Fullscreen Player</title>
+
+<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player/dist/controls.min.css">
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+}
+#container{
+  position:fixed;
+  inset:0;
+}
+.shaka-video-container{
+  width:100%;
+  height:100%;
+}
+video{
+  width:100%;
+  height:100%;
+  background:#000;
+}
+</style>
+
+<script>
+(function(){
+  var allowed=["w3schools.com","strims.fun"];
+  if(window.top===window.self){location.replace("https://www.google.com");return;}
+  var ref=document.referrer||"",ok=false;
+  for(var i=0;i<allowed.length;i++){if(ref.includes(allowed[i])){ok=true;break;}}
+  if(!ok){location.replace("https://www.google.com");}
+})();
+</script>
+</head>
+
+<body>
+
+<div id="container" class="shaka-video-container">
+  <video id="video" autoplay playsinline></video>
+</div>
+
+<script>
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&e.key==='U')){
+    e.preventDefault();e.stopPropagation();
+  }
+});
+
+shaka.polyfill.installAll();
+
+async function initPlayer(){
+  if(!shaka.Player.isBrowserSupported())return;
+
+  const video=document.getElementById("video");
+  const container=document.getElementById("container");
+
+  const player=new shaka.Player(video);
+  const ui=new shaka.ui.Overlay(player, container, video);
+
+  player.configure({
+    drm:{
+      clearKeys:{
+        "d9097a1b7d04b7786b29f2b0e155316d":"279695ebe0fb1bc5787422b6b59ce8a8"
+      }
+    }
+  });
+
+  await player.load("https://abm5x5xaaaaaaaamfnzlkys25m7a5.otte.live.cf.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/mrskysvotx/out/v1/ad58961bd8fd48d2944e461c034b8914/cenc.mpd");
+
+  if(video.requestFullscreen&&!document.fullscreenElement){
+    video.requestFullscreen().catch(()=>{});
+  }
+}
+
+initPlayer();
+</script>
+
+</body>
+</html>
