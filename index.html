@@ -27,6 +27,7 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 a{color:inherit;text-decoration:none}
+
 .nav{
   position:sticky;
   top:0;
@@ -44,65 +45,126 @@ a{color:inherit;text-decoration:none}
   align-items:center;
 }
 .brand{font-weight:900;font-size:20px}
-.nav-links{display:flex;gap:12px}
+
+.nav-links{
+  display:flex;
+  gap:12px;
+}
 .nav-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 14px;border-radius:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
   border:1px solid var(--border);
   background:rgba(255,255,255,.04);
   font-weight:700;
 }
-.nav-btn svg{width:18px;height:18px}
+.nav-btn svg{
+  width:18px;
+  height:18px;
+}
+
 .wrapper{max-width:var(--max);margin:auto;padding:16px}
 .grid{display:grid;grid-template-columns:320px 1fr 360px;gap:16px}
 @media(max-width:1200px){.grid{grid-template-columns:1fr}}
+
 .panel{
   background:var(--grad);
   border:1px solid var(--border);
   border-radius:18px;
   overflow:hidden;
 }
-.panel-head{padding:14px 16px;font-weight:900;border-bottom:1px solid var(--border)}
+.panel-head{
+  padding:14px 16px;
+  font-weight:900;
+  border-bottom:1px solid var(--border)
+}
+
 .schedule{padding:12px;display:grid;gap:10px}
 .match{
-  padding:12px;border-radius:14px;border:1px solid var(--border);
-  background:rgba(0,0,0,.25);cursor:pointer
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.25);
+  cursor:pointer
 }
 .match:hover{background:rgba(255,255,255,.06)}
 .match-title{font-weight:800}
 .match-meta{font-size:13px;color:var(--muted)}
+
 .player-wrap{padding:20px}
-.video{width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;position:relative}
+.video{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative
+}
+
 .placeholder{
-  width:100%;height:100%;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;
-  gap:18px;padding:48px 36px
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:18px;
+  padding:48px 36px
 }
 .placeholder img{width:100%;max-width:620px}
 .placeholder h2{margin:0;font-size:28px;font-weight:900}
 .placeholder p{margin:0;font-size:16px;color:var(--muted)}
+
 .stream-buttons{display:none;gap:12px;margin-top:16px}
 .stream-btn{
-  flex:1;padding:12px;border-radius:12px;
+  flex:1;
+  padding:12px;
+  border-radius:12px;
   border:1px solid var(--border);
   background:rgba(255,255,255,.12);
-  color:#fff;font-weight:900;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px
 }
 .stream-btn img{width:22px;height:16px}
-.stream-btn:hover{background:rgba(255,255,255,.18)}
-.chat iframe{width:100%;height:600px;border:0}
+
+.chat iframe{
+  width:100%;
+  height:600px;
+  border:0
+}
 </style>
 </head>
 
 <body>
 
+<!-- NAV -->
 <div class="nav">
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
+
     <div class="nav-links">
-      <a class="nav-btn" href="/">Home</a>
-      <a class="nav-btn" href="/tv">TV</a>
+      <a class="nav-btn" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75V21h15V9.75"/>
+        </svg>
+        Home
+      </a>
+
+      <a class="nav-btn" href="/tv">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="15" rx="2"/>
+          <path d="m17 2-5 5-5-5"/>
+        </svg>
+        TV
+      </a>
     </div>
   </div>
 </div>
@@ -118,8 +180,8 @@ a{color:inherit;text-decoration:none}
     <div class="panel">
       <div class="panel-head">Přenos</div>
       <div class="player-wrap">
-        <div class="video">
 
+        <div class="video">
           <div class="placeholder" id="placeholder">
             <img src="https://i.imgur.com/LWZmB9W.png">
             <h2>Hokejové přenosy</h2>
@@ -127,8 +189,7 @@ a{color:inherit;text-decoration:none}
           </div>
 
           <video id="player" class="video-js vjs-fill vjs-big-play-centered" controls preload="auto"></video>
-          <iframe id="embedPlayer" style="display:none;width:100%;height:100%;border:0;" allowfullscreen></iframe>
-
+          <iframe id="embedPlayer" style="display:none;width:100%;height:100%;border:0" allowfullscreen></iframe>
         </div>
 
         <div class="stream-buttons" id="streamButtons"></div>
@@ -145,8 +206,6 @@ a{color:inherit;text-decoration:none}
 
 <script>
 let currentMatch=null;
-let currentType=null;
-let streamIndex=0;
 
 const player=videojs('player',{html5:{vhs:{overrideNative:true}}});
 const videoEl=document.getElementById("player");
@@ -164,22 +223,27 @@ const langMap={
 };
 
 function getCzechDate(){
-  const f=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Prague",year:"numeric",month:"2-digit",day:"2-digit"});
-  return f.format(new Date());
+  return new Intl.DateTimeFormat("en-CA",{
+    timeZone:"Europe/Prague",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit"
+  }).format(new Date());
 }
 
 function renderDay(){
-  const today=getCzechDate();
   fetch("./matches.json").then(r=>r.json()).then(data=>{
+    const day=data.days[getCzechDate()];
     scheduleBox.innerHTML="";
-    const day=data.days[today];
-    if(!day)return;
+    if(!day) return;
+
     day.competitions.forEach(c=>{
       c.matches.forEach(m=>{
         const d=document.createElement("div");
         d.className="match";
-        d.innerHTML=`<div class="match-title">${m.home} vs ${m.away}</div>
-                     <div class="match-meta">${c.competition} · ${m.date}</div>`;
+        d.innerHTML=`
+          <div class="match-title">${m.home} vs ${m.away}</div>
+          <div class="match-meta">${c.competition} · ${m.date}</div>`;
         d.onclick=()=>selectMatch(m);
         scheduleBox.appendChild(d);
       });
@@ -187,35 +251,21 @@ function renderDay(){
   });
 }
 
-function scheduleMidnightReload(){
-  const now=new Date();
-  const prague=new Date(now.toLocaleString("en-US",{timeZone:"Europe/Prague"}));
-  const nextMidnight=new Date(prague);
-  nextMidnight.setHours(24,0,0,0);
-  setTimeout(()=>location.reload(),nextMidnight-prague);
-}
-
 function selectMatch(m){
-  currentMatch=m;
   placeholder.style.display="none";
-  player.pause();
-  embedEl.style.display="none";
   videoEl.style.display="none";
-  buttons.style.display="none";
+  embedEl.style.display="none";
   buttons.innerHTML="";
+  buttons.style.display="flex";
 
-  if(m.embeds){
-    buttons.style.display="flex";
-    m.embeds.forEach(e=>{
-      const b=document.createElement("button");
-      const f=langMap[e.language];
-      b.className="stream-btn";
-      b.innerHTML=`<img src="${f.flag}">${f.name}`;
-      b.onclick=()=>loadEmbed(e.url);
-      buttons.appendChild(b);
-    });
-    loadEmbed(m.embeds[0].url);
-  }
+  m.embeds.forEach((e,i)=>{
+    const b=document.createElement("button");
+    b.className="stream-btn";
+    b.innerHTML=`<img src="${langMap[e.language].flag}">${langMap[e.language].name}`;
+    b.onclick=()=>loadEmbed(e.url);
+    buttons.appendChild(b);
+    if(i===0) loadEmbed(e.url);
+  });
 }
 
 function loadEmbed(url){
@@ -226,7 +276,6 @@ function loadEmbed(url){
 }
 
 renderDay();
-scheduleMidnightReload();
 </script>
 
 <script>
