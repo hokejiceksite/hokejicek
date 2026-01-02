@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DASH Fullscreen Player</title>
+<title>TSN3 - LIVE</title>
 
 <script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player/dist/controls.min.css">
@@ -31,16 +31,6 @@ video{
   background:#000;
 }
 </style>
-
-<script>
-(function(){
-  var allowed=["w3schools.com","strims.fun"];
-  if(window.top===window.self){location.replace("https://www.google.com");return;}
-  var ref=document.referrer||"",ok=false;
-  for(var i=0;i<allowed.length;i++){if(ref.includes(allowed[i])){ok=true;break;}}
-  if(!ok){location.replace("https://www.google.com");}
-})();
-</script>
 </head>
 
 <body>
@@ -53,7 +43,8 @@ video{
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{
   if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&e.key==='U')){
-    e.preventDefault();e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
   }
 });
 
@@ -76,9 +67,11 @@ async function initPlayer(){
     }
   });
 
-  await player.load("https://abm5x5xaaaaaaaamfnzlkys25m7a5.otte.live.cf.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/mrskysvotx/out/v1/ad58961bd8fd48d2944e461c034b8914/cenc.mpd");
+  await player.load(
+    "https://abm5x5xaaaaaaaamfnzlkys25m7a5.otte.live.cf.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/mrskysvotx/out/v1/ad58961bd8fd48d2944e461c034b8914/cenc.mpd"
+  );
 
-  if(video.requestFullscreen&&!document.fullscreenElement){
+  if(video.requestFullscreen && !document.fullscreenElement){
     video.requestFullscreen().catch(()=>{});
   }
 }
