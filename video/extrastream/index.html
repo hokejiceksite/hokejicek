@@ -4,40 +4,57 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/controls.min.css">
 
 <style>
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  overflow: hidden;
-  position: fixed;
+html, body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
 }
 
-video {
-  width: 100vw;
-  height: 100vh;
-  object-fit: contain;
-  background: #000;
+#container{
+  position:fixed;
+  inset:0;
+  background:#000;
+}
+
+.shaka-video-container{
+  width:100%;
+  height:100%;
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
 }
 </style>
 </head>
 <body>
 
-<video id="v" autoplay controls playsinline></video>
+<div id="container" data-shaka-player-container>
+  <video id="v" data-shaka-player autoplay playsinline></video>
+</div>
 
 <script>
 const WORKER_URL = "https://ctsportplus.long-mode-0a14.workers.dev";
 
 (async () => {
+  shaka.polyfill.installAll();
   if (!shaka.Player.isBrowserSupported()) return;
 
   const video = document.getElementById("v");
+  const container = document.getElementById("container");
+
   const player = new shaka.Player(video);
+  const ui = new shaka.ui.Overlay(player, container, video);
 
   player.configure({
     abr: {
@@ -48,19 +65,26 @@ const WORKER_URL = "https://ctsportplus.long-mode-0a14.workers.dev";
       maxWidth: Infinity,
       maxHeight: Infinity,
       maxPixels: Infinity
+    },
+    streaming: {
+      rebufferingGoal: 2,
+      bufferingGoal: 10
     }
   });
 
-  const mpd = await fetch(WORKER_URL).then(r => r.text());
+  const url = await fetch(WORKER_URL, { cache: "no-store" }).then(r => r.text());
 
-  if (!mpd.startsWith("http")) return;
+  if (!url || !url.trim().startsWith("http")) return;
 
-  await player.load(mpd);
+  await player.load(url.trim());
 
-  video.onclick = () => {
-    if (!document.fullscreenElement)
-      video.requestFullscreen().catch(()=>{});
-  };
+  video.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+      container.requestFullscreen().catch(()=>{});
+    }
+  });
+
+  try { await video.play(); } catch(e) {}
 })();
 </script>
 
