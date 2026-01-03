@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Fullscreen Player</title>
 
-<!-- SHAKA CORE -->
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.min.js"></script>
 
-<!-- SHAKA UI -->
 <script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player/dist/controls.min.css">
 
@@ -43,10 +43,7 @@ video{
 (async () => {
   shaka.polyfill.installAll();
 
-  if (!shaka.Player.isBrowserSupported()) {
-    alert('Prohlížeč nepodporuje Shaka Player');
-    return;
-  }
+  if (!shaka.Player.isBrowserSupported()) return;
 
   const video = document.getElementById('video');
   const container = document.getElementById('container');
@@ -66,7 +63,6 @@ video{
     ]
   });
 
-  // zakáže pauzu kliknutím
   video.addEventListener('click', e => {
     e.preventDefault();
     e.stopPropagation();
@@ -77,9 +73,15 @@ video{
       'https://purple-glitter-ba46.long-mode-0a14.workers.dev/CH_4.m3u8'
     );
   } catch (e) {
-    console.error('Load error', e);
+    console.error(e);
   }
 })();
+</script>
+
+<script type="text/javascript">
+  aclib.runAutoTag({
+    zoneId: 'zitkptgwk8'
+  });
 </script>
 
 </body>
