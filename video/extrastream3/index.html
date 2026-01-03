@@ -2,65 +2,79 @@
 <html lang="cs">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fullscreen Player</title>
 
-  <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player/dist/controls.min.css">
 
 <style>
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  overflow: hidden;
-  position: fixed;
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
 }
-
-video {
-  width: 100vw;
-  height: 100vh;
-  object-fit: contain;
-  background: #000;
+#container{
+  width:100vw;
+  height:100vh;
+}
+video{
+  width:100%;
+  height:100%;
+  background:#000;
 }
 </style>
 </head>
+
 <body>
 
-<video id="v" autoplay controls playsinline></video>
+<div id="container">
+  <video id="video" autoplay muted playsinline></video>
+</div>
 
 <script>
-const WORKER_URL = "https://ctsportplus3.long-mode-0a14.workers.dev";
-
 (async () => {
+  shaka.polyfill.installAll();
+
   if (!shaka.Player.isBrowserSupported()) return;
 
-  const video = document.getElementById("v");
-  const player = new shaka.Player(video);
+  const video = document.getElementById('video');
+  const container = document.getElementById('container');
 
-  player.configure({
-    abr: {
-      enabled: true,
-      defaultBandwidthEstimate: 1e9
-    },
-    restrictions: {
-      maxWidth: Infinity,
-      maxHeight: Infinity,
-      maxPixels: Infinity
-    }
+  const player = new shaka.Player(video);
+  const ui = new shaka.ui.Overlay(player, container, video);
+
+  ui.configure({
+    addBigPlayButton: false,
+    controlPanelElements: [
+      'play_pause',
+      'time_and_duration',
+      'spacer',
+      'mute',
+      'volume',
+      'fullscreen'
+    ]
   });
 
-  const mpd = await fetch(WORKER_URL).then(r => r.text());
+  video.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
 
-  if (!mpd.startsWith("http")) return;
-
-  await player.load(mpd);
-
-  video.onclick = () => {
-    if (!document.fullscreenElement)
-      video.requestFullscreen().catch(()=>{});
-  };
+  try {
+    await player.load(
+      'https://hok-e1-prod.fotbalicek.best/CH_33.m3u8'
+    );
+  } catch (e) {
+    console.error(e);
+  }
 })();
 </script>
 
