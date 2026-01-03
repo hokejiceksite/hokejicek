@@ -2,96 +2,84 @@
 <html lang="cs">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fullscreen Player</title>
 
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<!-- SHAKA CORE -->
+<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.10.5/dist/controls.min.css">
+<!-- SHAKA UI -->
+<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player/dist/controls.min.css">
 
 <style>
-html, body{
+html,body{
   margin:0;
+  padding:0;
   width:100%;
   height:100%;
   background:#000;
   overflow:hidden;
 }
-
 #container{
-  position:fixed;
-  inset:0;
-  background:#000;
+  width:100vw;
+  height:100vh;
 }
-
-.shaka-video-container{
-  width:100%;
-  height:100%;
-}
-
 video{
   width:100%;
   height:100%;
-  object-fit:contain;
   background:#000;
 }
 </style>
 </head>
+
 <body>
 
-<div id="container" data-shaka-player-container>
-  <video id="v" data-shaka-player autoplay playsinline></video>
+<div id="container">
+  <video id="video" autoplay muted playsinline></video>
 </div>
 
 <script>
-const WORKER_URL = "https://ctsport.long-mode-0a14.workers.dev";
-
 (async () => {
   shaka.polyfill.installAll();
-  if (!shaka.Player.isBrowserSupported()) return;
 
-  const video = document.getElementById("v");
-  const container = document.getElementById("container");
+  if (!shaka.Player.isBrowserSupported()) {
+    alert('Prohlížeč nepodporuje Shaka Player');
+    return;
+  }
+
+  const video = document.getElementById('video');
+  const container = document.getElementById('container');
 
   const player = new shaka.Player(video);
   const ui = new shaka.ui.Overlay(player, container, video);
 
-  player.configure({
-    abr: {
-      enabled: true,
-      defaultBandwidthEstimate: 1e9
-    },
-    restrictions: {
-      maxWidth: Infinity,
-      maxHeight: Infinity,
-      maxPixels: Infinity
-    },
-    streaming: {
-      rebufferingGoal: 2,
-      bufferingGoal: 10
-    }
+  ui.configure({
+    addBigPlayButton: false,
+    controlPanelElements: [
+      'play_pause',
+      'time_and_duration',
+      'spacer',
+      'mute',
+      'volume',
+      'fullscreen'
+    ]
   });
 
-  const url = await fetch(WORKER_URL, { cache: "no-store" }).then(r => r.text());
-
-  if (!url || !url.trim().startsWith("http")) return;
-
-  await player.load(url.trim());
-
-  video.addEventListener("click", () => {
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().catch(()=>{});
-    }
+  // zakáže pauzu kliknutím
+  video.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
   });
 
-  try { await video.play(); } catch(e) {}
+  try {
+    await player.load(
+      'https://purple-glitter-ba46.long-mode-0a14.workers.dev/CH_4.m3u8'
+    );
+  } catch (e) {
+    console.error('Load error', e);
+  }
 })();
-</script>
-
-<script type="text/javascript">
-  aclib.runAutoTag({
-    zoneId: 'zitkptgwk8'
-  });
 </script>
 
 </body>
