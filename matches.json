@@ -1,103 +1,39 @@
 {
   "days": {
-    "2026-01-02": {
-      "label": "2. 1.",
+    "2026-01-04": {
+      "label": "4. 1.",
       "competitions": [
         {
           "competition": "WCH U20 - Play Offs",
           "matches": [
             {
               "home": "Sweden U20",
-              "away": "Latvia U20",
-              "date": "2026-01-02 20:00",
+              "away": "Finland U20",
+              "date": "2026-01-04 22:30",
               "embeds": [
-                {
-                  "language": "SV",
-                  "url": "https://redirect-srv.gostream.sbs/2145-3564-5842-3562/index.m3u8"
-                },
-                {
-                  "language": "EN",
-                  "url": "https://wikisport.wiki/0nhl/25.php"
-                }
-              ]
-            },
-            {
-              "home": "Czech Republic U20",
-              "away": "Switzerland U20",
-              "date": "2026-01-02 22:30",
-              "embeds": [
-                {
-                  "language": "CZ",
-                  "url": "https://hokejicek.site/video/ctsport"
-                },
-                {
-                  "language": "SK",
-                  "url": "https://gostream.sbs/play/goplay.php?id=24"
-                },
-                {
-                  "language": "SV",
-                  "url": "https://redirect-srv.gostream.sbs/4444-5555-2451-2542/index.m3u8"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "competition": "WCH U20 - Relegation",
-          "matches": [
-            {
-              "home": "Germany U20",
-              "away": "Denmark U20",
-              "date": "2026-01-02 18:30",
-              "embeds": [
-                {
-                  "language": "CZ",
-                  "url": "https://www.youtube.com/embed/oCq-Ga3dXVo?si=ObeddadccCQIwEb0"
-                }
+                { "language": "CZ", "url": "/video/ctsport" },
+                { "language": "SK", "url": "https://gostream.sbs/play/goplay.php?id=24" },
+                { "language": "SV", "url": "/video/svt1" }
               ]
             }
           ]
         }
       ]
     },
-    "2026-01-03": {
-      "label": "3. 1.",
+    "2026-01-05": {
+      "label": "5. 1.",
       "competitions": [
         {
           "competition": "WCH U20 - Play Offs",
           "matches": [
             {
-              "home": "USA U20",
-              "away": "Finland U20",
-              "date": "2026-01-03 00:00",
-              "embeds": [
-                {
-                  "language": "CZ",
-                  "url": "https://hokejicek.site/video/extrastream"
-                },
-                {
-                  "language": "SV",
-                  "url": "https://redirect-srv.gostream.sbs/2145-3564-5842-3562/index.m3u8"
-                }
-              ]
-            },
-            {
               "home": "Canada U20",
-              "away": "Slovakia U20",
-              "date": "2026-01-03 02:30",
+              "away": "Czech Republic U20",
+              "date": "2026-01-05 02:30",
               "embeds": [
-                {
-                  "language": "CZ",
-                  "url": "https://hokejicek.site/video/extrastream1"
-                },
-                {
-                  "language": "SK",
-                  "url": "https://gostream.sbs/play/goplay.php?id=24"
-                },
-                {
-                  "language": "SV",
-                  "url": "https://redirect-srv.gostream.sbs/2145-3564-5842-3562/index.m3u8"
-                }
+                { "language": "CZ", "url": "/video/ctsport" },
+                { "language": "SK", "url": "https://gostream.sbs/play/goplay.php?id=24" },
+                { "language": "SV", "url": "/video/svt1" }
               ]
             }
           ]
