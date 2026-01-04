@@ -6,26 +6,48 @@
 <title>HOKEJICEK.site</title>
 <link rel="icon" href="/H.png">
 
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-
 <style>
 :root{
   --bg:#0a0e18;
   --grad:linear-gradient(135deg,#0b1224,#121c38);
-  --border:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.1);
   --text:#ffffff;
-  --muted:rgba(255,255,255,.7);
+  --muted:rgba(255,255,255,.65);
+  --scroll-track:#0b1224;
+  --scroll-thumb:#1a233d;
+  --scroll-thumb-hover:#2b4cff;
   --max:1600px;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
   background:var(--bg);
-  color:#fff;
+  color:var(--text);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 a{text-decoration:none;color:inherit}
 
+/* ===== SCROLLBAR (GLOBAL) ===== */
+*{
+  scrollbar-width:thin;
+  scrollbar-color:var(--scroll-thumb) var(--scroll-track);
+}
+*::-webkit-scrollbar{
+  width:8px;
+  height:8px;
+}
+*::-webkit-scrollbar-track{
+  background:var(--scroll-track);
+}
+*::-webkit-scrollbar-thumb{
+  background:var(--scroll-thumb);
+  border-radius:8px;
+}
+*::-webkit-scrollbar-thumb:hover{
+  background:var(--scroll-thumb-hover);
+}
+
+/* NAVBAR */
 .nav{
   position:sticky;
   top:0;
@@ -56,16 +78,22 @@ a{text-decoration:none;color:inherit}
 }
 .nav-btn svg{width:18px;height:18px}
 
-.wrapper{max-width:var(--max);margin:auto;padding:16px}
+/* LAYOUT */
+.wrapper{
+  max-width:var(--max);
+  margin:auto;
+  padding:16px;
+}
 .grid{
   display:grid;
-  grid-template-columns:320px 1fr 360px;
+  grid-template-columns:360px 1fr 360px;
   gap:16px;
 }
 @media(max-width:1200px){
   .grid{grid-template-columns:1fr}
 }
 
+/* PANELS */
 .panel{
   background:var(--grad);
   border:1px solid var(--border);
@@ -75,90 +103,95 @@ a{text-decoration:none;color:inherit}
 .panel-head{
   padding:14px 16px;
   font-weight:900;
-  border-bottom:1px solid var(--border)
+  border-bottom:1px solid var(--border);
 }
 
+/* ROZPIS */
 .schedule{
   padding:12px;
   display:grid;
-  gap:10px;
-  height:70vh;
+  gap:12px;
+  max-height:75vh;
   overflow-y:auto;
 }
-.schedule::-webkit-scrollbar{width:6px}
-.schedule::-webkit-scrollbar-thumb{
-  background:#1a1f2e;
-  border-radius:6px;
-}
-.match{
-  padding:12px;
-  border-radius:14px;
+
+/* LEAGUE */
+.league{
   border:1px solid var(--border);
+  border-radius:14px;
   background:rgba(0,0,0,.25);
-  cursor:pointer
 }
-.match:hover{background:rgba(255,255,255,.06)}
-.match-title{font-weight:800;color:#fff}
+.league-head{
+  padding:14px 16px;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+}
+.league-head:hover{background:rgba(255,255,255,.06)}
+.league-arrow{
+  opacity:.6;
+  transition:.25s;
+}
+.league.open .league-arrow{transform:rotate(90deg)}
+.league-body{
+  display:none;
+  padding:10px 14px 14px;
+  gap:8px;
+}
+.league.open .league-body{
+  display:grid;
+}
+
+/* MATCH */
+.match{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.35);
+  cursor:pointer;
+}
+.match:hover{background:rgba(255,255,255,.08)}
+.match-title{font-weight:800}
 .match-meta{font-size:13px;color:var(--muted)}
 
-.player-wrap{padding:20px}
+/* PLAYER */
+.player-wrap{padding:16px}
 .video{
   width:100%;
   aspect-ratio:16/9;
-  border-radius:18px;
-  overflow:hidden;
   background:#000;
+  border-radius:16px;
+  overflow:hidden;
 }
 .video iframe{
   width:100%;
   height:100%;
   border:0;
 }
-
 .stream-bar{
   display:flex;
   gap:10px;
-  padding:10px 8px;
+  padding-top:10px;
   overflow-x:auto;
-  overflow-y:hidden;
-  align-items:center;
-  scrollbar-width:thin;
-  scrollbar-color:#1a1f2e transparent;
 }
-.stream-bar::-webkit-scrollbar{height:6px}
-.stream-bar::-webkit-scrollbar-track{background:transparent}
-.stream-bar::-webkit-scrollbar-thumb{
-  background:#1a1f2e;
-  border-radius:6px;
-}
-.stream-bar::-webkit-scrollbar-thumb:hover{
-  background:#2b3b6b;
-}
-
 .stream-btn{
-  min-width:96px;
+  min-width:100px;
   height:40px;
-  padding:0 14px;
   border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(180deg,#1a233d,#121a30);
+  border:1px solid var(--border);
+  background:#1a233d;
   color:#fff;
   font-weight:800;
-  font-size:13px;
   cursor:pointer;
-  white-space:nowrap;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 .stream-btn.active{
-  background:linear-gradient(180deg,#2b4cff,#1f3fbf);
-  border-color:#4a6cff;
+  background:#2b4cff;
 }
 
+/* CHAT */
 .chat-body{
-  height:70vh;
-  overflow:hidden;
+  height:75vh;
 }
 .chat-body iframe{
   width:100%;
@@ -174,8 +207,20 @@ a{text-decoration:none;color:inherit}
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
     <div class="nav-links">
-      <a class="nav-btn" href="/">Home</a>
-      <a class="nav-btn" href="/tv">TV</a>
+      <a class="nav-btn" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z"/>
+        </svg>
+        Home
+      </a>
+      <a class="nav-btn" href="/tv">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <rect x="2" y="7" width="20" height="15" rx="2"/>
+          <path d="m17 2-5 5-5-5"/>
+        </svg>
+        TV
+      </a>
     </div>
   </div>
 </div>
@@ -185,16 +230,14 @@ a{text-decoration:none;color:inherit}
 
     <div class="panel">
       <div class="panel-head">Rozpis</div>
-      <div class="schedule" id="schedule"></div>
+      <div class="schedule" id="schedule">Načítám…</div>
     </div>
 
     <div class="panel">
       <div class="panel-head">Přenos</div>
       <div class="player-wrap">
-        <div class="video">
-          <iframe id="embedPlayer" allowfullscreen></iframe>
-        </div>
-        <div id="streamButtons" class="stream-bar"></div>
+        <div class="video" id="player"></div>
+        <div class="stream-bar" id="streamButtons"></div>
       </div>
     </div>
 
@@ -210,57 +253,73 @@ a{text-decoration:none;color:inherit}
 
 <script>
 const API_URL="https://onhockey.long-mode-0a14.workers.dev/";
-const embedEl=document.getElementById("embedPlayer");
+const schedule=document.getElementById("schedule");
+const player=document.getElementById("player");
 const buttons=document.getElementById("streamButtons");
-const scheduleBox=document.getElementById("schedule");
 
-function decodeHtml(s){
-  const t=document.createElement("textarea");
-  t.innerHTML=s;
-  return t.value;
+function decodeHtml(t){
+  const x=document.createElement("textarea");
+  x.innerHTML=t;
+  return x.value;
 }
-function fixEmbedUrl(url){
-  if(url.startsWith("https://onhockey.tv/")){
-    return url.replace("https://onhockey.tv/","https://");
-  }
-  return url;
+function fixUrl(u){
+  return u.startsWith("https://onhockey.tv/")
+    ? u.replace("https://onhockey.tv/","https://")
+    : u;
 }
 
-fetch(API_URL).then(r=>r.json()).then(json=>{
+fetch(API_URL)
+.then(r=>r.json())
+.then(json=>{
+  schedule.innerHTML="";
   json.data.forEach(l=>{
+    if(!l.games || !l.games.length) return;
+
+    const league=document.createElement("div");
+    league.className="league";
+
+    const head=document.createElement("div");
+    head.className="league-head";
+    head.innerHTML=`<span>${decodeHtml(l.league)}</span><span class="league-arrow">▶</span>`;
+    head.onclick=()=>league.classList.toggle("open");
+
+    const body=document.createElement("div");
+    body.className="league-body";
+
     l.games.forEach(g=>{
-      const d=document.createElement("div");
-      d.className="match";
-      d.innerHTML=`
+      const m=document.createElement("div");
+      m.className="match";
+      m.innerHTML=`
         <div class="match-title">${decodeHtml(g.teams)}</div>
-        <div class="match-meta">${l.league} · ${g.time}</div>`;
-      d.onclick=()=>{
+        <div class="match-meta">${g.time}</div>
+      `;
+      m.onclick=()=>{
         buttons.innerHTML="";
-        g.links.forEach((l,i)=>{
+        player.innerHTML="";
+        if(!g.links || !g.links.length){
+          player.innerHTML="<div style='padding:20px;color:#aaa'>Stream není dostupný</div>";
+          return;
+        }
+        g.links.forEach((ln,i)=>{
           const b=document.createElement("button");
           b.className="stream-btn";
-          b.textContent=l.label.toUpperCase();
+          b.textContent=ln.label.toUpperCase();
           b.onclick=()=>{
             document.querySelectorAll(".stream-btn").forEach(x=>x.classList.remove("active"));
             b.classList.add("active");
-            embedEl.src=fixEmbedUrl(l.url);
+            player.innerHTML=`<iframe allowfullscreen src="${fixUrl(ln.url)}"></iframe>`;
           };
           buttons.appendChild(b);
-          if(i===0){
-            b.classList.add("active");
-            embedEl.src=fixEmbedUrl(l.url);
-          }
+          if(i===0) b.click();
         });
       };
-      scheduleBox.appendChild(d);
+      body.appendChild(m);
     });
-  });
-});
-</script>
 
-<script type="text/javascript">
-aclib.runAutoTag({
-  zoneId: 'zitkptgwk8'
+    league.appendChild(head);
+    league.appendChild(body);
+    schedule.appendChild(league);
+  });
 });
 </script>
 
