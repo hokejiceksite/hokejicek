@@ -102,7 +102,6 @@ a{text-decoration:none;color:inherit}
   border-bottom:1px solid var(--border);
 }
 
-/* ROZPIS */
 .schedule{
   padding:12px;
   display:grid;
@@ -111,7 +110,6 @@ a{text-decoration:none;color:inherit}
   overflow-y:auto;
 }
 
-/* LEAGUE */
 .league{
   border:1px solid var(--border);
   border-radius:14px;
@@ -139,7 +137,6 @@ a{text-decoration:none;color:inherit}
   display:grid;
 }
 
-/* MATCH */
 .match{
   padding:10px 12px;
   border-radius:12px;
@@ -151,7 +148,6 @@ a{text-decoration:none;color:inherit}
 .match-title{font-weight:800}
 .match-meta{font-size:13px;color:var(--muted)}
 
-/* PLAYER */
 .player-wrap{padding:16px}
 .video{
   width:100%;
@@ -185,7 +181,6 @@ a{text-decoration:none;color:inherit}
   background:#2b4cff;
 }
 
-/* CHAT */
 .chat-body{
   height:75vh;
 }
@@ -195,6 +190,8 @@ a{text-decoration:none;color:inherit}
   border:0;
 }
 </style>
+
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 </head>
 
 <body>
@@ -203,7 +200,6 @@ a{text-decoration:none;color:inherit}
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
     <div class="nav-links">
-
       <a class="nav-btn" href="/">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -211,7 +207,6 @@ a{text-decoration:none;color:inherit}
         </svg>
         Home
       </a>
-
       <a class="nav-btn" href="/tv">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="7" width="20" height="15" rx="2"/>
@@ -219,7 +214,6 @@ a{text-decoration:none;color:inherit}
         </svg>
         TV
       </a>
-
     </div>
   </div>
 </div>
@@ -262,9 +256,7 @@ function decodeHtml(t){
   return x.value;
 }
 function fixUrl(u){
-  return u.startsWith("https://onhockey.tv/")
-    ? u.replace("https://onhockey.tv/","https://")
-    : u;
+  return u.startsWith("https://onhockey.tv/") ? u.replace("https://onhockey.tv/","https://") : u;
 }
 
 fetch(API_URL)
@@ -322,9 +314,15 @@ fetch(API_URL)
 });
 </script>
 
+<script>
+if(typeof aclib!=="undefined"){
+  aclib.runAutoTag({zoneId:"zitkptgwk8"});
+}
+</script>
+
 <script id="_wauysh">
-  var _wau = _wau || [];
-  _wau.push(["classic", "fli48hy375", "ysh"]);
+var _wau=_wau||[];
+_wau.push(["classic","fli48hy375","ysh"]);
 </script>
 <script async src="//waust.at/c.js"></script>
 
