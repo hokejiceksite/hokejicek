@@ -13,49 +13,185 @@
   --border:rgba(255,255,255,.1);
   --text:#ffffff;
   --muted:rgba(255,255,255,.65);
+  --scroll-track:#0b1224;
+  --scroll-thumb:#1a233d;
+  --scroll-thumb-hover:#2b4cff;
   --max:1600px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
 a{text-decoration:none;color:inherit}
 
-#_wauysh,#_wauysh img,a[href*="waust.at"]{display:none!important}
+*{
+  scrollbar-width:thin;
+  scrollbar-color:var(--scroll-thumb) var(--scroll-track);
+}
+*::-webkit-scrollbar{
+  width:8px;
+  height:8px;
+}
+*::-webkit-scrollbar-track{
+  background:var(--scroll-track);
+}
+*::-webkit-scrollbar-thumb{
+  background:var(--scroll-thumb);
+  border-radius:8px;
+}
+*::-webkit-scrollbar-thumb:hover{
+  background:var(--scroll-thumb-hover);
+}
 
-.nav{position:sticky;top:0;background:rgba(10,14,24,.9);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:var(--max);margin:auto;padding:14px 16px;display:flex;justify-content:space-between}
+.nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(10,14,24,.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:var(--max);
+  margin:auto;
+  padding:14px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 .brand{font-weight:900;font-size:20px}
+.nav-links{display:flex;gap:12px}
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  font-weight:700;
+}
+.nav-btn svg{width:18px;height:18px}
 
-.wrapper{max-width:var(--max);margin:auto;padding:16px}
-.grid{display:grid;grid-template-columns:360px 1fr 360px;gap:16px}
-@media(max-width:1200px){.grid{grid-template-columns:1fr}}
+.wrapper{
+  max-width:var(--max);
+  margin:auto;
+  padding:16px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:360px 1fr 360px;
+  gap:16px;
+}
+@media(max-width:1200px){
+  .grid{grid-template-columns:1fr}
+}
 
-.panel{background:var(--grad);border:1px solid var(--border);border-radius:18px;overflow:hidden}
-.panel-head{padding:14px 16px;font-weight:900;border-bottom:1px solid var(--border)}
+.panel{
+  background:var(--grad);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+}
+.panel-head{
+  padding:14px 16px;
+  font-weight:900;
+  border-bottom:1px solid var(--border);
+}
 
-.schedule{padding:12px;display:grid;gap:12px;max-height:75vh;overflow-y:auto}
+.schedule{
+  padding:12px;
+  display:grid;
+  gap:12px;
+  max-height:75vh;
+  overflow-y:auto;
+}
 
-.league{border:1px solid var(--border);border-radius:14px;background:rgba(0,0,0,.25)}
-.league-head{padding:14px 16px;font-weight:900;cursor:pointer;display:flex;justify-content:space-between}
-.league-body{display:none;padding:10px 14px 14px;gap:8px}
-.league.open .league-body{display:grid}
+.league{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.25);
+}
+.league-head{
+  padding:14px 16px;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+}
+.league-head:hover{background:rgba(255,255,255,.06)}
+.league-arrow{
+  opacity:.6;
+  transition:.25s;
+}
+.league.open .league-arrow{transform:rotate(90deg)}
+.league-body{
+  display:none;
+  padding:10px 14px 14px;
+  gap:8px;
+}
+.league.open .league-body{
+  display:grid;
+}
 
-.match{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.35);cursor:pointer}
+.match{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.35);
+  cursor:pointer;
+}
+.match:hover{background:rgba(255,255,255,.08)}
 .match-title{font-weight:800}
 .match-meta{font-size:13px;color:var(--muted)}
 
 .player-wrap{padding:16px}
-.video{width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden}
-.video iframe{width:100%;height:100%;border:0}
+.video{
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  border-radius:16px;
+  overflow:hidden;
+}
+.video iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
+.stream-bar{
+  display:flex;
+  gap:10px;
+  padding-top:10px;
+  overflow-x:auto;
+}
+.stream-btn{
+  min-width:100px;
+  height:40px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#1a233d;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+.stream-btn.active{
+  background:#2b4cff;
+}
 
-.stream-bar{display:flex;gap:10px;padding-top:10px;overflow-x:auto}
-.stream-btn{min-width:100px;height:40px;border-radius:14px;border:1px solid var(--border);background:#1a233d;color:#fff;font-weight:800;cursor:pointer}
-.stream-btn.active{background:#2b4cff}
-
-.chat-body{height:75vh}
-.chat-body iframe{width:100%;height:100%;border:0}
+.chat-body{
+  height:75vh;
+}
+.chat-body iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
 </style>
 
-<script id="aclib" src="//acscdn.com/script/aclib.js"></script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 </head>
 
 <body>
@@ -63,6 +199,22 @@ a{text-decoration:none;color:inherit}
 <div class="nav">
   <div class="nav-inner">
     <div class="brand">HOKEJICEK.site</div>
+    <div class="nav-links">
+      <a class="nav-btn" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75V21h15V9.75"/>
+        </svg>
+        Home
+      </a>
+      <a class="nav-btn" href="/tv">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="15" rx="2"/>
+          <path d="m17 2-5 5-5-5"/>
+        </svg>
+        TV
+      </a>
+    </div>
   </div>
 </div>
 
@@ -103,17 +255,8 @@ function decodeHtml(t){
   x.innerHTML=t;
   return x.value;
 }
-
-function makeEmbed(url){
-  return `
-<iframe
-  src="${url}"
-  allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-  allowfullscreen
-  referrerpolicy="no-referrer"
-  sandbox="allow-same-origin allow-scripts allow-forms allow-presentation"
-  loading="eager">
-</iframe>`;
+function fixUrl(u){
+  return u.startsWith("https://onhockey.tv/") ? u.replace("https://onhockey.tv/","https://") : u;
 }
 
 fetch(API_URL)
@@ -121,14 +264,14 @@ fetch(API_URL)
 .then(json=>{
   schedule.innerHTML="";
   json.data.forEach(l=>{
-    if(!l.games?.length) return;
+    if(!l.games || !l.games.length) return;
 
     const league=document.createElement("div");
     league.className="league";
 
     const head=document.createElement("div");
     head.className="league-head";
-    head.innerHTML=`<span>${decodeHtml(l.league)}</span><span>▶</span>`;
+    head.innerHTML=`<span>${decodeHtml(l.league)}</span><span class="league-arrow">▶</span>`;
     head.onclick=()=>league.classList.toggle("open");
 
     const body=document.createElement("div");
@@ -137,12 +280,15 @@ fetch(API_URL)
     l.games.forEach(g=>{
       const m=document.createElement("div");
       m.className="match";
-      m.innerHTML=`<div class="match-title">${decodeHtml(g.teams)}</div><div class="match-meta">${g.time}</div>`;
+      m.innerHTML=`
+        <div class="match-title">${decodeHtml(g.teams)}</div>
+        <div class="match-meta">${g.time}</div>
+      `;
       m.onclick=()=>{
         buttons.innerHTML="";
         player.innerHTML="";
-        if(!g.links?.length){
-          player.innerHTML="Stream není dostupný";
+        if(!g.links || !g.links.length){
+          player.innerHTML="<div style='padding:20px;color:#aaa'>Stream není dostupný</div>";
           return;
         }
         g.links.forEach((ln,i)=>{
@@ -152,7 +298,7 @@ fetch(API_URL)
           b.onclick=()=>{
             document.querySelectorAll(".stream-btn").forEach(x=>x.classList.remove("active"));
             b.classList.add("active");
-            player.innerHTML=makeEmbed(ln.url);
+            player.innerHTML=`<iframe allowfullscreen src="${fixUrl(ln.url)}"></iframe>`;
           };
           buttons.appendChild(b);
           if(i===0) b.click();
