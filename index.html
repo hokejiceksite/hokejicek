@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="cs">
 <head>
@@ -5,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HOKEJICEK.site</title>
 <link rel="icon" href="/H.png">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 :root{
@@ -256,7 +258,26 @@ function decodeHtml(t){
   return x.value;
 }
 function fixUrl(u){
-  return u.startsWith("https://onhockey.tv/") ? u.replace("https://onhockey.tv/","https://") : u;
+  return u.startsWith("https://onhockey.tv/")
+    ? u.replace("https://onhockey.tv/","https://")
+    : u;
+}
+
+function playM3U8(url){
+  player.innerHTML = `
+    <video id="hlsPlayer" controls autoplay style="width:100%;height:100%;background:#000"></video>
+  `;
+  const video = document.getElementById("hlsPlayer");
+
+  if (Hls.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = url;
+  } else {
+    player.innerHTML="<div style='padding:20px;color:#aaa'>HLS není podporováno</div>";
+  }
 }
 
 fetch(API_URL)
@@ -287,19 +308,29 @@ fetch(API_URL)
       m.onclick=()=>{
         buttons.innerHTML="";
         player.innerHTML="";
+
         if(!g.links || !g.links.length){
           player.innerHTML="<div style='padding:20px;color:#aaa'>Stream není dostupný</div>";
           return;
         }
+
         g.links.forEach((ln,i)=>{
+          const label = ln.label.toLowerCase();
           const b=document.createElement("button");
           b.className="stream-btn";
           b.textContent=ln.label.toUpperCase();
+
           b.onclick=()=>{
             document.querySelectorAll(".stream-btn").forEach(x=>x.classList.remove("active"));
             b.classList.add("active");
-            player.innerHTML=`<iframe allowfullscreen src="${fixUrl(ln.url)}"></iframe>`;
+
+            if(label.includes("fluid")){
+              playM3U8(fixUrl(ln.url));
+            } else {
+              player.innerHTML=`<iframe allowfullscreen src="${fixUrl(ln.url)}"></iframe>`;
+            }
           };
+
           buttons.appendChild(b);
           if(i===0) b.click();
         });
@@ -313,6 +344,7 @@ fetch(API_URL)
   });
 });
 </script>
+
 
 <script>
 if(typeof aclib!=="undefined"){
